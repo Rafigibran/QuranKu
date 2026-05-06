@@ -679,6 +679,8 @@ class _FullPlayerViewState extends State<FullPlayerView> {
         return Icons.repeat;
       case RepeatMode.repeatOne:
         return Icons.repeat_one;
+      default:
+        return Icons.repeat;
     }
   }
 }
