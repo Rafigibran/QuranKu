@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart' hide RepeatMode;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-import '../services/audio_service.dart';
+import '../services/audio_service.dart' as as_audio;
 import '../services/api_service.dart';
 import '../services/settings_service.dart';
 import '../models/ayah.dart';
@@ -16,7 +16,7 @@ class FullPlayerView extends StatefulWidget {
 }
 
 class _FullPlayerViewState extends State<FullPlayerView> {
-  final AudioService _audioService = AudioService();
+  final as_audio.AudioService _audioService = as_audio.AudioService();
   final ApiService _apiService = ApiService();
   final SettingsService _settings = SettingsService();
   final ItemScrollController _itemScrollController = ItemScrollController();
@@ -589,7 +589,7 @@ class _FullPlayerViewState extends State<FullPlayerView> {
                 iconSize: 16,
                 icon: Icon(
                   _getRepeatIcon(_audioService.repeatMode),
-                  color: _audioService.repeatMode == RepeatMode.none
+                  color: _audioService.repeatMode == as_audio.RepeatMode.none
                       ? colorScheme.onSurface.withValues(alpha: 0.38)
                       : colorScheme.primary,
                 ),
@@ -658,7 +658,7 @@ class _FullPlayerViewState extends State<FullPlayerView> {
                 iconSize: 16,
                 icon: Icon(
                   Icons.sort_rounded,
-                  color: _audioService.surahOrder == SurahOrder.ascending
+                  color: _audioService.surahOrder == as_audio.SurahOrder.ascending
                       ? colorScheme.primary
                       : Colors.amber,
                 ),
@@ -671,13 +671,13 @@ class _FullPlayerViewState extends State<FullPlayerView> {
     );
   }
 
-  IconData _getRepeatIcon(RepeatMode mode) {
+  IconData _getRepeatIcon(as_audio.RepeatMode mode) {
     switch (mode) {
-      case RepeatMode.none:
+      case as_audio.RepeatMode.none:
         return Icons.stop_circle_outlined;
-      case RepeatMode.autoNext:
+      case as_audio.RepeatMode.autoNext:
         return Icons.repeat;
-      case RepeatMode.repeatOne:
+      case as_audio.RepeatMode.repeatOne:
         return Icons.repeat_one;
       default:
         return Icons.repeat;

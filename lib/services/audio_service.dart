@@ -8,6 +8,7 @@ import 'package:synchronized/synchronized.dart';
 import '../models/surah.dart';
 import '../services/api_service.dart';
 import '../services/murotal_download_service.dart';
+import '../services/widget_service.dart';
 
 enum RepeatMode { none, autoNext, repeatOne }
 
@@ -210,6 +211,7 @@ class AudioService extends ChangeNotifier {
       _isBuffering =
           state.processingState == ProcessingState.buffering ||
           state.processingState == ProcessingState.loading;
+      
       notifyListeners();
     });
 

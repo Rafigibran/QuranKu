@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'screens/splash_screen.dart';
 import 'screens/main_screen.dart';
 import 'services/settings_service.dart';
+import 'services/widget_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SettingsService().init();
+  await WidgetService.init();
   runApp(const MyApp());
 }
 

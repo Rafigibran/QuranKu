@@ -8,6 +8,7 @@ import '../services/api_service.dart';
 import 'imsakiyah_screen.dart';
 import '../services/settings_service.dart';
 import '../services/audio_service.dart';
+import '../services/widget_service.dart';
 
 class PrayerTimesScreen extends StatefulWidget {
   const PrayerTimesScreen({super.key});
@@ -320,9 +321,13 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
       );
 
       if (todayData.isNotEmpty) {
+        final prayerTimes = PrayerTimes.fromJson(todayData);
         setState(() {
-          _todayPrayerTimes = PrayerTimes.fromJson(todayData);
+          _todayPrayerTimes = prayerTimes;
         });
+
+        // Update Home Screen Widgets
+        _updateWidgets(prayerTimes);
       } else {
         setState(() {
           _errorMessage = 'No schedule found for this date.';
@@ -376,6 +381,44 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
     });
     _saveLocation();
     _fetchPrayerTimes();
+  }
+
+  void _updateWidgets(PrayerTimes prayerTimes) {
+    final now = DateTime.now();
+    final timesMap = {
+      'Imsak': prayerTimes.imsak,
+      'Subuh': prayerTimes.subuh,
+      'Dzuhur': prayerTimes.dzuhur,
+      'Ashar': prayerTimes.ashar,
+      'Maghrib': prayerTimes.maghrib,
+      'Isya': prayerTimes.isya,
+    };
+
+    String nextName = 'Imsak';
+    String nextTime = prayerTimes.imsak;
+
+    for (var entry in timesMap.entries) {
+      final t = entry.value.split(':');
+      final prayerTime = DateTime(
+        now.year,
+        now.month,
+        now.day,
+        int.parse(t[0]),
+        int.parse(t[1]),
+      );
+      if (prayerTime.isAfter(now)) {
+        nextName = entry.key;
+        nextTime = entry.value;
+        break;
+      }
+    }
+
+    WidgetService.updatePrayerWidgets(
+      location: _selectedCity ?? 'Jakarta',
+      prayerTimes: timesMap,
+      nextPrayerName: nextName,
+      nextPrayerTime: nextTime,
+    );
   }
 
   @override

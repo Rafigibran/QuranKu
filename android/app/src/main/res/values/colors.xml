@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="splash_color">#0a0a0a</color>
-	<color name="ic_launcher_background">#F4F9F9</color>
+    <!-- Light mode widget colors -->
+    <color name="widget_bg">#E8FFFFFF</color>
+    <color name="widget_stroke">#1A40B779</color>
+    <color name="widget_icon_bg">#1A40B779</color>
+    <color name="text_primary">#1A1A2E</color>
+    <color name="text_secondary">#6B7280</color>
+    <color name="accent">#40B779</color>
+    <color name="accent_faint">#1A40B779</color>
+    <color name="divider_color">#14000000</color>
+    <color name="splash_color">#40B779</color>
+    <color name="ic_launcher_background">#40B779</color>
 </resources>
