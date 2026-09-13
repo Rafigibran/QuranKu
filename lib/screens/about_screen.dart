@@ -15,9 +15,9 @@ class AboutScreen extends StatefulWidget {
 
 class _AboutScreenState extends State<AboutScreen> {
   final AudioService _audioService = AudioService();
-  final String _appVersion = "3.0.0";
+  final String _appVersion = "1.0.0";
 
-  static const String _developerName = 'Rafigibran';
+  static const String _developerName = 'Rafi Gibran';
   static const String _githubProfile = 'https://github.com/Rafigibran';
   static const String _repository = 'https://github.com/Rafigibran/QuranKu';
   static const String _issues = 'https://github.com/Rafigibran/QuranKu/issues';
