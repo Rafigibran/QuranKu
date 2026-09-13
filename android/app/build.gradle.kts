@@ -5,7 +5,8 @@ plugins {
 }
 
 android {
-    namespace = "com.rafdev.quranku"
+    // Keep the existing Kotlin source package; the installed application ID is changed below.
+    namespace = "com.damarcreative.quran"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
