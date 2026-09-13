@@ -45,6 +45,39 @@ jobs:
           echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/quranku-release.jks
           test -s android/app/quranku-release.jks
 
+      - name: Align app version with release
+        run: |
+          VERSION="3.0.${{ github.run_number }}"
+          python3 - "$VERSION" <<'PY'
+          import pathlib
+          import sys
+
+          version = sys.argv[1]
+          replacements = {
+              'lib/screens/about_screen.dart': [
+                  ('final String _appVersion = "1.0.0";', f'final String _appVersion = "{version}";'),
+              ],
+              'lib/screens/settings_screen.dart': [
+                  ("'v3.0.0'", f"'v{version}'"),
+              ],
+          }
+
+          for filename, pairs in replacements.items():
+              path = pathlib.Path(filename)
+              text = path.read_text(encoding='utf-8')
+              changed = False
+              for old, new in pairs:
+                  if old in text:
+                      text = text.replace(old, new)
+                      changed = True
+              if not changed:
+                  raise SystemExit(f'Expected version marker not found in {filename}')
+              path.write_text(text, encoding='utf-8')
+          PY
+
+          grep -n "_appVersion" lib/screens/about_screen.dart
+          grep -n "v3.0" lib/screens/settings_screen.dart
+
       - name: Build signed release APK
         env:
           ANDROID_KEYSTORE_PATH: ${{ github.workspace }}/android/app/quranku-release.jks
@@ -57,7 +90,7 @@ jobs:
           test -n "$ANDROID_KEY_PASSWORD" || { echo "ANDROID_KEY_PASSWORD Secret is missing."; exit 1; }
           flutter build apk \
             --release \
-            --build-name 3.0.0 \
+            --build-name "3.0.${{ github.run_number }}" \
             --build-number "${{ github.run_number }}"
 
       - name: Upload APK
