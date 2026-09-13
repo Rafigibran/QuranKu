@@ -40,10 +40,9 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'My Quran',
+      title: 'QuranKu',
       debugShowCheckedModeBanner: false,
       themeMode: _settings.themeMode,
-      // Dark theme
       darkTheme: ThemeData(
         brightness: Brightness.dark,
         scaffoldBackgroundColor: const Color(0xFF0A0A0A),
@@ -56,7 +55,6 @@ class _MyAppState extends State<MyApp> {
         ),
         useMaterial3: true,
       ),
-      // Light theme
       theme: ThemeData(
         brightness: Brightness.light,
         scaffoldBackgroundColor: const Color(0xFFF5F5F5),
