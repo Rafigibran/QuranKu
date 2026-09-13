@@ -12,7 +12,12 @@ class AboutScreen extends StatefulWidget {
 
 class _AboutScreenState extends State<AboutScreen> {
   final AudioService _audioService = AudioService();
-  final String _appVersion = "3.0.0"; // Hardcoded version
+  final String _appVersion = "3.0.0";
+
+  static const String _developerName = 'Rafigibran';
+  static const String _githubProfile = 'https://github.com/Rafigibran';
+  static const String _repository = 'https://github.com/Rafigibran/QuranKu';
+  static const String _issues = 'https://github.com/Rafigibran/QuranKu/issues';
 
   @override
   void initState() {
@@ -33,7 +38,7 @@ class _AboutScreenState extends State<AboutScreen> {
   Future<void> _launchUrl(String urlString) async {
     try {
       final Uri url = Uri.parse(urlString);
-      if (!await launchUrl(url)) {
+      if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
         debugPrint('Could not launch $url');
       }
     } catch (e) {
@@ -88,7 +93,7 @@ class _AboutScreenState extends State<AboutScreen> {
                 height: 4,
                 margin: const EdgeInsets.only(bottom: 24),
                 decoration: BoxDecoration(
-                  color: Colors.transparent, // Hidden line since it's a full screen now
+                  color: Colors.transparent,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -102,40 +107,81 @@ class _AboutScreenState extends State<AboutScreen> {
               ),
             ),
             const SizedBox(height: 24),
-            _buildAboutInfoItem(context, 'Developer', 'Damar Jati', Icons.person_outline),
-            _buildAboutInfoItem(context, 'App Version', 'v$_appVersion', Icons.info_outline),
-            _buildAboutInfoItem(context, 'Email', 'dev@damarcreative.my.id', Icons.email_outlined,
-                isLink: true, linkPrefix: 'mailto:'),
-            _buildAboutInfoItem(context, 'Portfolio', 'https://damarcreative.my.id/', Icons.language, isLink: true),
-            _buildAboutInfoItem(context, 'Website', 'https://quran.damarcreative.my.id/', Icons.public, isLink: true),
-            _buildAboutInfoItem(context, 'Repository', 'https://github.com/Damarcreative/QuranAPI.git', Icons.code, isLink: true),
+            _buildAboutInfoItem(
+              context,
+              'Developer',
+              _developerName,
+              Icons.person_outline,
+            ),
+            _buildAboutInfoItem(
+              context,
+              'App Version',
+              'v$_appVersion',
+              Icons.info_outline,
+            ),
+            _buildAboutInfoItem(
+              context,
+              'GitHub',
+              'github.com/Rafigibran',
+              Icons.code,
+              isLink: true,
+              valueOverride: _githubProfile,
+            ),
+            _buildAboutInfoItem(
+              context,
+              'Repository',
+              _repository,
+              Icons.source_outlined,
+              isLink: true,
+            ),
 
             const SizedBox(height: 24),
             Text(
               'Attribution',
-              style: GoogleFonts.spaceGrotesk(fontSize: 18, fontWeight: FontWeight.bold, color: colorScheme.onSurface),
+              style: GoogleFonts.spaceGrotesk(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: colorScheme.onSurface,
+              ),
             ),
             const SizedBox(height: 12),
-            _buildAboutInfoItem(context, 'Prayer Times Source', 'Equran.id', Icons.api,
-                isLink: true, linkPrefix: 'https://', valueOverride: 'https://equran.id/'),
+            _buildAboutInfoItem(
+              context,
+              'Prayer Times Source',
+              'Equran.id',
+              Icons.api,
+              isLink: true,
+              valueOverride: 'https://equran.id/',
+            ),
 
             const SizedBox(height: 24),
             Text(
               'Support',
-              style: GoogleFonts.spaceGrotesk(fontSize: 18, fontWeight: FontWeight.bold, color: colorScheme.onSurface),
+              style: GoogleFonts.spaceGrotesk(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: colorScheme.onSurface,
+              ),
             ),
             const SizedBox(height: 12),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
-                onPressed: () => _launchUrl('https://damarcreative.my.id/found.html'),
-                icon: const Icon(Icons.favorite, color: Colors.black),
-                label: Text('Donate to Developer',
-                    style: GoogleFonts.spaceGrotesk(fontWeight: FontWeight.bold, color: Colors.black)),
+                onPressed: () => _launchUrl(_githubProfile),
+                icon: const Icon(Icons.code, color: Colors.black),
+                label: Text(
+                  'Visit GitHub Profile',
+                  style: GoogleFonts.spaceGrotesk(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: colorScheme.primary,
                   padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
               ),
             ),
@@ -143,20 +189,25 @@ class _AboutScreenState extends State<AboutScreen> {
             SizedBox(
               width: double.infinity,
               child: OutlinedButton.icon(
-                onPressed: () => _launchUrl('mailto:dev@damarcreative.my.id?subject=Quran App Issue Report'),
+                onPressed: () => _launchUrl(_issues),
                 icon: Icon(Icons.bug_report_outlined, color: colorScheme.onSurface),
-                label: Text('Report Issue',
-                    style: GoogleFonts.spaceGrotesk(fontWeight: FontWeight.bold, color: colorScheme.onSurface)),
+                label: Text(
+                  'Report Issue',
+                  style: GoogleFonts.spaceGrotesk(
+                    fontWeight: FontWeight.bold,
+                    color: colorScheme.onSurface,
+                  ),
+                ),
                 style: OutlinedButton.styleFrom(
                   side: BorderSide(color: colorScheme.outline),
                   padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
               ),
             ),
             const SizedBox(height: 24),
-
-            // Miniplayer Padding
             if (_audioService.currentSurah != null)
               const SizedBox(height: 80),
           ],
@@ -165,9 +216,16 @@ class _AboutScreenState extends State<AboutScreen> {
     );
   }
 
-  Widget _buildAboutInfoItem(BuildContext context, String label, String value, IconData icon,
-      {bool isLink = false, String linkPrefix = '', String? valueOverride}) {
+  Widget _buildAboutInfoItem(
+    BuildContext context,
+    String label,
+    String value,
+    IconData icon, {
+    bool isLink = false,
+    String? valueOverride,
+  }) {
     final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
@@ -179,7 +237,9 @@ class _AboutScreenState extends State<AboutScreen> {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(8),
-          onTap: isLink ? () => _launchUrl(valueOverride ?? (linkPrefix + value)) : null,
+          onTap: isLink
+              ? () => _launchUrl(valueOverride ?? value)
+              : null,
           child: Padding(
             padding: const EdgeInsets.all(12),
             child: Row(
@@ -190,22 +250,38 @@ class _AboutScreenState extends State<AboutScreen> {
                     color: colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Icon(icon, color: isLink ? colorScheme.primary : colorScheme.onSurface, size: 20),
+                  child: Icon(
+                    icon,
+                    color: isLink
+                        ? colorScheme.primary
+                        : colorScheme.onSurface,
+                    size: 20,
+                  ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(label, style: GoogleFonts.spaceGrotesk(color: colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 12)),
+                      Text(
+                        label,
+                        style: GoogleFonts.spaceGrotesk(
+                          color: colorScheme.onSurface.withValues(alpha: 0.5),
+                          fontSize: 12,
+                        ),
+                      ),
                       const SizedBox(height: 2),
                       Text(
                         value,
                         style: GoogleFonts.spaceGrotesk(
-                          color: isLink ? colorScheme.primary : colorScheme.onSurface,
+                          color: isLink
+                              ? colorScheme.primary
+                              : colorScheme.onSurface,
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
-                          decoration: isLink ? TextDecoration.underline : TextDecoration.none,
+                          decoration: isLink
+                              ? TextDecoration.underline
+                              : TextDecoration.none,
                           decorationColor: colorScheme.primary,
                         ),
                         maxLines: 1,
@@ -215,7 +291,11 @@ class _AboutScreenState extends State<AboutScreen> {
                   ),
                 ),
                 if (isLink)
-                  Icon(Icons.arrow_outward, color: colorScheme.primary, size: 16),
+                  Icon(
+                    Icons.arrow_outward,
+                    color: colorScheme.primary,
+                    size: 16,
+                  ),
               ],
             ),
           ),
