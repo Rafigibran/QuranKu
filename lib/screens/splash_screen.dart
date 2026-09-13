@@ -18,7 +18,9 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(const Duration(seconds: 2, milliseconds: 500), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => widget.nextScreen ?? const SurahListScreen()),
+        MaterialPageRoute(
+          builder: (context) => widget.nextScreen ?? const SurahListScreen(),
+        ),
       );
     });
   }
@@ -42,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen> {
             right: 0,
             child: Center(
               child: Text(
-                'Damar Jati',
+                'RAFDEV',
                 style: GoogleFonts.spaceGrotesk(
                   color: const Color(0xFF888888),
                   fontSize: 12,
