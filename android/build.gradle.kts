@@ -26,18 +26,13 @@ subprojects {
         }
     }
 
-    // Some Flutter plugins (notably home_widget) configure their Java task
-    // back to 1.8. Force the final Java compiler target to 17 immediately
-    // before execution so Java/Kotlin targets stay compatible.
+    // Some Flutter plugins (notably home_widget/audio_service) configure
+    // Java compilation back to 1.8. Reset the final compatibility values
+    // immediately before compilation so Java and Kotlin use the same target.
     tasks.withType<JavaCompile>().configureEach {
-        sourceCompatibility = "17"
-        targetCompatibility = "17"
-        options.release.set(17)
-
         doFirst {
             sourceCompatibility = "17"
             targetCompatibility = "17"
-            options.release.set(17)
         }
     }
 }
