@@ -6,6 +6,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
   build-apk:
     runs-on: ubuntu-latest
@@ -52,7 +55,10 @@ jobs:
           test -n "$ANDROID_KEYSTORE_PASSWORD" || { echo "ANDROID_KEYSTORE_PASSWORD Secret is missing."; exit 1; }
           test -n "$ANDROID_KEY_ALIAS" || { echo "ANDROID_KEY_ALIAS Secret is missing."; exit 1; }
           test -n "$ANDROID_KEY_PASSWORD" || { echo "ANDROID_KEY_PASSWORD Secret is missing."; exit 1; }
-          flutter build apk --release
+          flutter build apk \
+            --release \
+            --build-name 3.0.0 \
+            --build-number "${{ github.run_number }}"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
@@ -60,6 +66,16 @@ jobs:
           name: QuranKu-release
           path: build/app/outputs/flutter-apk/app-release.apk
           if-no-files-found: error
+
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="v3.0.${{ github.run_number }}"
+          gh release create "$TAG" \
+            build/app/outputs/flutter-apk/app-release.apk \
+            --title "QuranKu $TAG" \
+            --generate-notes
 
       - name: Remove signing key from runner
         if: always()
