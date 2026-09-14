@@ -24,20 +24,14 @@ class _MainScreenState extends State<MainScreen> {
   final AudioService _audioService = AudioService();
   final AppLanguageService _language = AppLanguageService();
 
-  // Do not mount Qibla at startup. Qibla uses Android location/compass APIs,
-  // and mounting it inside IndexedStack can cause a system permission overlay
-  // to cover the Quran screen on some devices.
-  final List<Widget> _screens = const [
-    SurahListScreen(),
-    PrayerTimesScreen(),
-    MurotalScreen(),
-    PlaylistScreen(),
-    SettingsScreen(),
-  ];
+  // Lazily create tabs. Previously every screen was instantiated at startup,
+  // allowing dialogs/sheets from hidden screens to appear over Quran.
+  late final List<Widget?> _screens = List<Widget?>.filled(6, null);
 
   @override
   void initState() {
     super.initState();
+    _screens[0] = const SurahListScreen();
     _audioService.addListener(_onAudioUpdate);
     _language.addListener(_onLanguageUpdate);
   }
@@ -49,6 +43,35 @@ class _MainScreenState extends State<MainScreen> {
     super.dispose();
   }
 
+  Widget _screenForIndex(int index) {
+    final existing = _screens[index];
+    if (existing != null) return existing;
+
+    switch (index) {
+      case 0:
+        _screens[index] = const SurahListScreen();
+        break;
+      case 1:
+        _screens[index] = const PrayerTimesScreen();
+        break;
+      case 2:
+        _screens[index] = const MurotalScreen();
+        break;
+      case 3:
+        _screens[index] = const PlaylistScreen();
+        break;
+      case 4:
+        _screens[index] = const QiblaScreen();
+        break;
+      case 5:
+        _screens[index] = const SettingsScreen();
+        break;
+      default:
+        _screens[index] = const SurahListScreen();
+    }
+    return _screens[index]!;
+  }
+
   void _onAudioUpdate() {
     if (mounted) setState(() {});
   }
@@ -58,13 +81,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void _onItemTapped(int index) {
-    if (index == 4) {
-      Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => const QiblaScreen()),
-      );
-      return;
-    }
-
+    _screenForIndex(index);
     setState(() {
       _selectedIndex = index;
       _showFullPlayer = false;
@@ -104,13 +121,19 @@ class _MainScreenState extends State<MainScreen> {
     final hasAudio = _audioService.currentSurah != null;
     final colorScheme = Theme.of(context).colorScheme;
 
+    final children = List<Widget>.generate(
+      _screens.length,
+      (index) => _screens[index] ?? const SizedBox.shrink(),
+      growable: false,
+    );
+
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Stack(
           children: [
-            IndexedStack(index: _selectedIndex, children: _screens),
+            IndexedStack(index: _selectedIndex, children: children),
             if (!_showFullPlayer && hasAudio)
               Positioned(
                 left: 0,
