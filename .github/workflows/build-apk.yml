@@ -33,6 +33,16 @@ jobs:
 
       - name: Apply background audio patch
         run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('tool/apply_background_audio_patch.py')
+          text = p.read_text(encoding='utf-8')
+          old = 'rain_path.write_bytes(base64.b64decode(RAIN_MP3_B64))'
+          new = 'rain_path.write_bytes(base64.b64decode(RAIN_MP3_B64[:len(RAIN_MP3_B64) - (len(RAIN_MP3_B64) % 4)]))'
+          if old not in text:
+              raise SystemExit('Expected rain base64 decode line was not found')
+          p.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
           python3 -m py_compile tool/apply_background_audio_patch.py
           python3 tool/apply_background_audio_patch.py
           test -s assets/rain_loop.mp3
