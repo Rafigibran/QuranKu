@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../models/surah.dart';
 import '../services/api_service.dart';
 import '../services/settings_service.dart';
+import '../widgets/liquid_glass.dart';
 import 'surah_detail_screen.dart';
 import 'download_screen.dart';
 
@@ -13,29 +14,28 @@ class SurahListScreen extends StatefulWidget {
   State<SurahListScreen> createState() => _SurahListScreenState();
 }
 
-class _SurahListScreenState extends State<SurahListScreen> with TickerProviderStateMixin {
+class _SurahListScreenState extends State<SurahListScreen> {
   late Future<List<Surah>> _surahListFuture;
-  List<Surah> _allSurahs = [];
-  List<Surah> _filteredSurahs = [];
+  List<Surah> _allSurahs = <Surah>[];
+  List<Surah> _filteredSurahs = <Surah>[];
   final TextEditingController _searchController = TextEditingController();
   final SettingsService _settings = SettingsService();
 
   @override
   void initState() {
     super.initState();
-    // Do not initialize notifications/download services while Quran is starting.
-    // The Download Manager initializes them only when it is explicitly opened.
     _settings.addListener(_onSettingsUpdate);
+    _surahListFuture = _loadSurahs();
+  }
 
-    _surahListFuture = ApiService().fetchSurahs().then((surahs) {
-      if (mounted) {
-        setState(() {
-          _allSurahs = surahs;
-          _filteredSurahs = surahs;
-        });
-      }
-      return surahs;
+  Future<List<Surah>> _loadSurahs() async {
+    final surahs = await ApiService().fetchSurahs();
+    if (!mounted) return surahs;
+    setState(() {
+      _allSurahs = surahs;
+      _filteredSurahs = surahs;
     });
+    return surahs;
   }
 
   @override
@@ -50,15 +50,17 @@ class _SurahListScreenState extends State<SurahListScreen> with TickerProviderSt
   }
 
   void _filterSurahs(String query) {
+    final normalized = query.trim().toLowerCase();
     setState(() {
-      if (query.isEmpty) {
+      if (normalized.isEmpty) {
         _filteredSurahs = _allSurahs;
-      } else {
-        _filteredSurahs = _allSurahs.where((surah) {
-          return surah.name.toLowerCase().contains(query.toLowerCase()) ||
-              surah.number.toString().contains(query);
-        }).toList();
+        return;
       }
+      _filteredSurahs = _allSurahs.where((surah) {
+        return surah.name.toLowerCase().contains(normalized) ||
+            surah.nameAr.contains(query.trim()) ||
+            surah.number.toString() == query.trim();
+      }).toList();
     });
   }
 
@@ -67,10 +69,12 @@ class _SurahListScreenState extends State<SurahListScreen> with TickerProviderSt
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
+      barrierColor: Colors.black.withValues(alpha: 0.18),
       builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.7,
-        minChildSize: 0.5,
-        maxChildSize: 0.9,
+        initialChildSize: 0.72,
+        minChildSize: 0.50,
+        maxChildSize: 0.94,
+        expand: false,
         builder: (context, scrollController) => DownloadScreen(
           scrollController: scrollController,
         ),
@@ -78,71 +82,89 @@ class _SurahListScreenState extends State<SurahListScreen> with TickerProviderSt
     );
   }
 
+  Future<void> _refresh() async {
+    try {
+      final surahs = await ApiService().fetchSurahs(forceRefresh: true);
+      if (!mounted) return;
+      setState(() {
+        _allSurahs = surahs;
+        _filteredSurahs = surahs;
+        _searchController.clear();
+      });
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Gagal memuat ulang: $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final scheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
-        title: RichText(
-          text: TextSpan(
-            children: [
-              TextSpan(
-                text: 'QURAN',
-                style: GoogleFonts.spaceGrotesk(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24,
-                  color: colorScheme.onSurface,
-                  letterSpacing: -1,
-                ),
-              ),
-              TextSpan(
-                text: '.',
-                style: GoogleFonts.spaceGrotesk(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24,
-                  color: colorScheme.primary,
-                ),
-              ),
-            ],
-          ),
-        ),
-        centerTitle: false,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        scrolledUnderElevation: 0,
-        elevation: 0,
         automaticallyImplyLeading: false,
+        titleSpacing: 20,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'QuranKu',
+              style: GoogleFonts.spaceGrotesk(
+                color: scheme.onSurface,
+                fontWeight: FontWeight.w800,
+                fontSize: 25,
+                letterSpacing: -0.8,
+              ),
+            ),
+            Text(
+              'Baca dengan tenang, kapan saja.',
+              style: GoogleFonts.spaceGrotesk(
+                color: scheme.onSurface.withValues(alpha: 0.58),
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
         actions: [
-          IconButton(
+          LiquidGlassIconButton(
+            icon: Icons.download_outlined,
+            tooltip: 'Kelola unduhan',
+            semanticLabel: 'Kelola unduhan Al-Quran',
             onPressed: _openDownloadManager,
-            icon: Icon(Icons.download_outlined, color: colorScheme.primary),
-            tooltip: 'Download Manager',
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 16),
         ],
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(60.0),
+          preferredSize: const Size.fromHeight(82),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
+            padding: const EdgeInsets.fromLTRB(20, 4, 20, 14),
             child: TextField(
               controller: _searchController,
               onChanged: _filterSurahs,
-              style: GoogleFonts.spaceGrotesk(color: colorScheme.onSurface, height: 1.5),
+              textInputAction: TextInputAction.search,
+              style: GoogleFonts.spaceGrotesk(
+                color: scheme.onSurface,
+                fontSize: 16,
+                height: 1.2,
+              ),
               decoration: InputDecoration(
-                hintText: 'Search Surah...',
-                hintStyle: GoogleFonts.spaceGrotesk(color: colorScheme.onSurface.withValues(alpha: 0.5)),
-                isDense: true,
-                filled: true,
-                fillColor: Colors.transparent,
-                contentPadding: const EdgeInsets.only(bottom: 4, top: 12),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: colorScheme.outline, width: 2),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: colorScheme.primary, width: 2),
-                ),
-                suffixIcon: Icon(Icons.search, color: colorScheme.primary, size: 20),
+                hintText: 'Cari nama atau nomor Surah',
+                prefixIcon: Icon(Icons.search_rounded, color: scheme.primary, size: 24),
+                suffixIcon: _searchController.text.isEmpty
+                    ? null
+                    : IconButton(
+                        tooltip: 'Bersihkan pencarian',
+                        onPressed: () {
+                          _searchController.clear();
+                          _filterSurahs('');
+                        },
+                        icon: const Icon(Icons.close_rounded),
+                      ),
               ),
             ),
           ),
@@ -152,86 +174,154 @@ class _SurahListScreenState extends State<SurahListScreen> with TickerProviderSt
         future: _surahListFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting && _allSurahs.isEmpty) {
-            return Center(child: CircularProgressIndicator(color: colorScheme.primary));
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Failed to load data', style: TextStyle(color: Colors.red)));
-          } else if (_filteredSurahs.isEmpty && _allSurahs.isNotEmpty) {
             return Center(
-              child: Text(
-                "No Surahs found matching '${_searchController.text}'",
-                style: TextStyle(color: colorScheme.onSurface.withValues(alpha: 0.7)),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(color: scheme.primary),
+                  const SizedBox(height: 14),
+                  Text('Memuat Al-Quran…', style: Theme.of(context).textTheme.bodyLarge),
+                ],
               ),
             );
-          } else if (_allSurahs.isEmpty) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return const Center(child: Text('No Surahs found'));
-            }
-            return const SizedBox.shrink();
+          }
+
+          if (snapshot.hasError) {
+            return Center(
+              child: LiquidGlassCard(
+                margin: const EdgeInsets.all(24),
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.cloud_off_rounded, size: 46, color: scheme.primary),
+                    const SizedBox(height: 14),
+                    Text(
+                      'Al-Quran belum dapat dimuat.',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Periksa koneksi internet, lalu coba lagi.',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    const SizedBox(height: 18),
+                    ElevatedButton.icon(
+                      onPressed: () => setState(() => _surahListFuture = _loadSurahs()),
+                      icon: const Icon(Icons.refresh_rounded),
+                      label: const Text('Coba Lagi'),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+
+          if (_filteredSurahs.isEmpty) {
+            return RefreshIndicator(
+              color: scheme.primary,
+              onRefresh: _refresh,
+              child: ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.fromLTRB(24, 48, 24, 140),
+                children: [
+                  LiquidGlassCard(
+                    padding: const EdgeInsets.all(26),
+                    child: Column(
+                      children: [
+                        Icon(Icons.search_off_rounded, size: 52, color: scheme.primary),
+                        const SizedBox(height: 14),
+                        Text(
+                          'Surah tidak ditemukan',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.w700,
+                              ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          'Coba gunakan nama atau nomor Surah yang lain.',
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
           }
 
           return LayoutBuilder(
             builder: (context, constraints) {
-              int crossAxisCount = 1;
-              if (constraints.maxWidth > 1024) {
-                crossAxisCount = 3;
-              } else if (constraints.maxWidth > 768) {
-                crossAxisCount = 2;
-              }
+              final wide = constraints.maxWidth >= 760;
+              final crossAxisCount = constraints.maxWidth >= 1180
+                  ? 3
+                  : (wide ? 2 : 1);
 
               return RefreshIndicator(
-                color: colorScheme.primary,
-                backgroundColor: Theme.of(context).cardColor,
-                onRefresh: () async {
-                  try {
-                    final surahs = await ApiService().fetchSurahs(forceRefresh: true);
-                    setState(() {
-                      _allSurahs = surahs;
-                      _filteredSurahs = surahs;
-                      _searchController.clear();
-                    });
-                  } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Failed to refresh: $e')),
-                    );
-                  }
-                },
-                child: _filteredSurahs.isEmpty
-                    ? SingleChildScrollView(
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        child: SizedBox(
-                          height: constraints.maxHeight,
-                          child: Center(
-                            child: Text(
-                              'No Surahs found. Pull to refresh.',
-                              style: TextStyle(color: colorScheme.onSurface.withValues(alpha: 0.7)),
+                color: scheme.primary,
+                onRefresh: _refresh,
+                child: CustomScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 10, 20, 6),
+                        child: Row(
+                          children: [
+                            LiquidGlassPill(
+                              child: Text(
+                                '${_filteredSurahs.length} Surah',
+                                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                      fontWeight: FontWeight.w700,
+                                      color: scheme.primary,
+                                    ),
+                              ),
                             ),
-                          ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Text(
+                                'Pilih Surah untuk mulai membaca',
+                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                      color: scheme.onSurface.withValues(alpha: 0.58),
+                                    ),
+                              ),
+                            ),
+                          ],
                         ),
-                      )
-                    : crossAxisCount == 1
-                        ? ListView.builder(
-                            padding: const EdgeInsets.fromLTRB(24, 24, 24, 100),
-                            itemCount: _filteredSurahs.length,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 16),
-                                child: _buildSurahCard(_filteredSurahs[index]),
-                              );
-                            },
-                          )
-                        : GridView.builder(
-                            padding: const EdgeInsets.fromLTRB(24, 24, 24, 100),
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: crossAxisCount,
-                              crossAxisSpacing: 24,
-                              mainAxisSpacing: 24,
-                              childAspectRatio: 2.2,
+                      ),
+                    ),
+                    SliverPadding(
+                      padding: const EdgeInsets.fromLTRB(20, 8, 20, 130),
+                      sliver: crossAxisCount == 1
+                          ? SliverList(
+                              delegate: SliverChildBuilderDelegate(
+                                (context, index) => Padding(
+                                  padding: const EdgeInsets.only(bottom: 12),
+                                  child: _buildSurahCard(_filteredSurahs[index]),
+                                ),
+                                childCount: _filteredSurahs.length,
+                              ),
+                            )
+                          : SliverGrid(
+                              delegate: SliverChildBuilderDelegate(
+                                (context, index) => _buildSurahCard(_filteredSurahs[index]),
+                                childCount: _filteredSurahs.length,
+                              ),
+                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: crossAxisCount,
+                                crossAxisSpacing: 14,
+                                mainAxisSpacing: 14,
+                                childAspectRatio: 1.8,
+                              ),
                             ),
-                            itemCount: _filteredSurahs.length,
-                            itemBuilder: (context, index) {
-                              return _buildSurahCard(_filteredSurahs[index]);
-                            },
-                          ),
+                    ),
+                  ],
+                ),
               );
             },
           );
@@ -241,105 +331,100 @@ class _SurahListScreenState extends State<SurahListScreen> with TickerProviderSt
   }
 
   Widget _buildSurahCard(Surah surah) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final scheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.transparent,
-        border: Border.all(color: colorScheme.outline),
-        borderRadius: BorderRadius.circular(0),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          hoverColor: Colors.transparent,
-          highlightColor: colorScheme.primary.withValues(alpha: 0.05),
-          splashColor: colorScheme.primary.withValues(alpha: 0.1),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => SurahDetailScreen(surah: surah),
-              ),
-            );
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          _settings.formatNumber(surah.number),
-                          style: GoogleFonts.spaceGrotesk(
-                            color: colorScheme.primary,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Text(
-                          '${_settings.formatNumber(surah.totalAyahs)} Ayahs',
-                          style: GoogleFonts.spaceGrotesk(
-                            color: colorScheme.onSurface.withValues(alpha: 0.5),
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(99),
-                        border: Border.all(color: colorScheme.outline),
-                      ),
-                      child: Text(
-                        surah.type,
-                        style: GoogleFonts.spaceGrotesk(
-                          color: colorScheme.onSurface.withValues(alpha: 0.5),
-                          fontSize: 11,
-                        ),
-                      ),
-                    ),
+    return LiquidGlassCard(
+      radius: 24,
+      padding: const EdgeInsets.all(18),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SurahDetailScreen(surah: surah)),
+        );
+      },
+      child: Semantics(
+        button: true,
+        label: '${surah.name}, ${surah.totalAyahs} ayat, ${surah.type}',
+        child: Row(
+          children: [
+            Container(
+              width: 56,
+              height: 56,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    scheme.primary.withValues(alpha: 0.18),
+                    scheme.primary.withValues(alpha: 0.07),
                   ],
                 ),
-                const SizedBox(height: 12),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        surah.name,
-                        style: GoogleFonts.spaceGrotesk(
-                          color: colorScheme.onSurface,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          height: 1.2,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                border: Border.all(
+                  color: scheme.primary.withValues(alpha: 0.22),
+                ),
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                _settings.formatNumber(surah.number),
+                style: GoogleFonts.spaceGrotesk(
+                  color: scheme.primary,
+                  fontWeight: FontWeight.w800,
+                  fontSize: 15,
+                ),
+              ),
+            ),
+            const SizedBox(width: 15),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    surah.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.spaceGrotesk(
+                      color: scheme.onSurface,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: -0.2,
                     ),
-                    const SizedBox(width: 8),
-                    Text(
-                      surah.nameAr,
-                      style: GoogleFonts.amiri(
-                        color: colorScheme.onSurface.withValues(alpha: 0.5),
-                        fontSize: 20,
-                        height: 1.0,
-                      ),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    '${_settings.formatNumber(surah.totalAyahs)} Ayat • ${surah.type}',
+                    style: GoogleFonts.spaceGrotesk(
+                      color: scheme.onSurface.withValues(alpha: 0.56),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
                     ),
-                  ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  surah.nameAr,
+                  textAlign: TextAlign.right,
+                  style: GoogleFonts.amiri(
+                    color: isDark ? Colors.white.withValues(alpha: 0.86) : const Color(0xFF23322B),
+                    fontSize: 25,
+                    height: 1.0,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Icon(
+                  Icons.chevron_right_rounded,
+                  color: scheme.onSurface.withValues(alpha: 0.40),
+                  size: 22,
                 ),
               ],
             ),
-          ),
+          ],
         ),
       ),
     );
