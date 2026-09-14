@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'surah_list_screen.dart';
 import 'prayer_times_screen.dart';
 import 'murotal_screen.dart';
 import 'playlist_screen.dart';
 import 'settings_screen.dart';
 import '../services/audio_service.dart';
-import '../services/app_language_service.dart';
 import '../widgets/mini_player.dart';
 import '../widgets/full_player_view.dart';
 
@@ -21,7 +19,6 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
   bool _showFullPlayer = false;
   final AudioService _audioService = AudioService();
-  final AppLanguageService _language = AppLanguageService();
 
   late final List<Widget?> _screens = List<Widget?>.filled(5, null);
 
@@ -30,13 +27,11 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
     _screens[0] = const SurahListScreen();
     _audioService.addListener(_onAudioUpdate);
-    _language.addListener(_onLanguageUpdate);
   }
 
   @override
   void dispose() {
     _audioService.removeListener(_onAudioUpdate);
-    _language.removeListener(_onLanguageUpdate);
     super.dispose();
   }
 
@@ -70,10 +65,6 @@ class _MainScreenState extends State<MainScreen> {
     if (mounted) setState(() {});
   }
 
-  void _onLanguageUpdate() {
-    if (mounted) setState(() {});
-  }
-
   void _onItemTapped(int index) {
     _screenForIndex(index);
     setState(() {
@@ -95,14 +86,11 @@ class _MainScreenState extends State<MainScreen> {
         now.difference(_currentBackPressTime!) > const Duration(seconds: 2)) {
       _currentBackPressTime = now;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            _language.t('double_tap_exit'),
-            style: GoogleFonts.spaceGrotesk(color: Colors.white),
-          ),
-          backgroundColor: const Color(0xFF2A2A2A),
+        const SnackBar(
+          content: Text('Ketuk dua kali untuk keluar'),
+          backgroundColor: Color(0xFF2A2A2A),
           behavior: SnackBarBehavior.floating,
-          duration: const Duration(seconds: 2),
+          duration: Duration(seconds: 2),
         ),
       );
       return false;
@@ -172,31 +160,31 @@ class _MainScreenState extends State<MainScreen> {
                     onDestinationSelected: _onItemTapped,
                     height: 52,
                     elevation: 0,
-                    destinations: [
+                    destinations: const [
                       NavigationDestination(
-                        icon: const Icon(Icons.auto_stories_outlined),
-                        selectedIcon: const Icon(Icons.auto_stories),
-                        label: _language.t('quran'),
+                        icon: Icon(Icons.auto_stories_outlined),
+                        selectedIcon: Icon(Icons.auto_stories),
+                        label: 'Al-Quran',
                       ),
                       NavigationDestination(
-                        icon: const Icon(Icons.mosque_outlined),
-                        selectedIcon: const Icon(Icons.mosque),
-                        label: _language.t('times'),
+                        icon: Icon(Icons.mosque_outlined),
+                        selectedIcon: Icon(Icons.mosque),
+                        label: 'Jadwal',
                       ),
                       NavigationDestination(
-                        icon: const Icon(Icons.headphones_outlined),
-                        selectedIcon: const Icon(Icons.headphones),
-                        label: _language.t('murotal'),
+                        icon: Icon(Icons.headphones_outlined),
+                        selectedIcon: Icon(Icons.headphones),
+                        label: 'Murotal',
                       ),
                       NavigationDestination(
-                        icon: const Icon(Icons.queue_music_outlined),
-                        selectedIcon: const Icon(Icons.queue_music),
-                        label: _language.t('playlist'),
+                        icon: Icon(Icons.queue_music_outlined),
+                        selectedIcon: Icon(Icons.queue_music),
+                        label: 'Daftar Putar',
                       ),
                       NavigationDestination(
-                        icon: const Icon(Icons.settings_outlined),
-                        selectedIcon: const Icon(Icons.settings),
-                        label: _language.t('settings'),
+                        icon: Icon(Icons.settings_outlined),
+                        selectedIcon: Icon(Icons.settings),
+                        label: 'Pengaturan',
                       ),
                     ],
                   ),
