@@ -50,7 +50,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/prayer_location_widget_info" />
         </receiver>
-        <receiver android:name="es.antonborriorri.home_widget.HomeWidgetBackgroundReceiver"
+        <receiver android:name="es.antonborri.home_widget.HomeWidgetBackgroundReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="es.antonborri.home_widget.action.BACKGROUND" />
@@ -60,7 +60,7 @@
     <queries>
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
-            <data android:mimeType="text/plain"/>
+            <data android:mimeType="text/plain" />
         </intent>
         <intent>
             <action android:name="android.intent.action.VIEW" />
