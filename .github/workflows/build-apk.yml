@@ -31,6 +31,18 @@ jobs:
           channel: stable
           cache: true
 
+      - name: Prepare valid rain background audio
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+          mkdir -p assets
+          ffmpeg -hide_banner -loglevel error -y \
+            -f lavfi -i "anoisesrc=color=pink:duration=30:amplitude=0.18" \
+            -af "highpass=f=120,lowpass=f=8000,volume=0.65" \
+            -c:a libmp3lame -b:a 96k assets/rain_loop.mp3
+          test -s assets/rain_loop.mp3
+          ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 assets/rain_loop.mp3
+
       - name: Apply background audio patch
         run: |
           python3 - <<'PY'
@@ -38,23 +50,17 @@ jobs:
           p = Path('tool/apply_background_audio_patch.py')
           text = p.read_text(encoding='utf-8')
           old = 'rain_path.write_bytes(base64.b64decode(RAIN_MP3_B64))'
-          new = 'rain_path.write_bytes(base64.b64decode(RAIN_MP3_B64[:len(RAIN_MP3_B64) - (len(RAIN_MP3_B64) % 4)]))'
           if old in text:
-              text = text.replace(old, new, 1)
+              text = text.replace(
+                  old,
+                  "if not rain_path.exists() or rain_path.stat().st_size < 1000:\n    rain_path.write_bytes(base64.b64decode(RAIN_MP3_B64 + '=' * (-len(RAIN_MP3_B64) % 4)))",
+                  1,
+              )
               p.write_text(text, encoding='utf-8')
           PY
           python3 -m py_compile tool/apply_background_audio_patch.py
           python3 tool/apply_background_audio_patch.py
           test -s assets/rain_loop.mp3
-          python3 - <<'PY'
-          from pathlib import Path
-          data = Path('assets/rain_loop.mp3').read_bytes()
-          if len(data) < 1000:
-              raise SystemExit('Rain audio file is unexpectedly small')
-          if not (data.startswith(b'ID3') or (len(data) >= 2 and data[0] == 0xFF and (data[1] & 0xE0) == 0xE0)):
-              raise SystemExit('Generated rain audio does not look like a valid MP3 stream')
-          print(f'Rain audio ready: {len(data)} bytes')
-          PY
 
       - name: Install dependencies
         run: flutter pub get
