@@ -31,6 +31,13 @@ jobs:
           channel: stable
           cache: true
 
+      - name: Apply background audio patch
+        run: |
+          python3 -m py_compile tool/apply_background_audio_patch.py
+          python3 tool/apply_background_audio_patch.py
+          test -s assets/rain_loop.mp3
+          ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 assets/rain_loop.mp3
+
       - name: Install dependencies
         run: flutter pub get
 
