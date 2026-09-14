@@ -91,7 +91,7 @@ class _MainScreenState extends State<MainScreen> {
           content: const Text('Ketuk sekali lagi untuk keluar'),
           behavior: SnackBarBehavior.floating,
           backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0.92),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
           elevation: 8,
         ),
       );
@@ -103,7 +103,6 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     final hasAudio = _audioService.currentSurah != null;
-
     final children = List<Widget>.generate(
       _screens.length,
       (index) => _screens[index] ?? const SizedBox.shrink(),
@@ -114,6 +113,7 @@ class _MainScreenState extends State<MainScreen> {
       onWillPop: _onWillPop,
       child: Scaffold(
         backgroundColor: Colors.transparent,
+        extendBody: true,
         body: Stack(
           children: [
             IndexedStack(index: _selectedIndex, children: children),
@@ -121,18 +121,12 @@ class _MainScreenState extends State<MainScreen> {
               Positioned(
                 left: 14,
                 right: 14,
-                bottom: 8,
+                bottom: 96,
                 child: SafeArea(
+                  top: false,
                   bottom: false,
-                  child: LiquidGlassCard(
-                    radius: 22,
-                    padding: EdgeInsets.zero,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(22),
-                      child: MiniPlayer(
-                        onTap: () => setState(() => _showFullPlayer = true),
-                      ),
-                    ),
+                  child: MiniPlayer(
+                    onTap: () => setState(() => _showFullPlayer = true),
                   ),
                 ),
               ),
@@ -146,78 +140,99 @@ class _MainScreenState extends State<MainScreen> {
         ),
         bottomNavigationBar: _showFullPlayer
             ? null
-            : _buildGlassNavigation(context, hasAudio),
+            : _buildReferenceNavigation(context),
       ),
     );
   }
 
-  Widget _buildGlassNavigation(BuildContext context, bool hasAudio) {
+  Widget _buildReferenceNavigation(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final selected = scheme.primary;
-    final unselected = scheme.onSurface.withValues(alpha: 0.55);
+    final unselected = Colors.white.withValues(alpha: 0.78);
 
     return SafeArea(
       top: false,
-      minimum: const EdgeInsets.fromLTRB(12, 0, 12, 10),
+      minimum: const EdgeInsets.fromLTRB(18, 6, 18, 12),
       child: LiquidGlassCard(
-        radius: 28,
-        padding: const EdgeInsets.fromLTRB(6, 6, 6, 6),
-        blur: 20,
-        child: NavigationBarTheme(
-          data: NavigationBarThemeData(
-            backgroundColor: Colors.transparent,
-            indicatorColor: selected.withValues(alpha: 0.13),
-            indicatorShape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            labelTextStyle: WidgetStatePropertyAll(
-              Theme.of(context).textTheme.labelSmall?.copyWith(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 10,
-                  ),
-            ),
-            iconTheme: WidgetStateProperty.resolveWith((states) {
-              final isSelected = states.contains(WidgetState.selected);
-              return IconThemeData(
-                size: isSelected ? 25 : 23,
-                color: isSelected ? selected : unselected,
-              );
-            }),
-          ),
-          child: NavigationBar(
-            backgroundColor: Colors.transparent,
-            selectedIndex: _selectedIndex,
-            onDestinationSelected: _onItemTapped,
-            height: 68,
-            elevation: 0,
-            labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-            destinations: const [
-              NavigationDestination(
-                icon: Icon(Icons.auto_stories_outlined),
-                selectedIcon: Icon(Icons.auto_stories),
-                label: 'Al-Quran',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.mosque_outlined),
-                selectedIcon: Icon(Icons.mosque),
-                label: 'Jadwal',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.headphones_outlined),
-                selectedIcon: Icon(Icons.headphones),
-                label: 'Murotal',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.queue_music_outlined),
-                selectedIcon: Icon(Icons.queue_music),
-                label: 'Playlist',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.settings_outlined),
-                selectedIcon: Icon(Icons.settings),
-                label: 'Pengaturan',
-              ),
+        radius: 34,
+        blur: 28,
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        tint: scheme.surface.withValues(alpha: 0.32),
+        child: SizedBox(
+          height: 86,
+          child: Row(
+            children: [
+              _navItem(context, 0, Icons.home_rounded, 'Al-Quran', selected, unselected),
+              _navItem(context, 1, Icons.mosque_rounded, 'Jadwal', selected, unselected),
+              _navItem(context, 2, Icons.person_rounded, 'Murotal', selected, unselected),
+              _navItem(context, 3, Icons.queue_music_rounded, 'Playlist', selected, unselected),
+              _navItem(context, 4, Icons.settings_rounded, 'Pengaturan', selected, unselected),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _navItem(
+    BuildContext context,
+    int index,
+    IconData icon,
+    String label,
+    Color selected,
+    Color unselected,
+  ) {
+    final isSelected = _selectedIndex == index;
+
+    return Expanded(
+      child: Semantics(
+        button: true,
+        selected: isSelected,
+        label: label,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(28),
+          onTap: () => _onItemTapped(index),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 180),
+            curve: Curves.easeOutCubic,
+            margin: const EdgeInsets.symmetric(horizontal: 2),
+            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+            decoration: BoxDecoration(
+              color: isSelected
+                  ? selected.withValues(alpha: 0.18)
+                  : Colors.transparent,
+              borderRadius: BorderRadius.circular(28),
+              border: isSelected
+                  ? Border.all(color: selected.withValues(alpha: 0.20))
+                  : null,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                AnimatedScale(
+                  duration: const Duration(milliseconds: 180),
+                  scale: isSelected ? 1.06 : 1.0,
+                  child: Icon(
+                    icon,
+                    size: isSelected ? 31 : 28,
+                    color: isSelected ? selected : unselected,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        fontSize: 10.5,
+                        height: 1,
+                        fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                        color: isSelected ? selected : unselected,
+                      ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
