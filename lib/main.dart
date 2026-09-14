@@ -39,7 +39,6 @@ class _MyAppState extends State<MyApp> {
   ThemeData _buildTheme(Brightness brightness) {
     final isDark = brightness == Brightness.dark;
     const accent = Color(0xFF2E9D6B);
-    final background = isDark ? const Color(0xFF0C1411) : const Color(0xFFF2F7F4);
     final surface = isDark ? const Color(0xFF121C18) : const Color(0xFFFFFFFF);
     final onSurface = isDark ? Colors.white : const Color(0xFF18201C);
     final outline = isDark ? const Color(0xFF293A33) : const Color(0xFFD8E4DF);
@@ -79,7 +78,7 @@ class _MyAppState extends State<MyApp> {
         titleTextStyle: GoogleFonts.spaceGrotesk(
           color: onSurface,
           fontSize: 25,
-          fontWeight: FontWeight.w750,
+          fontWeight: FontWeight.w700,
           letterSpacing: -0.6,
         ),
         iconTheme: IconThemeData(color: onSurface, size: 24),
