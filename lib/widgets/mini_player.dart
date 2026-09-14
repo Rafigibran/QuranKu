@@ -24,6 +24,9 @@ class _MiniPlayerState extends State<MiniPlayer> {
     _audioService.addListener(_update);
     _settings.addListener(_update);
     _background.addListener(_update);
+    _background.init().then((_) {
+      if (mounted) setState(() {});
+    });
   }
 
   @override
