@@ -17,7 +17,7 @@ class _QiblaScreenState extends State<QiblaScreen> {
   static const double _kaabaLat = 21.422487;
   static const double _kaabaLon = 39.826206;
 
-  StreamSubscription<double?>? _headingSubscription;
+  StreamSubscription<CompassEvent>? _headingSubscription;
   double? _heading;
   double? _qiblaBearing;
   Position? _position;
@@ -67,16 +67,22 @@ class _QiblaScreenState extends State<QiblaScreen> {
         _error = null;
       });
 
-      _headingSubscription = FlutterDeviceCompass.events.listen(
+      _headingSubscription?.cancel();
+      _headingSubscription = FlutterCompass.events?.listen(
         (event) {
           if (!mounted) return;
           final heading = event.heading;
           if (heading != null) setState(() => _heading = heading);
         },
         onError: (_) {
-          if (mounted) setState(() => _error = 'Sensor kompas tidak tersedia pada perangkat ini.');
+          if (mounted) {
+            setState(() => _error = 'Sensor kompas tidak tersedia pada perangkat ini.');
+          }
         },
       );
+      if (_headingSubscription == null && mounted) {
+        setState(() => _error = 'Sensor kompas tidak tersedia pada perangkat ini.');
+      }
     } catch (e) {
       if (!mounted) return;
       setState(() {
@@ -315,7 +321,10 @@ class _CompassPainter extends CustomPainter {
     final labels = {'U': 0.0, 'T': 90.0, 'S': 180.0, 'B': 270.0};
     labels.forEach((label, degree) {
       final angle = degree * math.pi / 180;
-      final position = center + Offset(math.sin(angle) * (radius - 38), -math.cos(angle) * (radius - 38));
+      final position = center + Offset(
+        math.sin(angle) * (radius - 38),
+        -math.cos(angle) * (radius - 38),
+      );
       textPainter.text = TextSpan(
         text: label,
         style: TextStyle(
