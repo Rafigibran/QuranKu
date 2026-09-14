@@ -24,7 +24,7 @@ dependencies:
   dio: ^5.9.1
   path_provider: ^2.1.5
   home_widget: ^0.9.4
-  flutter_device_compass: ^2.2.0
+  flutter_device_compass: ^2.0.1
   geolocator: ^14.0.3
 
 dev_dependencies:
