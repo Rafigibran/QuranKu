@@ -4,7 +4,6 @@ import 'surah_list_screen.dart';
 import 'prayer_times_screen.dart';
 import 'murotal_screen.dart';
 import 'playlist_screen.dart';
-import 'qibla_screen.dart';
 import 'settings_screen.dart';
 import '../services/audio_service.dart';
 import '../services/app_language_service.dart';
@@ -24,9 +23,7 @@ class _MainScreenState extends State<MainScreen> {
   final AudioService _audioService = AudioService();
   final AppLanguageService _language = AppLanguageService();
 
-  // Lazily create tabs. Previously every screen was instantiated at startup,
-  // allowing dialogs/sheets from hidden screens to appear over Quran.
-  late final List<Widget?> _screens = List<Widget?>.filled(6, null);
+  late final List<Widget?> _screens = List<Widget?>.filled(5, null);
 
   @override
   void initState() {
@@ -61,9 +58,6 @@ class _MainScreenState extends State<MainScreen> {
         _screens[index] = const PlaylistScreen();
         break;
       case 4:
-        _screens[index] = const QiblaScreen();
-        break;
-      case 5:
         _screens[index] = const SettingsScreen();
         break;
       default:
@@ -198,11 +192,6 @@ class _MainScreenState extends State<MainScreen> {
                         icon: const Icon(Icons.queue_music_outlined),
                         selectedIcon: const Icon(Icons.queue_music),
                         label: _language.t('playlist'),
-                      ),
-                      NavigationDestination(
-                        icon: const Icon(Icons.explore_outlined),
-                        selectedIcon: const Icon(Icons.explore),
-                        label: _language.t('qibla'),
                       ),
                       NavigationDestination(
                         icon: const Icon(Icons.settings_outlined),
