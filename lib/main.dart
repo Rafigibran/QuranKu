@@ -2,14 +2,10 @@ import 'package:flutter/material.dart';
 import 'screens/splash_screen.dart';
 import 'screens/main_screen.dart';
 import 'services/settings_service.dart';
-import 'services/app_language_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SettingsService().init();
-  await AppLanguageService().init();
-  // Feature services are initialized lazily by the features that use them.
-  // This prevents startup dialogs/overlays from covering the Quran screen.
   runApp(const MyApp());
 }
 
@@ -22,19 +18,16 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final SettingsService _settings = SettingsService();
-  final AppLanguageService _language = AppLanguageService();
 
   @override
   void initState() {
     super.initState();
     _settings.addListener(_onChanged);
-    _language.addListener(_onChanged);
   }
 
   @override
   void dispose() {
     _settings.removeListener(_onChanged);
-    _language.removeListener(_onChanged);
     super.dispose();
   }
 
@@ -47,8 +40,6 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'QuranKu',
       debugShowCheckedModeBanner: false,
-      locale: _language.locale,
-      supportedLocales: const [Locale('id'), Locale('en')],
       themeMode: _settings.themeMode,
       darkTheme: ThemeData(
         brightness: Brightness.dark,
