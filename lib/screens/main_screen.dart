@@ -7,6 +7,7 @@ import 'settings_screen.dart';
 import '../services/audio_service.dart';
 import '../widgets/mini_player.dart';
 import '../widgets/full_player_view.dart';
+import '../widgets/liquid_glass.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -86,11 +87,12 @@ class _MainScreenState extends State<MainScreen> {
         now.difference(_currentBackPressTime!) > const Duration(seconds: 2)) {
       _currentBackPressTime = now;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Ketuk dua kali untuk keluar'),
-          backgroundColor: Color(0xFF2A2A2A),
+        SnackBar(
+          content: const Text('Ketuk sekali lagi untuk keluar'),
           behavior: SnackBarBehavior.floating,
-          duration: Duration(seconds: 2),
+          backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0.92),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          elevation: 8,
         ),
       );
       return false;
@@ -101,7 +103,6 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     final hasAudio = _audioService.currentSurah != null;
-    final colorScheme = Theme.of(context).colorScheme;
 
     final children = List<Widget>.generate(
       _screens.length,
@@ -112,17 +113,27 @@ class _MainScreenState extends State<MainScreen> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: Colors.transparent,
         body: Stack(
           children: [
             IndexedStack(index: _selectedIndex, children: children),
             if (!_showFullPlayer && hasAudio)
               Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: MiniPlayer(
-                  onTap: () => setState(() => _showFullPlayer = true),
+                left: 14,
+                right: 14,
+                bottom: 8,
+                child: SafeArea(
+                  bottom: false,
+                  child: LiquidGlassCard(
+                    radius: 22,
+                    padding: EdgeInsets.zero,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(22),
+                      child: MiniPlayer(
+                        onTap: () => setState(() => _showFullPlayer = true),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             if (_showFullPlayer && hasAudio)
@@ -135,61 +146,80 @@ class _MainScreenState extends State<MainScreen> {
         ),
         bottomNavigationBar: _showFullPlayer
             ? null
-            : Container(
-                decoration: BoxDecoration(
-                  border: Border(top: BorderSide(color: colorScheme.outline)),
-                ),
-                child: NavigationBarTheme(
-                  data: NavigationBarThemeData(
-                    indicatorColor: colorScheme.primary.withOpacity(0.2),
-                    labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-                    height: 52,
-                    iconTheme: WidgetStateProperty.resolveWith((states) {
-                      if (states.contains(WidgetState.selected)) {
-                        return IconThemeData(size: 20, color: colorScheme.primary);
-                      }
-                      return IconThemeData(
-                        size: 20,
-                        color: colorScheme.onSurface.withOpacity(0.5),
-                      );
-                    }),
+            : _buildGlassNavigation(context, hasAudio),
+      ),
+    );
+  }
+
+  Widget _buildGlassNavigation(BuildContext context, bool hasAudio) {
+    final scheme = Theme.of(context).colorScheme;
+    final selected = scheme.primary;
+    final unselected = scheme.onSurface.withValues(alpha: 0.55);
+
+    return SafeArea(
+      top: false,
+      minimum: const EdgeInsets.fromLTRB(12, 0, 12, 10),
+      child: LiquidGlassCard(
+        radius: 28,
+        padding: const EdgeInsets.fromLTRB(6, 6, 6, 6),
+        blur: 20,
+        child: NavigationBarTheme(
+          data: NavigationBarThemeData(
+            backgroundColor: Colors.transparent,
+            indicatorColor: selected.withValues(alpha: 0.13),
+            indicatorShape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            labelTextStyle: WidgetStatePropertyAll(
+              Theme.of(context).textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 10,
                   ),
-                  child: NavigationBar(
-                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                    selectedIndex: _selectedIndex,
-                    onDestinationSelected: _onItemTapped,
-                    height: 52,
-                    elevation: 0,
-                    destinations: const [
-                      NavigationDestination(
-                        icon: Icon(Icons.auto_stories_outlined),
-                        selectedIcon: Icon(Icons.auto_stories),
-                        label: 'Al-Quran',
-                      ),
-                      NavigationDestination(
-                        icon: Icon(Icons.mosque_outlined),
-                        selectedIcon: Icon(Icons.mosque),
-                        label: 'Jadwal',
-                      ),
-                      NavigationDestination(
-                        icon: Icon(Icons.headphones_outlined),
-                        selectedIcon: Icon(Icons.headphones),
-                        label: 'Murotal',
-                      ),
-                      NavigationDestination(
-                        icon: Icon(Icons.queue_music_outlined),
-                        selectedIcon: Icon(Icons.queue_music),
-                        label: 'Daftar Putar',
-                      ),
-                      NavigationDestination(
-                        icon: Icon(Icons.settings_outlined),
-                        selectedIcon: Icon(Icons.settings),
-                        label: 'Pengaturan',
-                      ),
-                    ],
-                  ),
-                ),
+            ),
+            iconTheme: WidgetStateProperty.resolveWith((states) {
+              final isSelected = states.contains(WidgetState.selected);
+              return IconThemeData(
+                size: isSelected ? 25 : 23,
+                color: isSelected ? selected : unselected,
+              );
+            }),
+          ),
+          child: NavigationBar(
+            backgroundColor: Colors.transparent,
+            selectedIndex: _selectedIndex,
+            onDestinationSelected: _onItemTapped,
+            height: 68,
+            elevation: 0,
+            labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+            destinations: const [
+              NavigationDestination(
+                icon: Icon(Icons.auto_stories_outlined),
+                selectedIcon: Icon(Icons.auto_stories),
+                label: 'Al-Quran',
               ),
+              NavigationDestination(
+                icon: Icon(Icons.mosque_outlined),
+                selectedIcon: Icon(Icons.mosque),
+                label: 'Jadwal',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.headphones_outlined),
+                selectedIcon: Icon(Icons.headphones),
+                label: 'Murotal',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.queue_music_outlined),
+                selectedIcon: Icon(Icons.queue_music),
+                label: 'Playlist',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.settings_outlined),
+                selectedIcon: Icon(Icons.settings),
+                label: 'Pengaturan',
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
