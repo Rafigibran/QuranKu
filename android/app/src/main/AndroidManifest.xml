@@ -4,8 +4,6 @@
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <application
         android:label="QuranKu"
         android:name="${applicationName}"
@@ -52,7 +50,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/prayer_location_widget_info" />
         </receiver>
-        <receiver android:name="es.antonborri.home_widget.HomeWidgetBackgroundReceiver"
+        <receiver android:name="es.antonborriorri.home_widget.HomeWidgetBackgroundReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="es.antonborri.home_widget.action.BACKGROUND" />
