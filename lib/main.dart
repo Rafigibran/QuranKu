@@ -4,10 +4,12 @@ import 'screens/main_screen.dart';
 import 'services/settings_service.dart';
 import 'services/widget_service.dart';
 import 'services/background_audio_service.dart';
+import 'services/app_language_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SettingsService().init();
+  await AppLanguageService().init();
   await WidgetService.init();
   await BackgroundAudioService().init();
   runApp(const MyApp());
@@ -22,20 +24,23 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final SettingsService _settings = SettingsService();
+  final AppLanguageService _language = AppLanguageService();
 
   @override
   void initState() {
     super.initState();
-    _settings.addListener(_onSettingsChanged);
+    _settings.addListener(_onChanged);
+    _language.addListener(_onChanged);
   }
 
   @override
   void dispose() {
-    _settings.removeListener(_onSettingsChanged);
+    _settings.removeListener(_onChanged);
+    _language.removeListener(_onChanged);
     super.dispose();
   }
 
-  void _onSettingsChanged() {
+  void _onChanged() {
     if (mounted) setState(() {});
   }
 
@@ -44,6 +49,8 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'QuranKu',
       debugShowCheckedModeBanner: false,
+      locale: _language.locale,
+      supportedLocales: const [Locale('id'), Locale('en')],
       themeMode: _settings.themeMode,
       darkTheme: ThemeData(
         brightness: Brightness.dark,
