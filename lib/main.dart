@@ -1,58 +1,20 @@
 import 'package:flutter/material.dart';
-import 'screens/splash_screen.dart';
-import 'screens/main_screen.dart';
-import 'services/settings_service.dart';
-import 'services/widget_service.dart';
-import 'services/background_audio_service.dart';
-import 'services/app_language_service.dart';
+import 'screens/quran_home_screen.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  await SettingsService().init();
-  await AppLanguageService().init();
-  await WidgetService.init();
-  await BackgroundAudioService().init();
-  runApp(const MyApp());
+  runApp(const QuranKuApp());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  final SettingsService _settings = SettingsService();
-  final AppLanguageService _language = AppLanguageService();
-
-  @override
-  void initState() {
-    super.initState();
-    _settings.addListener(_onChanged);
-    _language.addListener(_onChanged);
-  }
-
-  @override
-  void dispose() {
-    _settings.removeListener(_onChanged);
-    _language.removeListener(_onChanged);
-    super.dispose();
-  }
-
-  void _onChanged() {
-    if (mounted) setState(() {});
-  }
+class QuranKuApp extends StatelessWidget {
+  const QuranKuApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'QuranKu',
       debugShowCheckedModeBanner: false,
-      locale: _language.locale,
-      supportedLocales: const [Locale('id'), Locale('en')],
-      themeMode: _settings.themeMode,
-      darkTheme: ThemeData(
+      theme: ThemeData(
         brightness: Brightness.dark,
         scaffoldBackgroundColor: const Color(0xFF0A0A0A),
         primaryColor: const Color(0xFF40B779),
@@ -64,19 +26,7 @@ class _MyAppState extends State<MyApp> {
         ),
         useMaterial3: true,
       ),
-      theme: ThemeData(
-        brightness: Brightness.light,
-        scaffoldBackgroundColor: const Color(0xFFF5F5F5),
-        primaryColor: const Color(0xFF40B779),
-        colorScheme: const ColorScheme.light(
-          primary: Color(0xFF40B779),
-          surface: Color(0xFFF5F5F5),
-          onSurface: Color(0xFF1A1A1A),
-          outline: Color(0xFFE0E0E0),
-        ),
-        useMaterial3: true,
-      ),
-      home: const SplashScreen(nextScreen: MainScreen()),
+      home: const QuranHomeScreen(),
     );
   }
 }
