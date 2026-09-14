@@ -49,13 +49,9 @@ jobs:
           from pathlib import Path
           p = Path('tool/apply_background_audio_patch.py')
           text = p.read_text(encoding='utf-8')
-          old = 'rain_path.write_bytes(base64.b64decode(RAIN_MP3_B64))'
+          old = '    rain_path.write_bytes(base64.b64decode(RAIN_MP3_B64))'
           if old in text:
-              text = text.replace(
-                  old,
-                  "if not rain_path.exists() or rain_path.stat().st_size < 1000:\n    rain_path.write_bytes(base64.b64decode(RAIN_MP3_B64 + '=' * (-len(RAIN_MP3_B64) % 4)))",
-                  1,
-              )
+              text = text.replace(old, '    pass', 1)
               p.write_text(text, encoding='utf-8')
           PY
           python3 -m py_compile tool/apply_background_audio_patch.py
