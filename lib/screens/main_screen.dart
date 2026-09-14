@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'surah_list_screen.dart';
 import 'prayer_times_screen.dart';
 import 'murotal_screen.dart';
+import 'playlist_screen.dart';
+import 'qibla_screen.dart';
 import 'settings_screen.dart';
 import '../services/audio_service.dart';
 import '../widgets/mini_player.dart';
@@ -24,6 +26,8 @@ class _MainScreenState extends State<MainScreen> {
     const SurahListScreen(),
     const PrayerTimesScreen(),
     const MurotalScreen(),
+    const PlaylistScreen(),
+    const QiblaScreen(),
     const SettingsScreen(),
   ];
 
@@ -46,7 +50,6 @@ class _MainScreenState extends State<MainScreen> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      // Collapse player on tab switch so user can see the new tab content
       _showFullPlayer = false;
     });
   }
@@ -54,17 +57,13 @@ class _MainScreenState extends State<MainScreen> {
   DateTime? _currentBackPressTime;
 
   Future<bool> _onWillPop() async {
-    // 1. If Full Player is showing, close it
     if (_showFullPlayer) {
-      setState(() {
-        _showFullPlayer = false;
-      });
-      return false; // Do not exit app
+      setState(() => _showFullPlayer = false);
+      return false;
     }
 
-    // 2. Double click to exit to prevent accidental touches
     final now = DateTime.now();
-    if (_currentBackPressTime == null || 
+    if (_currentBackPressTime == null ||
         now.difference(_currentBackPressTime!) > const Duration(seconds: 2)) {
       _currentBackPressTime = now;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -80,8 +79,8 @@ class _MainScreenState extends State<MainScreen> {
       );
       return false;
     }
-    
-    return true; // Allow exit
+
+    return true;
   }
 
   @override
@@ -95,21 +94,16 @@ class _MainScreenState extends State<MainScreen> {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Stack(
           children: [
-            IndexedStack(
-              index: _selectedIndex,
-              children: _screens,
-            ),
-            
+            IndexedStack(index: _selectedIndex, children: _screens),
             if (!_showFullPlayer && hasAudio)
               Positioned(
-                left: 0, 
-                right: 0, 
+                left: 0,
+                right: 0,
                 bottom: 0,
                 child: MiniPlayer(
                   onTap: () => setState(() => _showFullPlayer = true),
                 ),
               ),
-
             if (_showFullPlayer && hasAudio)
               Positioned.fill(
                 child: FullPlayerView(
@@ -118,53 +112,68 @@ class _MainScreenState extends State<MainScreen> {
               ),
           ],
         ),
-        bottomNavigationBar: _showFullPlayer ? null : Container(
-          decoration: BoxDecoration(
-            border: Border(top: BorderSide(color: colorScheme.outline)),
-          ),
-          child: NavigationBarTheme(
-            data: NavigationBarThemeData(
-              indicatorColor: colorScheme.primary.withOpacity(0.2),
-              labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-              height: 48,
-              iconTheme: WidgetStateProperty.resolveWith((states) {
-                if (states.contains(WidgetState.selected)) {
-                  return IconThemeData(size: 20, color: colorScheme.primary);
-                }
-                return IconThemeData(size: 20, color: colorScheme.onSurface.withOpacity(0.5));
-              }),
-            ),
-            child: NavigationBar(
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              selectedIndex: _selectedIndex,
-              onDestinationSelected: _onItemTapped,
-              height: 48,
-              elevation: 0,
-              destinations: const [
-                NavigationDestination(
-                  icon: Icon(Icons.auto_stories_outlined),
-                  selectedIcon: Icon(Icons.auto_stories),
-                  label: 'Quran',
+        bottomNavigationBar: _showFullPlayer
+            ? null
+            : Container(
+                decoration: BoxDecoration(
+                  border: Border(top: BorderSide(color: colorScheme.outline)),
                 ),
-                NavigationDestination(
-                  icon: Icon(Icons.mosque_outlined),
-                  selectedIcon: Icon(Icons.mosque),
-                  label: 'Times',
+                child: NavigationBarTheme(
+                  data: NavigationBarThemeData(
+                    indicatorColor: colorScheme.primary.withOpacity(0.2),
+                    labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+                    height: 52,
+                    iconTheme: WidgetStateProperty.resolveWith((states) {
+                      if (states.contains(WidgetState.selected)) {
+                        return IconThemeData(size: 20, color: colorScheme.primary);
+                      }
+                      return IconThemeData(
+                        size: 20,
+                        color: colorScheme.onSurface.withOpacity(0.5),
+                      );
+                    }),
+                  ),
+                  child: NavigationBar(
+                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                    selectedIndex: _selectedIndex,
+                    onDestinationSelected: _onItemTapped,
+                    height: 52,
+                    elevation: 0,
+                    destinations: const [
+                      NavigationDestination(
+                        icon: Icon(Icons.auto_stories_outlined),
+                        selectedIcon: Icon(Icons.auto_stories),
+                        label: 'Quran',
+                      ),
+                      NavigationDestination(
+                        icon: Icon(Icons.mosque_outlined),
+                        selectedIcon: Icon(Icons.mosque),
+                        label: 'Times',
+                      ),
+                      NavigationDestination(
+                        icon: Icon(Icons.headphones_outlined),
+                        selectedIcon: Icon(Icons.headphones),
+                        label: 'Murotal',
+                      ),
+                      NavigationDestination(
+                        icon: Icon(Icons.queue_music_outlined),
+                        selectedIcon: Icon(Icons.queue_music),
+                        label: 'Playlist',
+                      ),
+                      NavigationDestination(
+                        icon: Icon(Icons.explore_outlined),
+                        selectedIcon: Icon(Icons.explore),
+                        label: 'Qibla',
+                      ),
+                      NavigationDestination(
+                        icon: Icon(Icons.settings_outlined),
+                        selectedIcon: Icon(Icons.settings),
+                        label: 'Settings',
+                      ),
+                    ],
+                  ),
                 ),
-                NavigationDestination(
-                  icon: Icon(Icons.headphones_outlined),
-                  selectedIcon: Icon(Icons.headphones),
-                  label: 'Murotal',
-                ),
-                NavigationDestination(
-                  icon: Icon(Icons.settings_outlined),
-                  selectedIcon: Icon(Icons.settings),
-                  label: 'Settings',
-                ),
-              ],
-            ),
-          ),
-        ),
+              ),
       ),
     );
   }
