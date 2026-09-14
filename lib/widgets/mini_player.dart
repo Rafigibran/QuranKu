@@ -46,12 +46,12 @@ class _MiniPlayerState extends State<MiniPlayer> {
       backgroundColor: Colors.transparent,
       builder: (context) => SafeArea(
         top: false,
-        child: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface.withValues(alpha: .97),
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-          ),
+        child: LiquidGlassCard(
+          radius: 30,
+          margin: const EdgeInsets.fromLTRB(14, 0, 14, 14),
           padding: const EdgeInsets.fromLTRB(22, 14, 22, 28),
+          blur: 24,
+          tint: Theme.of(context).colorScheme.surface.withValues(alpha: .45),
           child: StatefulBuilder(
             builder: (context, setSheetState) {
               final scheme = Theme.of(context).colorScheme;
@@ -59,22 +59,48 @@ class _MiniPlayerState extends State<MiniPlayer> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Center(child: Container(width: 42, height: 4, decoration: BoxDecoration(color: scheme.outline, borderRadius: BorderRadius.circular(99)))),
-                  const SizedBox(height: 20),
-                  Text('Suara latar', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800)),
-                  const SizedBox(height: 6),
-                  Text('Suara hujan mengikuti pemutaran surah.', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: scheme.onSurface.withValues(alpha: .62))),
-                  const SizedBox(height: 12),
-                  SwitchListTile.adaptive(
-                    contentPadding: EdgeInsets.zero,
-                    title: const Text('Aktifkan suara hujan'),
-                    value: _background.enabled,
-                    onChanged: (value) async {
-                      await _background.setEnabled(value);
-                      setSheetState(() {});
-                    },
+                  Center(
+                    child: Container(
+                      width: 44,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: scheme.onSurface.withValues(alpha: .28),
+                        borderRadius: BorderRadius.circular(99),
+                      ),
+                    ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: scheme.primary.withValues(alpha: .14),
+                        ),
+                        child: Icon(Icons.water_drop_rounded, color: scheme.primary),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Suara latar', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800)),
+                            Text('Suara hujan mengikuti pemutaran surah.', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: scheme.onSurface.withValues(alpha: .62))),
+                          ],
+                        ),
+                      ),
+                      Switch.adaptive(
+                        value: _background.enabled,
+                        onChanged: (value) async {
+                          await _background.setEnabled(value);
+                          setSheetState(() {});
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 18),
                   _slider('Volume Al-Qur’an', _background.mainVolume, (value) async {
                     await _background.setMainVolume(value);
                     setSheetState(() {});
@@ -97,8 +123,15 @@ class _MiniPlayerState extends State<MiniPlayer> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(title, style: const TextStyle(fontWeight: FontWeight.w700)), Text('${(value * 100).round()}%', style: TextStyle(color: scheme.primary, fontWeight: FontWeight.w700))]),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(title, style: const TextStyle(fontWeight: FontWeight.w700)),
+            Text('${(value * 100).round()}%', style: TextStyle(color: scheme.primary, fontWeight: FontWeight.w800)),
+          ],
+        ),
         Slider(value: value, onChanged: onChanged),
+        const SizedBox(height: 6),
       ],
     );
   }
@@ -110,49 +143,114 @@ class _MiniPlayerState extends State<MiniPlayer> {
     final scheme = Theme.of(context).colorScheme;
 
     return LiquidGlassCard(
-      radius: 22,
-      padding: const EdgeInsets.fromLTRB(12, 8, 10, 8),
-      tint: scheme.surface.withValues(alpha: .32),
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: widget.onTap,
-        child: Row(
-          children: [
-            Container(
-              width: 46,
-              height: 46,
+      radius: 26,
+      blur: 26,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      tint: scheme.surface.withValues(alpha: .34),
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: widget.onTap,
+            child: Container(
+              width: 58,
+              height: 58,
               decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: LinearGradient(colors: [scheme.primary.withValues(alpha: .85), scheme.primary.withValues(alpha: .35)]),
+                borderRadius: BorderRadius.circular(16),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    scheme.primary.withValues(alpha: .92),
+                    const Color(0xFF143F37),
+                  ],
+                ),
+                border: Border.all(color: Colors.white.withValues(alpha: .14)),
+                boxShadow: [
+                  BoxShadow(
+                    color: scheme.primary.withValues(alpha: .18),
+                    blurRadius: 16,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
               ),
-              child: const Icon(Icons.menu_book_rounded, color: Colors.white, size: 23),
+              child: const Icon(Icons.menu_book_rounded, color: Colors.white, size: 28),
             ),
-            const SizedBox(width: 12),
-            Expanded(
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: widget.onTap,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(surah.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: GoogleFonts.spaceGrotesk(fontSize: 15, fontWeight: FontWeight.w800)),
+                  Text(
+                    '${surah.number}. ${surah.name}',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.spaceGrotesk(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                      color: scheme.onSurface,
+                    ),
+                  ),
                   const SizedBox(height: 2),
-                  Text('Ayat ${_settings.formatNumber(_audio.currentAyah)}', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: scheme.primary, fontWeight: FontWeight.w700)),
+                  Text(
+                    'Mishary Rashid Alafasy • Ayat ${_settings.formatNumber(_audio.currentAyah)}',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.spaceGrotesk(
+                      fontSize: 12,
+                      color: scheme.onSurface.withValues(alpha: .62),
+                    ),
+                  ),
                 ],
               ),
             ),
-            IconButton(tooltip: 'Suara latar', onPressed: _openBackground, icon: Icon(_background.enabled ? Icons.water_drop_rounded : Icons.water_drop_outlined, color: _background.enabled ? scheme.primary : scheme.onSurface.withValues(alpha: .72))),
-            IconButton(tooltip: 'Sebelumnya', onPressed: _audio.hasPrevSurah() ? _audio.playPrevSurah : null, icon: const Icon(Icons.skip_previous_rounded)),
-            SizedBox(
-              width: 48,
-              height: 48,
-              child: LiquidGlassCard(
-                radius: 16,
-                padding: EdgeInsets.zero,
-                tint: scheme.primary.withValues(alpha: .16),
-                onTap: () => _audio.isPlaying ? _audio.pause() : _audio.resume(),
-                child: Icon(_audio.isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded, color: scheme.primary, size: 27),
-              ),
-            ),
-            IconButton(tooltip: 'Berikutnya', onPressed: _audio.hasNextSurah() ? _audio.playNextSurah : null, icon: const Icon(Icons.skip_next_rounded)),
-          ],
+          ),
+          _miniAction(
+            icon: _background.enabled ? Icons.water_drop_rounded : Icons.water_drop_outlined,
+            color: _background.enabled ? scheme.primary : scheme.onSurface.withValues(alpha: .76),
+            tooltip: 'Suara latar',
+            onPressed: _openBackground,
+          ),
+          _miniAction(
+            icon: _audio.hasNextSurah() ? Icons.play_arrow_rounded : Icons.play_arrow_rounded,
+            color: scheme.onSurface.withValues(alpha: .90),
+            tooltip: 'Buka player',
+            onPressed: widget.onTap,
+          ),
+          _miniAction(
+            icon: Icons.skip_next_rounded,
+            color: _audio.hasNextSurah() ? scheme.onSurface : scheme.onSurface.withValues(alpha: .30),
+            tooltip: 'Berikutnya',
+            onPressed: _audio.hasNextSurah() ? _audio.playNextSurah : null,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _miniAction({
+    required IconData icon,
+    required Color color,
+    required String tooltip,
+    required VoidCallback? onPressed,
+  }) {
+    final scheme = Theme.of(context).colorScheme;
+    return Tooltip(
+      message: tooltip,
+      child: SizedBox(
+        width: 48,
+        height: 48,
+        child: LiquidGlassCard(
+          radius: 16,
+          padding: EdgeInsets.zero,
+          blur: 14,
+          tint: scheme.surface.withValues(alpha: .20),
+          onTap: onPressed,
+          child: Icon(icon, color: color, size: 25),
         ),
       ),
     );
