@@ -24,12 +24,14 @@ class _MainScreenState extends State<MainScreen> {
   final AudioService _audioService = AudioService();
   final AppLanguageService _language = AppLanguageService();
 
+  // Do not mount Qibla at startup. Qibla uses Android location/compass APIs,
+  // and mounting it inside IndexedStack can cause a system permission overlay
+  // to cover the Quran screen on some devices.
   final List<Widget> _screens = const [
     SurahListScreen(),
     PrayerTimesScreen(),
     MurotalScreen(),
     PlaylistScreen(),
-    QiblaScreen(),
     SettingsScreen(),
   ];
 
@@ -56,6 +58,13 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void _onItemTapped(int index) {
+    if (index == 4) {
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) => const QiblaScreen()),
+      );
+      return;
+    }
+
     setState(() {
       _selectedIndex = index;
       _showFullPlayer = false;
@@ -71,11 +80,15 @@ class _MainScreenState extends State<MainScreen> {
     }
 
     final now = DateTime.now();
-    if (_currentBackPressTime == null || now.difference(_currentBackPressTime!) > const Duration(seconds: 2)) {
+    if (_currentBackPressTime == null ||
+        now.difference(_currentBackPressTime!) > const Duration(seconds: 2)) {
       _currentBackPressTime = now;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(_language.t('double_tap_exit'), style: GoogleFonts.spaceGrotesk(color: Colors.white)),
+          content: Text(
+            _language.t('double_tap_exit'),
+            style: GoogleFonts.spaceGrotesk(color: Colors.white),
+          ),
           backgroundColor: const Color(0xFF2A2A2A),
           behavior: SnackBarBehavior.floating,
           duration: const Duration(seconds: 2),
@@ -99,23 +112,41 @@ class _MainScreenState extends State<MainScreen> {
           children: [
             IndexedStack(index: _selectedIndex, children: _screens),
             if (!_showFullPlayer && hasAudio)
-              Positioned(left: 0, right: 0, bottom: 0, child: MiniPlayer(onTap: () => setState(() => _showFullPlayer = true))),
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: MiniPlayer(
+                  onTap: () => setState(() => _showFullPlayer = true),
+                ),
+              ),
             if (_showFullPlayer && hasAudio)
-              Positioned.fill(child: FullPlayerView(onCollapse: () => setState(() => _showFullPlayer = false))),
+              Positioned.fill(
+                child: FullPlayerView(
+                  onCollapse: () => setState(() => _showFullPlayer = false),
+                ),
+              ),
           ],
         ),
         bottomNavigationBar: _showFullPlayer
             ? null
             : Container(
-                decoration: BoxDecoration(border: Border(top: BorderSide(color: colorScheme.outline))),
+                decoration: BoxDecoration(
+                  border: Border(top: BorderSide(color: colorScheme.outline)),
+                ),
                 child: NavigationBarTheme(
                   data: NavigationBarThemeData(
                     indicatorColor: colorScheme.primary.withOpacity(0.2),
                     labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
                     height: 52,
                     iconTheme: WidgetStateProperty.resolveWith((states) {
-                      if (states.contains(WidgetState.selected)) return IconThemeData(size: 20, color: colorScheme.primary);
-                      return IconThemeData(size: 20, color: colorScheme.onSurface.withOpacity(0.5));
+                      if (states.contains(WidgetState.selected)) {
+                        return IconThemeData(size: 20, color: colorScheme.primary);
+                      }
+                      return IconThemeData(
+                        size: 20,
+                        color: colorScheme.onSurface.withOpacity(0.5),
+                      );
                     }),
                   ),
                   child: NavigationBar(
@@ -125,12 +156,36 @@ class _MainScreenState extends State<MainScreen> {
                     height: 52,
                     elevation: 0,
                     destinations: [
-                      NavigationDestination(icon: const Icon(Icons.auto_stories_outlined), selectedIcon: const Icon(Icons.auto_stories), label: _language.t('quran')),
-                      NavigationDestination(icon: const Icon(Icons.mosque_outlined), selectedIcon: const Icon(Icons.mosque), label: _language.t('times')),
-                      NavigationDestination(icon: const Icon(Icons.headphones_outlined), selectedIcon: const Icon(Icons.headphones), label: _language.t('murotal')),
-                      NavigationDestination(icon: const Icon(Icons.queue_music_outlined), selectedIcon: const Icon(Icons.queue_music), label: _language.t('playlist')),
-                      NavigationDestination(icon: const Icon(Icons.explore_outlined), selectedIcon: const Icon(Icons.explore), label: _language.t('qibla')),
-                      NavigationDestination(icon: const Icon(Icons.settings_outlined), selectedIcon: const Icon(Icons.settings), label: _language.t('settings')),
+                      NavigationDestination(
+                        icon: const Icon(Icons.auto_stories_outlined),
+                        selectedIcon: const Icon(Icons.auto_stories),
+                        label: _language.t('quran'),
+                      ),
+                      NavigationDestination(
+                        icon: const Icon(Icons.mosque_outlined),
+                        selectedIcon: const Icon(Icons.mosque),
+                        label: _language.t('times'),
+                      ),
+                      NavigationDestination(
+                        icon: const Icon(Icons.headphones_outlined),
+                        selectedIcon: const Icon(Icons.headphones),
+                        label: _language.t('murotal'),
+                      ),
+                      NavigationDestination(
+                        icon: const Icon(Icons.queue_music_outlined),
+                        selectedIcon: const Icon(Icons.queue_music),
+                        label: _language.t('playlist'),
+                      ),
+                      NavigationDestination(
+                        icon: const Icon(Icons.explore_outlined),
+                        selectedIcon: const Icon(Icons.explore),
+                        label: _language.t('qibla'),
+                      ),
+                      NavigationDestination(
+                        icon: const Icon(Icons.settings_outlined),
+                        selectedIcon: const Icon(Icons.settings),
+                        label: _language.t('settings'),
+                      ),
                     ],
                   ),
                 ),
