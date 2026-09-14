@@ -139,7 +139,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _storageTile(
                 context,
                 'Kelola Penyimpanan',
-                '${_settings.formatBytes(_storageInfo['totalSize'] ?? 0)} used',
+                '${_settings.formatBytes(_storageInfo['totalSize'] ?? 0)} digunakan',
                 '',
                 Icons.storage,
                 () async {
@@ -317,13 +317,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Future<void> _showThemeDialog(BuildContext context) async {
     final selected = await showDialog<ThemeMode>(
       context: context,
-      builder: (context) => const SimpleDialog(
-        title: Text('Pilih Tema'),
+      builder: (context) => SimpleDialog(
+        title: const Text('Pilih Tema'),
         children: [
           SimpleDialogOption(
-            value: null,
-            onPressed: null,
-            child: Text(''),
+            onPressed: () => Navigator.pop(context, ThemeMode.light),
+            child: const Text('Terang'),
+          ),
+          SimpleDialogOption(
+            onPressed: () => Navigator.pop(context, ThemeMode.dark),
+            child: const Text('Gelap'),
           ),
         ],
       ),
