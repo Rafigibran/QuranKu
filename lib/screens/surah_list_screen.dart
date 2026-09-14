@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../models/surah.dart';
 import '../services/api_service.dart';
-import '../services/download_service.dart';
 import '../services/settings_service.dart';
 import 'surah_detail_screen.dart';
 import 'download_screen.dart';
@@ -24,7 +23,8 @@ class _SurahListScreenState extends State<SurahListScreen> with TickerProviderSt
   @override
   void initState() {
     super.initState();
-    DownloadService().init();
+    // Do not initialize notifications/download services while Quran is starting.
+    // The Download Manager initializes them only when it is explicitly opened.
     _settings.addListener(_onSettingsUpdate);
 
     _surahListFuture = ApiService().fetchSurahs().then((surahs) {
@@ -62,11 +62,25 @@ class _SurahListScreenState extends State<SurahListScreen> with TickerProviderSt
     });
   }
 
+  Future<void> _openDownloadManager() async {
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.7,
+        minChildSize: 0.5,
+        maxChildSize: 0.9,
+        builder: (context, scrollController) => DownloadScreen(
+          scrollController: scrollController,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -98,24 +112,10 @@ class _SurahListScreenState extends State<SurahListScreen> with TickerProviderSt
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         scrolledUnderElevation: 0,
         elevation: 0,
-        automaticallyImplyLeading: false, // Don't show back button
+        automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                backgroundColor: Colors.transparent,
-                builder: (context) => DraggableScrollableSheet(
-                  initialChildSize: 0.7,
-                  minChildSize: 0.5,
-                  maxChildSize: 0.9,
-                  builder: (context, scrollController) => DownloadScreen(
-                    scrollController: scrollController,
-                  ),
-                ),
-              );
-            },
+            onPressed: _openDownloadManager,
             icon: Icon(Icons.download_outlined, color: colorScheme.primary),
             tooltip: 'Download Manager',
           ),
@@ -156,22 +156,26 @@ class _SurahListScreenState extends State<SurahListScreen> with TickerProviderSt
           } else if (snapshot.hasError) {
             return Center(child: Text('Failed to load data', style: TextStyle(color: Colors.red)));
           } else if (_filteredSurahs.isEmpty && _allSurahs.isNotEmpty) {
-             return Center(child: Text("No Surahs found matching '${_searchController.text}'", style: TextStyle(color: colorScheme.onSurface.withValues(alpha: 0.7))));
+            return Center(
+              child: Text(
+                "No Surahs found matching '${_searchController.text}'",
+                style: TextStyle(color: colorScheme.onSurface.withValues(alpha: 0.7)),
+              ),
+            );
           } else if (_allSurahs.isEmpty) {
-             // Still loading or empty
-             if (snapshot.connectionState == ConnectionState.done) {
-               return const Center(child: Text("No Surahs found"));
-             }
-             return const SizedBox.shrink(); // Loading handled above
+            if (snapshot.connectionState == ConnectionState.done) {
+              return const Center(child: Text('No Surahs found'));
+            }
+            return const SizedBox.shrink();
           }
 
           return LayoutBuilder(
             builder: (context, constraints) {
               int crossAxisCount = 1;
               if (constraints.maxWidth > 1024) {
-                 crossAxisCount = 3;
+                crossAxisCount = 3;
               } else if (constraints.maxWidth > 768) {
-                 crossAxisCount = 2;
+                crossAxisCount = 2;
               }
 
               return RefreshIndicator(
@@ -186,43 +190,48 @@ class _SurahListScreenState extends State<SurahListScreen> with TickerProviderSt
                       _searchController.clear();
                     });
                   } catch (e) {
-                     ScaffoldMessenger.of(context).showSnackBar(
-                       SnackBar(content: Text('Failed to refresh: $e')),
-                     );
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Failed to refresh: $e')),
+                    );
                   }
                 },
-                child: _filteredSurahs.isEmpty 
-                  ? SingleChildScrollView(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      child: SizedBox(
-                        height: constraints.maxHeight,
-                        child: Center(child: Text("No Surahs found. Pull to refresh.", style: TextStyle(color: colorScheme.onSurface.withValues(alpha: 0.7)))),
-                      ),
-                    )
-                  : crossAxisCount == 1 
-                      ? ListView.builder(
-                          padding: const EdgeInsets.fromLTRB(24, 24, 24, 100),
-                          itemCount: _filteredSurahs.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 16),
-                              child: _buildSurahCard(_filteredSurahs[index]),
-                            );
-                          },
-                        )
-                      : GridView.builder(
-                          padding: const EdgeInsets.fromLTRB(24, 24, 24, 100),
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: crossAxisCount,
-                            crossAxisSpacing: 24,
-                            mainAxisSpacing: 24,
-                            childAspectRatio: 2.2,
+                child: _filteredSurahs.isEmpty
+                    ? SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        child: SizedBox(
+                          height: constraints.maxHeight,
+                          child: Center(
+                            child: Text(
+                              'No Surahs found. Pull to refresh.',
+                              style: TextStyle(color: colorScheme.onSurface.withValues(alpha: 0.7)),
+                            ),
                           ),
-                          itemCount: _filteredSurahs.length,
-                          itemBuilder: (context, index) {
-                            return _buildSurahCard(_filteredSurahs[index]);
-                          },
                         ),
+                      )
+                    : crossAxisCount == 1
+                        ? ListView.builder(
+                            padding: const EdgeInsets.fromLTRB(24, 24, 24, 100),
+                            itemCount: _filteredSurahs.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 16),
+                                child: _buildSurahCard(_filteredSurahs[index]),
+                              );
+                            },
+                          )
+                        : GridView.builder(
+                            padding: const EdgeInsets.fromLTRB(24, 24, 24, 100),
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: crossAxisCount,
+                              crossAxisSpacing: 24,
+                              mainAxisSpacing: 24,
+                              childAspectRatio: 2.2,
+                            ),
+                            itemCount: _filteredSurahs.length,
+                            itemBuilder: (context, index) {
+                              return _buildSurahCard(_filteredSurahs[index]);
+                            },
+                          ),
               );
             },
           );
@@ -233,7 +242,7 @@ class _SurahListScreenState extends State<SurahListScreen> with TickerProviderSt
 
   Widget _buildSurahCard(Surah surah) {
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.transparent,
