@@ -175,7 +175,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: _settingTile(
               icon: Icons.auto_awesome_outlined,
               title: 'Tentang QuranKu',
-              subtitle: 'v3.0.0 • RAFDEV',
+              subtitle: "'v3.0.0' • RAFDEV",
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => const AboutScreen()),
