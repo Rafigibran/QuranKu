@@ -4,10 +4,10 @@ A minimalist and modern Quran application built with Flutter for Android and iOS
 
 > **QuranKu by RAFDEV** — simple, calm, and focused on reading and listening to the Qur’an.
 
-[![Flutter](https://img.shields.io/badge/Flutter-3.47.4-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev/)
-[![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)](https://dart.dev/)
-[![Android](https://img.shields.io/badge/Android-Supported-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://www.android.com/)
-[![License](https://img.shields.io/badge/License-MIT-2E9D6B?style=for-the-badge)](LICENSE)
+![Flutter](https://img.shields.io/badge/Flutter-3.47.4-02569B?style=for-the-badge&logo=flutter&logoColor=white)
+![Dart](https://img.shields.io/badge/Dart-0175C2-0175C2?style=for-the-badge&logo=dart&logoColor=white)
+![Android](https://img.shields.io/badge/Android-Supported-3DDC84?style=for-the-badge&logo=android&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-2E9D6B?style=for-the-badge)
 
 ## Preview
 
@@ -146,9 +146,9 @@ lib/
 
 ### Installation
 
+Clone the QuranKu repository, open the project directory, install the Flutter dependencies, then run the application.
+
 ```bash
-git clone https://github.com/Rafigibran/QuranKu.git
-cd QuranKu
 flutter pub get
 flutter run
 ```
@@ -175,27 +175,27 @@ flutter build ios --release
 
 ## 🔐 Release APK
 
-The latest public release is available from GitHub Releases.
+The current public release is:
 
-**Current release:** `v3.0.94`
+**`v3.0.94`**
 
 ## ❤️ Support
 
-Support QuranKu / RAFDEV:
+Support QuranKu / RAFDEV through the project’s official donation channel.
 
-[![Saweria](https://img.shields.io/badge/Support%20on-Saweria-2E9D6B?style=for-the-badge)](https://saweria.co/rafdev)
+**Saweria:** `saweria.co/rafdev`
 
 ## 👨‍💻 Developer
 
 **RAFDEV**
 
-- GitHub: [@Rafigibran](https://github.com/Rafigibran)
-- Project: [QuranKu](https://github.com/Rafigibran/QuranKu)
-- Donation: [saweria.co/rafdev](https://saweria.co/rafdev)
+- GitHub username: `Rafigibran`
+- Project: `QuranKu`
+- Donation: `saweria.co/rafdev`
 
 ## 📜 License
 
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+This project is licensed under the MIT License. See the repository `LICENSE` file for details.
 
 ---
 
