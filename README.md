@@ -1,186 +1,202 @@
-# My Quran
+# QuranKu
 
-A minimalist, aesthetic, and focused Quran application built with Flutter for Android and iOS. Designed to deliver a serene and distraction-free reading experience with a carefully crafted dark theme and thoughtful typography.
+A minimalist and modern Quran application built with Flutter for Android and iOS. QuranKu is designed around a calm reading experience, clear typography, Liquid Glass-inspired UI, and a simple audio experience that remains comfortable to use for all ages.
 
-This project is developed with enthusiasm, sincerity, and deep care. Going beyond mere commercial objectives, this initiative serves as a testament to our dedication to the needs of the Islamic Ummah and the global Muslim community, with the hope of providing tangible benefits for all.
+> **QuranKu by RAFDEV** — simple, calm, and focused on reading and listening to the Qur’an.
 
-![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)
-![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)
-![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)
-![iOS](https://img.shields.io/badge/iOS-000000?style=for-the-badge&logo=apple&logoColor=white)
+[![Flutter](https://img.shields.io/badge/Flutter-3.47.4-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev/)
+[![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)](https://dart.dev/)
+[![Android](https://img.shields.io/badge/Android-Supported-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://www.android.com/)
+[![License](https://img.shields.io/badge/License-MIT-2E9D6B?style=for-the-badge)](LICENSE)
 
-![cover](https://repository-images.githubusercontent.com/1148592274/61035ef6-dee9-4163-bb0f-d0b6b7e411ad)
+## Preview
 
+> **Tambahkan screenshot kamu sendiri di folder `docs/screenshots/` dengan nama file seperti di bawah.**
+> Jika file belum ada, gambar hanya akan menjadi placeholder sampai kamu mengunggahnya.
 
-## Features
+### Beranda
 
-### Quran Reading
-- Full 114 Surahs with Arabic text and translations
-- Support for multiple translation editions (Indonesian and English / Sahih International)
-- Jump to specific Ayah within a Surah
-- Search Surahs by name or number
-- Offline caching for Surah lists and contents
+![QuranKu Home](docs/screenshots/home.png)
 
-### Audio and Murotal
-- Built-in audio player for Quran recitation (Murotal)
-- Background audio playback support on both Android and iOS
-- Full-screen player view with playback controls
-- Persistent mini player for seamless navigation while listening
-- Murotal download manager for offline listening
+### Murotal
 
-### Prayer Times
-- Accurate daily prayer time schedules
-- Imsakiyah (Ramadan fasting schedule) display
+![QuranKu Murotal](docs/screenshots/murotal.png)
 
-### User Interface
-- Deep dark mode (#0A0A0A) with green accent color scheme
-- Light mode support with automatic or manual switching
-- Custom typography using Space Grotesk for UI elements and Amiri for Arabic calligraphy
-- Custom splash screen with smooth transitions
-- Clean and intuitive navigation
+### Full Player
 
-### Storage and Settings
-- Download manager for Surah content (offline access)
-- Storage management screen to monitor and clear cached data
-- Configurable settings for theme, translation edition, and more
+![QuranKu Full Player](docs/screenshots/full-player.png)
 
-### Additional
-- About screen with developer information
-- External link support via URL launcher
+### Detail Surah
 
+![QuranKu Surah Detail](docs/screenshots/surah-detail.png)
 
-## Tech Stack
+### Pengaturan
 
-| Category         | Technology                        |
-| ---------------- | --------------------------------- |
-| Framework        | Flutter (Dart)                    |
-| State Management | setState                          |
-| Networking       | http, dio                         |
-| Audio            | just_audio, just_audio_background |
-| Local Storage    | shared_preferences, path_provider |
-| Typography       | google_fonts                      |
-| Notifications    | flutter_local_notifications       |
-| Permissions      | permission_handler                |
-| Navigation       | scrollable_positioned_list        |
-| Utilities        | intl, url_launcher                |
-| Icons            | cupertino_icons                   |
+![QuranKu Settings](docs/screenshots/settings.png)
 
+### Playlist
 
-## Project Structure
+![QuranKu Playlist](docs/screenshots/playlist.png)
 
-```
+## ✨ Features
+
+### 📖 Quran Reading
+
+- 114 Surahs with Arabic text and Indonesian translation.
+- Search Surahs by name or number.
+- Jump directly to a specific Ayah.
+- Clear, readable Arabic typography using Amiri.
+- Offline caching for downloaded Quran content.
+- Light and dark themes.
+
+### 🎧 Murotal
+
+- Quran recitation playback with continuous Ayah progression.
+- Previous/next Surah controls.
+- Repeat and playback-order controls.
+- Persistent mini player while navigating the app.
+- Full-screen player with playback controls and progress seeking.
+- Murotal download support for offline listening.
+
+### 🌧️ Background Sound
+
+- Optional ambient rain-like background sound.
+- Separate volume controls for Quran audio and background sound.
+- Background sound follows Quran playback state.
+- Settings are persisted between sessions.
+
+### 🎵 Playlist
+
+- Create multiple playlists.
+- Add and remove Surahs from playlists.
+- Reorder playlist items.
+- Rename and delete playlists.
+- Persistent playlists using local storage.
+
+### 🕌 Prayer & Daily Tools
+
+- Daily prayer-time display.
+- Ramadan imsakiyah support.
+- Simple navigation designed to keep frequently used features easy to reach.
+
+### 🎨 Interface
+
+- Minimalist Liquid Glass-inspired design.
+- Large touch targets and readable typography for users of all ages.
+- Green RAFDEV accent with restrained translucency and blur.
+- Floating mini player and glass navigation system.
+- Responsive layouts for different screen sizes.
+
+## 🛠️ Tech Stack
+
+| Category | Technology |
+| --- | --- |
+| Framework | Flutter / Dart |
+| Audio | just_audio |
+| Networking | http, dio |
+| Local Storage | shared_preferences, path_provider |
+| Typography | google_fonts |
+| Notifications | flutter_local_notifications |
+| Permissions | permission_handler |
+| Navigation / Lists | scrollable_positioned_list |
+| Utilities | intl, url_launcher |
+| UI | Material 3 + custom Liquid Glass widgets |
+
+## 📁 Project Structure
+
+```text
 lib/
-  main.dart                        -- Application entry point
+  main.dart
   models/
-    ayah.dart                      -- Ayah data model
-    surah.dart                     -- Surah data model
-    prayer_times.dart              -- Prayer times data model
   screens/
-    splash_screen.dart             -- Splash screen
-    main_screen.dart               -- Main navigation screen
-    surah_list_screen.dart         -- Surah list with search
-    surah_detail_screen.dart       -- Surah reading view
-    murotal_screen.dart            -- Murotal audio browser
-    murotal_download_screen.dart   -- Murotal download manager
-    download_screen.dart           -- Surah content download manager
-    prayer_times_screen.dart       -- Prayer time schedules
-    imsakiyah_screen.dart          -- Ramadan imsakiyah schedule
-    settings_screen.dart           -- App settings
-    storage_management_screen.dart -- Storage and cache management
-    about_screen.dart              -- About and developer info
+    splash_screen.dart
+    main_screen.dart
+    surah_list_screen.dart
+    surah_detail_screen.dart
+    murotal_screen.dart
+    murotal_download_screen.dart
+    playlist_screen.dart
+    prayer_times_screen.dart
+    imsakiyah_screen.dart
+    settings_screen.dart
+    storage_management_screen.dart
+    about_screen.dart
   services/
-    api_service.dart               -- API communication layer
-    audio_service.dart             -- Audio playback management
-    download_service.dart          -- Surah content download logic
-    murotal_download_service.dart  -- Murotal audio download logic
-    settings_service.dart          -- User preferences management
+    api_service.dart
+    audio_service.dart
+    background_audio_service.dart
+    download_service.dart
+    murotal_download_service.dart
+    playlist_service.dart
+    settings_service.dart
   widgets/
-    full_player_view.dart          -- Full-screen audio player
-    mini_player.dart               -- Persistent mini audio player
+    liquid_glass.dart
+    mini_player.dart
+    full_player_view.dart
 ```
 
+## 🚀 Getting Started
 
-## Supported Platforms
+### Requirements
 
-| Platform | Status     |
-| -------- | ---------- |
-| Android  | Supported  |
-| iOS      | Not Tested |
-
-
-## Getting Started
-
-### Prerequisites
-
-- Flutter SDK (latest stable channel)
-- Java JDK 17 or later
-- Android Studio or Visual Studio Code
-- Xcode (for iOS development, macOS only)
+- Flutter 3.47.4 or compatible stable Flutter SDK.
+- Java JDK 17 or later for Android builds.
+- Android Studio or Visual Studio Code.
+- Xcode on macOS for iOS builds.
 
 ### Installation
 
-1. Clone the repository
+```bash
+git clone https://github.com/Rafigibran/QuranKu.git
+cd QuranKu
+flutter pub get
+flutter run
+```
 
-   ```bash
-   git clone https://github.com/Damarcreative/Quran-App.git
-   cd Quran-App
-   ```
-
-2. Install dependencies
-
-   ```bash
-   flutter pub get
-   ```
-
-3. Run the application
-
-   ```bash
-   flutter run
-   ```
-
-
-## Building for Production
+## 📦 Build
 
 ### Android
 
-Generate a release APK or App Bundle:
+```bash
+flutter build apk --release
+```
+
+For a Play Store package:
 
 ```bash
-# APK
-flutter build apk --release
-
-# App Bundle (recommended for Play Store)
 flutter build appbundle --release
 ```
 
 ### iOS
 
-Generate a release build (requires macOS with Xcode):
-
 ```bash
 flutter build ios --release
 ```
 
+## 🔐 Release APK
 
-## API
+The latest public release is available from GitHub Releases.
 
-This application uses the Quran API provided by Damar Creative for fetching Surah data, translations, and audio recitations.
+**Current release:** `v3.0.94`
 
-- Quran Web: [https://quran.damarcreative.my.id](https://quran.damarcreative.my.id)
+## ❤️ Support
 
+Support QuranKu / RAFDEV:
 
-## Credits
+[![Saweria](https://img.shields.io/badge/Support%20on-Saweria-2E9D6B?style=for-the-badge)](https://saweria.co/rafdev)
 
-Developed by **Damar Jati** (Damar Creative).
+## 👨‍💻 Developer
 
-- Website: [damarcreative.my.id](https://damarcreative.my.id)
-- GitHub: [github.com/Damarcreative](https://github.com/Damarcreative)
+**RAFDEV**
 
+- GitHub: [@Rafigibran](https://github.com/Rafigibran)
+- Project: [QuranKu](https://github.com/Rafigibran/QuranKu)
+- Donation: [saweria.co/rafdev](https://saweria.co/rafdev)
 
-## License
+## 📜 License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
 
 ---
 
-Copyright (c) 2026 Damar Jati. All rights reserved.
+**QuranKu** • Built with Flutter by **RAFDEV**
