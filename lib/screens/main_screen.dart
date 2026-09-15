@@ -121,7 +121,7 @@ class _MainScreenState extends State<MainScreen> {
               Positioned(
                 left: 16,
                 right: 16,
-                bottom: 108,
+                bottom: 154,
                 child: SafeArea(
                   top: false,
                   bottom: false,
