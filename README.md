@@ -9,10 +9,6 @@ A minimalist and modern Quran application built with Flutter for Android and iOS
 ![Android](https://img.shields.io/badge/Android-Supported-3DDC84?style=for-the-badge&logo=android&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-2E9D6B?style=for-the-badge)
 
-## Preview
-
-> **Tambahkan screenshot kamu sendiri di folder `docs/screenshots/` dengan nama file seperti di bawah.**
-> Jika file belum ada, gambar hanya akan menjadi placeholder sampai kamu mengunggahnya.
 
 ### Beranda
 
