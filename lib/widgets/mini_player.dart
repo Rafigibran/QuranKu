@@ -63,19 +63,64 @@ class _MiniPlayerState extends State<MiniPlayer> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Center(child: Container(width: 42, height: 4, decoration: BoxDecoration(color: scheme.onSurface.withValues(alpha: .25), borderRadius: BorderRadius.circular(99)))),
+                  Center(
+                    child: Container(
+                      width: 42,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: scheme.onSurface.withValues(alpha: .25),
+                        borderRadius: BorderRadius.circular(99),
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: 18),
                   Row(
                     children: [
-                      Container(width: 44, height: 44, decoration: BoxDecoration(shape: BoxShape.circle, color: scheme.primary.withValues(alpha: .14)), child: Icon(Icons.water_drop_rounded, color: scheme.primary)),
+                      Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: scheme.primary.withValues(alpha: .14),
+                        ),
+                        child: Icon(Icons.water_drop_rounded, color: scheme.primary),
+                      ),
                       const SizedBox(width: 12),
-                      Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('Suara latar', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800)), Text('Berjalan bersama murotal.', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: scheme.onSurface.withValues(alpha: .62)))])),
-                      Switch.adaptive(value: _background.enabled, onChanged: (value) async { await _background.setEnabled(value); setSheetState(() {}); }),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Suara latar',
+                              style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+                            ),
+                            Text(
+                              'Berjalan bersama audio Al-Qur’an.',
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: scheme.onSurface.withValues(alpha: .62),
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Switch.adaptive(
+                        value: _background.enabled,
+                        onChanged: (value) async {
+                          await _background.setEnabled(value);
+                          setSheetState(() {});
+                        },
+                      ),
                     ],
                   ),
                   const SizedBox(height: 18),
-                  _slider('Volume Al-Qur’an', _background.mainVolume, (value) async { await _background.setMainVolume(value); setSheetState(() {}); }),
-                  _slider('Volume hujan', _background.backgroundVolume, (value) async { await _background.setBackgroundVolume(value); setSheetState(() {}); }),
+                  _slider('Volume Al-Qur’an', _background.mainVolume, (value) async {
+                    await _background.setMainVolume(value);
+                    setSheetState(() {});
+                  }),
+                  _slider('Volume hujan', _background.backgroundVolume, (value) async {
+                    await _background.setBackgroundVolume(value);
+                    setSheetState(() {});
+                  }),
                 ],
               );
             },
@@ -87,11 +132,23 @@ class _MiniPlayerState extends State<MiniPlayer> {
 
   Widget _slider(String title, double value, ValueChanged<double> onChanged) {
     final scheme = Theme.of(context).colorScheme;
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(title, style: const TextStyle(fontWeight: FontWeight.w700)), Text('${(value * 100).round()}%', style: TextStyle(color: scheme.primary, fontWeight: FontWeight.w800))]),
-      Slider(value: value.clamp(0.0, 1.0), onChanged: onChanged),
-      const SizedBox(height: 4),
-    ]);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(title, style: const TextStyle(fontWeight: FontWeight.w700)),
+            Text(
+              '${(value * 100).round()}%',
+              style: TextStyle(color: scheme.primary, fontWeight: FontWeight.w800),
+            ),
+          ],
+        ),
+        Slider(value: value.clamp(0.0, 1.0), onChanged: onChanged),
+        const SizedBox(height: 4),
+      ],
+    );
   }
 
   Future<void> _togglePlay() async {
@@ -102,7 +159,7 @@ class _MiniPlayerState extends State<MiniPlayer> {
     }
   }
 
-  Future<void> _openPlayer() async {
+  void _openPlayer() {
     widget.onTap();
   }
 
@@ -112,6 +169,7 @@ class _MiniPlayerState extends State<MiniPlayer> {
     if (surah == null) return const SizedBox.shrink();
 
     final scheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final progress = StreamBuilder<Duration>(
       stream: _audio.positionStream,
       builder: (context, positionSnapshot) {
@@ -127,7 +185,7 @@ class _MiniPlayerState extends State<MiniPlayer> {
               child: LinearProgressIndicator(
                 minHeight: 3,
                 value: current,
-                backgroundColor: Colors.white.withValues(alpha: .10),
+                backgroundColor: scheme.onSurface.withValues(alpha: isDark ? .10 : .12),
                 valueColor: AlwaysStoppedAnimation<Color>(scheme.primary),
               ),
             );
@@ -142,10 +200,20 @@ class _MiniPlayerState extends State<MiniPlayer> {
         filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
         child: Container(
           decoration: BoxDecoration(
-            color: scheme.surface.withValues(alpha: .68),
+            color: scheme.surface.withValues(alpha: isDark ? .72 : .86),
             borderRadius: BorderRadius.circular(28),
-            border: Border.all(color: Colors.white.withValues(alpha: .10)),
-            boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: .22), blurRadius: 24, offset: const Offset(0, 10))],
+            border: Border.all(
+              color: isDark
+                  ? Colors.white.withValues(alpha: .10)
+                  : scheme.outline.withValues(alpha: .55),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: isDark ? .22 : .08),
+                blurRadius: 24,
+                offset: const Offset(0, 10),
+              ),
+            ],
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -161,7 +229,11 @@ class _MiniPlayerState extends State<MiniPlayer> {
                         height: 54,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(17),
-                          gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [scheme.primary, scheme.primary.withValues(alpha: .34)]),
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [scheme.primary, scheme.primary.withValues(alpha: .34)],
+                          ),
                           border: Border.all(color: Colors.white.withValues(alpha: .13)),
                         ),
                         child: const Icon(Icons.menu_book_rounded, color: Colors.white, size: 28),
@@ -172,18 +244,41 @@ class _MiniPlayerState extends State<MiniPlayer> {
                       child: GestureDetector(
                         behavior: HitTestBehavior.opaque,
                         onTap: _openPlayer,
-                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                          Text('${surah.number}. ${surah.name}', maxLines: 1, overflow: TextOverflow.ellipsis, style: GoogleFonts.spaceGrotesk(fontSize: 15.5, fontWeight: FontWeight.w800, color: scheme.onSurface)),
-                          const SizedBox(height: 3),
-                          Text('Mishary Rashid Alafasy  •  Ayat ${_settings.formatNumber(_audio.currentAyah)}', maxLines: 1, overflow: TextOverflow.ellipsis, style: GoogleFonts.spaceGrotesk(fontSize: 11.5, color: scheme.onSurface.withValues(alpha: .60))),
-                        ]),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            '${surah.number}. ${surah.name}',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.spaceGrotesk(
+                              fontSize: 15.5,
+                              fontWeight: FontWeight.w800,
+                              color: scheme.onSurface,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                    _actionButton(Icons.water_drop_outlined, _background.enabled ? scheme.primary : scheme.onSurface.withValues(alpha: .72), _openBackground, 'Suara latar'),
+                    _actionButton(
+                      Icons.water_drop_outlined,
+                      _background.enabled ? scheme.primary : scheme.onSurface.withValues(alpha: .72),
+                      _openBackground,
+                      'Suara latar',
+                    ),
                     const SizedBox(width: 5),
-                    _actionButton(_audio.isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded, scheme.onSurface, _togglePlay, _audio.isPlaying ? 'Jeda' : 'Putar'),
+                    _actionButton(
+                      _audio.isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
+                      scheme.onSurface,
+                      _togglePlay,
+                      _audio.isPlaying ? 'Jeda' : 'Putar',
+                    ),
                     const SizedBox(width: 5),
-                    _actionButton(Icons.skip_next_rounded, _audio.hasNextSurah() ? scheme.onSurface : scheme.onSurface.withValues(alpha: .26), _audio.hasNextSurah() ? _audio.playNextSurah : null, 'Berikutnya'),
+                    _actionButton(
+                      Icons.skip_next_rounded,
+                      _audio.hasNextSurah() ? scheme.onSurface : scheme.onSurface.withValues(alpha: .26),
+                      _audio.hasNextSurah() ? _audio.playNextSurah : null,
+                      'Berikutnya',
+                    ),
                   ],
                 ),
               ),
@@ -203,7 +298,11 @@ class _MiniPlayerState extends State<MiniPlayer> {
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(17),
-          child: SizedBox(width: 47, height: 47, child: Center(child: Icon(icon, color: color, size: 26))),
+          child: SizedBox(
+            width: 47,
+            height: 47,
+            child: Center(child: Icon(icon, color: color, size: 26)),
+          ),
         ),
       ),
     );
