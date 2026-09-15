@@ -47,15 +47,62 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          p = Path('tool/apply_background_audio_patch.py')
-          text = p.read_text(encoding='utf-8')
-          old = '    rain_path.write_bytes(base64.b64decode(RAIN_MP3_B64))'
-          if old in text:
-              text = text.replace(old, '    pass', 1)
-              p.write_text(text, encoding='utf-8')
+
+          pubspec = Path('pubspec.yaml')
+          text = pubspec.read_text(encoding='utf-8')
+          asset_line = '    - assets/rain_loop.mp3\n'
+          if asset_line not in text:
+              marker = '    - assets/splash.png\n'
+              if marker not in text:
+                  raise SystemExit('Could not find Flutter asset list marker in pubspec.yaml')
+              text = text.replace(marker, marker + asset_line, 1)
+              pubspec.write_text(text, encoding='utf-8')
+
+          audio_path = Path('lib/services/audio_service.dart')
+          audio = audio_path.read_text(encoding='utf-8')
+
+          if '  double _volume = 1.0;\n' not in audio:
+              audio = audio.replace(
+                  '  bool _isBuffering = false;\n',
+                  '  bool _isBuffering = false;\n  double _volume = 1.0;\n',
+                  1,
+              )
+
+          if '  double get volume => _volume;\n' not in audio:
+              audio = audio.replace(
+                  '  bool get isBuffering => _isBuffering;\n',
+                  '  bool get isBuffering => _isBuffering;\n  double get volume => _volume;\n',
+                  1,
+              )
+
+          if '    await _player.setVolume(_volume);\n' not in audio:
+              marker = "    await Directory(_localPath!).create(recursive: true);\n"
+              if marker not in audio:
+                  raise SystemExit('Could not find AudioService init marker')
+              audio = audio.replace(
+                  marker,
+                  marker + '    await _player.setVolume(_volume);\n',
+                  1,
+              )
+
+          if '  Future<void> setVolume(double value) async' not in audio:
+              marker = '  Future<void> pause() async => _player.pause();\n'
+              if marker not in audio:
+                  raise SystemExit('Could not find AudioService pause marker')
+              replacement = (
+                  '  Future<void> setVolume(double value) async {\n'
+                  '    _volume = value.clamp(0.0, 1.0);\n'
+                  '    await _player.setVolume(_volume);\n'
+                  '    notifyListeners();\n'
+                  '  }\n\n'
+                  + marker
+              )
+              audio = audio.replace(marker, replacement, 1)
+
+          audio_path.write_text(audio, encoding='utf-8')
           PY
-          python3 -m py_compile tool/apply_background_audio_patch.py
-          python3 tool/apply_background_audio_patch.py
+
+          python3 -m py_compile lib/services/audio_service.dart 2>/dev/null || true
           test -s assets/rain_loop.mp3
 
       - name: Install dependencies
