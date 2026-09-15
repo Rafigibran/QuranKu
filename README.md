@@ -16,7 +16,7 @@ A minimalist and modern Quran application built with Flutter for Android and iOS
 
 ### Beranda
 
-![QuranKu Home](docs/screenshots/home.png)
+![QuranKu Home](docs/screenshots/docs/screenshot/20260915_102208.jpg)
 
 ### Murotal
 
