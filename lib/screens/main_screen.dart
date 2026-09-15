@@ -147,8 +147,17 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget _buildReferenceNavigation(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final selected = scheme.primary;
-    final unselected = Colors.white.withValues(alpha: 0.78);
+    final unselected = isDark
+        ? Colors.white.withValues(alpha: 0.78)
+        : scheme.onSurface.withValues(alpha: 0.70);
+    final navigationTint = isDark
+        ? scheme.surface.withValues(alpha: 0.32)
+        : Colors.white.withValues(alpha: 0.84);
+    final navigationBorder = isDark
+        ? Colors.white.withValues(alpha: 0.12)
+        : scheme.outline.withValues(alpha: 0.60);
 
     return SafeArea(
       top: false,
@@ -157,17 +166,23 @@ class _MainScreenState extends State<MainScreen> {
         radius: 34,
         blur: 28,
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-        tint: scheme.surface.withValues(alpha: 0.32),
-        child: SizedBox(
-          height: 86,
-          child: Row(
-            children: [
-              _navItem(context, 0, Icons.home_rounded, 'Al-Quran', selected, unselected),
-              _navItem(context, 1, Icons.mosque_rounded, 'Jadwal', selected, unselected),
-              _navItem(context, 2, Icons.person_rounded, 'Murotal', selected, unselected),
-              _navItem(context, 3, Icons.queue_music_rounded, 'Playlist', selected, unselected),
-              _navItem(context, 4, Icons.settings_rounded, 'Pengaturan', selected, unselected),
-            ],
+        tint: navigationTint,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(28),
+            border: Border.all(color: navigationBorder),
+          ),
+          child: SizedBox(
+            height: 86,
+            child: Row(
+              children: [
+                _navItem(context, 0, Icons.home_rounded, 'Al-Quran', selected, unselected),
+                _navItem(context, 1, Icons.mosque_rounded, 'Jadwal', selected, unselected),
+                _navItem(context, 2, Icons.person_rounded, 'Murotal', selected, unselected),
+                _navItem(context, 3, Icons.queue_music_rounded, 'Playlist', selected, unselected),
+                _navItem(context, 4, Icons.settings_rounded, 'Pengaturan', selected, unselected),
+              ],
+            ),
           ),
         ),
       ),
@@ -208,7 +223,11 @@ class _MainScreenState extends State<MainScreen> {
                 AnimatedScale(
                   duration: const Duration(milliseconds: 180),
                   scale: isSelected ? 1.06 : 1.0,
-                  child: Icon(icon, size: isSelected ? 31 : 28, color: isSelected ? selected : unselected),
+                  child: Icon(
+                    icon,
+                    size: isSelected ? 31 : 28,
+                    color: isSelected ? selected : unselected,
+                  ),
                 ),
                 const SizedBox(height: 5),
                 Text(
