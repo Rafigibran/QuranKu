@@ -119,9 +119,9 @@ class _MainScreenState extends State<MainScreen> {
             IndexedStack(index: _selectedIndex, children: children),
             if (!_showFullPlayer && hasAudio)
               Positioned(
-                left: 14,
-                right: 14,
-                bottom: 96,
+                left: 16,
+                right: 16,
+                bottom: 108,
                 child: SafeArea(
                   top: false,
                   bottom: false,
@@ -198,13 +198,9 @@ class _MainScreenState extends State<MainScreen> {
             margin: const EdgeInsets.symmetric(horizontal: 2),
             padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             decoration: BoxDecoration(
-              color: isSelected
-                  ? selected.withValues(alpha: 0.18)
-                  : Colors.transparent,
+              color: isSelected ? selected.withValues(alpha: 0.18) : Colors.transparent,
               borderRadius: BorderRadius.circular(28),
-              border: isSelected
-                  ? Border.all(color: selected.withValues(alpha: 0.20))
-                  : null,
+              border: isSelected ? Border.all(color: selected.withValues(alpha: 0.20)) : null,
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -212,11 +208,7 @@ class _MainScreenState extends State<MainScreen> {
                 AnimatedScale(
                   duration: const Duration(milliseconds: 180),
                   scale: isSelected ? 1.06 : 1.0,
-                  child: Icon(
-                    icon,
-                    size: isSelected ? 31 : 28,
-                    color: isSelected ? selected : unselected,
-                  ),
+                  child: Icon(icon, size: isSelected ? 31 : 28, color: isSelected ? selected : unselected),
                 ),
                 const SizedBox(height: 5),
                 Text(
@@ -225,11 +217,11 @@ class _MainScreenState extends State<MainScreen> {
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        fontSize: 10.5,
-                        height: 1,
-                        fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                        color: isSelected ? selected : unselected,
-                      ),
+                    fontSize: 10.5,
+                    height: 1,
+                    fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                    color: isSelected ? selected : unselected,
+                  ),
                 ),
               ],
             ),
