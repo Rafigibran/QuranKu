@@ -183,22 +183,20 @@ class _FullPlayerViewState extends State<FullPlayerView> {
               child: Column(
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      LiquidGlassIconButton(icon: Icons.keyboard_arrow_down_rounded, onPressed: widget.onCollapse, tooltip: 'Tutup'),
-                      const Spacer(),
-                      LiquidGlassPill(
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.keyboard_arrow_down_rounded, size: 17, color: scheme.onSurface),
-                            const SizedBox(width: 4),
-                            const Text('Suara latar', style: TextStyle(fontWeight: FontWeight.w700)),
-                          ],
-                        ),
+                      LiquidGlassIconButton(
+                        icon: Icons.keyboard_arrow_down_rounded,
+                        onPressed: widget.onCollapse,
+                        tooltip: 'Tutup',
                       ),
-                      const Spacer(),
-                      LiquidGlassIconButton(icon: _background.enabled ? Icons.water_drop_rounded : Icons.water_drop_outlined, onPressed: _openBackgroundSound, tooltip: 'Suara latar'),
+                      LiquidGlassIconButton(
+                        icon: _background.enabled
+                            ? Icons.water_drop_rounded
+                            : Icons.water_drop_outlined,
+                        onPressed: _openBackgroundSound,
+                        tooltip: 'Suara latar',
+                      ),
                     ],
                   ),
                   const Spacer(flex: 2),
@@ -296,11 +294,7 @@ class _FullPlayerViewState extends State<FullPlayerView> {
   }
 
   Future<void> _seek(Duration value) async {
-    final player = _audio;
-    final position = value;
-    // AudioService intentionally exposes streams but not a seek method.
-    // Keep the progress bar informational until the service exposes seek().
-    debugPrint('Seek requested: $position for ${player.currentSurah?.name}');
+    await _audio.seek(value);
   }
 
   String _formatDuration(Duration duration) {
@@ -421,7 +415,7 @@ class _PlayButton extends StatelessWidget {
       child: Container(
         width: 72,
         height: 72,
-        decoration: BoxDecoration(shape: BoxShape.circle, color: scheme.primary, boxShadow: const [BoxShadow(color: Color(0x5534B785), blurRadius: 28, spreadRadius: 2)]),
+        decoration: BoxDecoration(shape: BoxShape.circle, color: scheme.primary, boxShadow: const [BoxShadow(color: Color(0x4434B785), blurRadius: 22, spreadRadius: 2)]),
         child: Icon(playing ? Icons.pause_rounded : Icons.play_arrow_rounded, color: Colors.white, size: 38),
       ),
     );
@@ -429,28 +423,30 @@ class _PlayButton extends StatelessWidget {
 }
 
 class _BottomAction extends StatelessWidget {
-  const _BottomAction({required this.icon, required this.label, required this.onTap, this.active = false});
+  const _BottomAction({required this.icon, required this.label, this.active = false, required this.onTap});
 
   final IconData icon;
   final String label;
-  final VoidCallback onTap;
   final bool active;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(18),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, color: active ? scheme.primary : Colors.white70, size: 24),
-            const SizedBox(height: 4),
-            Text(label, style: TextStyle(fontSize: 11, color: active ? scheme.primary : Colors.white60, fontWeight: FontWeight.w600)),
-          ],
+    final color = active ? Theme.of(context).colorScheme.primary : Colors.white70;
+    return Expanded(
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(18),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: color, size: 28),
+              const SizedBox(height: 5),
+              Text(label, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: color, fontSize: 11, fontWeight: active ? FontWeight.w700 : FontWeight.w500)),
+            ],
+          ),
         ),
       ),
     );
@@ -465,28 +461,22 @@ class _GlassSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
     return SafeArea(
       top: false,
-      child: Container(
-        decoration: BoxDecoration(
-          color: scheme.surface.withValues(alpha: .96),
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
-        ),
-        padding: const EdgeInsets.fromLTRB(22, 12, 22, 28),
+      child: LiquidGlassCard(
+        radius: 30,
+        margin: const EdgeInsets.fromLTRB(14, 0, 14, 14),
+        padding: const EdgeInsets.fromLTRB(22, 14, 22, 28),
+        blur: 26,
+        tint: Theme.of(context).colorScheme.surface.withValues(alpha: .52),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(child: Container(width: 42, height: 4, decoration: BoxDecoration(color: scheme.outline, borderRadius: BorderRadius.circular(99)))),
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(child: Text(title, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800))),
-                IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.close_rounded)),
-              ],
-            ),
-            const SizedBox(height: 8),
+            Center(child: Container(width: 42, height: 4, decoration: BoxDecoration(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .25), borderRadius: BorderRadius.circular(99)))),
+            const SizedBox(height: 16),
+            Text(title, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800)),
+            const SizedBox(height: 12),
             child,
           ],
         ),
