@@ -302,11 +302,6 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _createPlaylist,
-        icon: const Icon(Icons.add),
-        label: const Text('Playlist Baru'),
-      ),
       body: _loading
           ? Center(child: CircularProgressIndicator(color: colors.primary))
           : _playlists.isEmpty
@@ -522,288 +517,108 @@ class _PlaylistDetailScreenState extends State<_PlaylistDetailScreen> {
     await _saveAndRefresh();
   }
 
-  Future<void> _removeAt(int index) async {
-    setState(() => widget.playlist.surahNumbers.removeAt(index));
-    if (widget.playlist.surahNumbers.isEmpty) {
-      widget.audioService.clearCustomSurahSequence();
-    }
+  Future<void> _removeSurah(Surah surah) async {
+    setState(() => widget.playlist.surahNumbers.remove(surah.number));
     await _saveAndRefresh();
   }
 
-  Future<void> _clear() async {
-    if (widget.playlist.surahNumbers.isEmpty) return;
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Kosongkan Playlist?'),
-        content: const Text('Semua Surah dalam playlist ini akan dihapus.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Batal'),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Hapus'),
-          ),
-        ],
-      ),
-    );
-    if (confirmed != true) return;
-    setState(() => widget.playlist.surahNumbers.clear());
-    widget.audioService.clearCustomSurahSequence();
+  Future<void> _reorder(int oldIndex, int newIndex) async {
+    if (newIndex > oldIndex) newIndex -= 1;
+    setState(() {
+      final value = widget.playlist.surahNumbers.removeAt(oldIndex);
+      widget.playlist.surahNumbers.insert(newIndex, value);
+    });
     await _saveAndRefresh();
-  }
-
-  Future<void> _showAddDialog() async {
-    _query = '';
-    await showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      builder: (sheetContext) => StatefulBuilder(
-        builder: (context, setSheetState) {
-          final selected = widget.playlist.surahNumbers.toSet();
-          final query = _query.trim().toLowerCase();
-          final trimmedQuery = _query.trim();
-          final available = widget.surahs.where((surah) {
-            if (selected.contains(surah.number)) return false;
-            if (query.isEmpty) return true;
-            return surah.name.toLowerCase().contains(query) ||
-                surah.nameAr.contains(trimmedQuery) ||
-                surah.number.toString() == trimmedQuery;
-          }).toList();
-          final colors = Theme.of(context).colorScheme;
-
-          return SafeArea(
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height * 0.82,
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 16, 12, 8),
-                    child: Row(
-                      children: [
-                        const Expanded(
-                          child: Text(
-                            'Tambah ke Playlist',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () => Navigator.pop(sheetContext),
-                          icon: const Icon(Icons.close),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-                    child: TextField(
-                      onChanged: (value) => setSheetState(() => _query = value),
-                      decoration: const InputDecoration(
-                        hintText: 'Cari Surah...',
-                        prefixIcon: Icon(Icons.search),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(12)),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: available.length,
-                      itemBuilder: (_, index) {
-                        final surah = available[index];
-                        return ListTile(
-                          title: Text(
-                            surah.name,
-                            style: GoogleFonts.spaceGrotesk(fontWeight: FontWeight.w600),
-                          ),
-                          subtitle: Text('${surah.number}. ${surah.nameAr}'),
-                          trailing: IconButton(
-                            icon: Icon(Icons.add_circle_outline, color: colors.primary),
-                            onPressed: () async {
-                              await _addSurah(surah);
-                              setSheetState(() {});
-                            },
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final items = _items;
+    final visible = _query.trim().isEmpty
+        ? _surahCandidates(items, widget.surahs)
+        : _surahCandidates(items, widget.surahs)
+            .where((surah) =>
+                surah.name.toLowerCase().contains(_query.toLowerCase()) ||
+                surah.nameAr.contains(_query))
+            .toList();
 
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        elevation: 0,
-        title: Text(
-          widget.playlist.name,
-          style: GoogleFonts.spaceGrotesk(fontWeight: FontWeight.bold),
-        ),
+        title: Text(widget.playlist.name),
         actions: [
-          if (items.isNotEmpty)
-            IconButton(
-              onPressed: _clear,
-              icon: const Icon(Icons.delete_sweep_outlined),
-              tooltip: 'Kosongkan playlist',
-            ),
           IconButton(
-            onPressed: items.isEmpty ? null : () => _playFrom(0),
-            icon: const Icon(Icons.play_arrow_rounded),
+            onPressed: () async {
+              for (final surah in items) {
+                if (!widget.audioService.currentSurah!.number.toString().contains(surah.number.toString())) {
+                  break;
+                }
+              }
+              if (items.isNotEmpty) _playFrom(0);
+            },
+            icon: const Icon(Icons.play_arrow),
+            tooltip: 'Putar playlist',
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _showAddDialog,
-        icon: const Icon(Icons.add),
-        label: const Text('Tambah Surah'),
-      ),
-      body: items.isEmpty
-          ? Center(
-              child: Padding(
-                padding: const EdgeInsets.all(32),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.queue_music_outlined, size: 64, color: colors.primary),
-                    const SizedBox(height: 16),
-                    const Text(
-                      'Playlist ini masih kosong',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Tambahkan Surah favorit dan atur urutannya sesuka kamu.',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.spaceGrotesk(
-                        fontSize: 12,
-                        color: colors.onSurface.withValues(alpha: 0.6),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    ElevatedButton.icon(
-                      onPressed: _showAddDialog,
-                      icon: const Icon(Icons.add),
-                      label: const Text('Tambah Surah'),
-                    ),
-                  ],
-                ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: TextField(
+              onChanged: (value) => setState(() => _query = value),
+              decoration: const InputDecoration(
+                hintText: 'Tambah Surah ke playlist...',
+                prefixIcon: Icon(Icons.search),
               ),
-            )
-          : Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 10, 24, 12),
-                  child: Row(
+            ),
+          ),
+          Expanded(
+            child: ReorderableListView.builder(
+              itemCount: visible.length,
+              onReorder: (oldIndex, newIndex) async {
+                final actualOld = widget.playlist.surahNumbers.indexOf(visible[oldIndex].number);
+                final actualNew = widget.playlist.surahNumbers.indexOf(visible[newIndex.clamp(0, visible.length - 1)].number);
+                if (actualOld >= 0 && actualNew >= 0) await _reorder(actualOld, actualNew);
+              },
+              itemBuilder: (context, index) {
+                final surah = visible[index];
+                final selected = widget.playlist.surahNumbers.contains(surah.number);
+                return ListTile(
+                  key: ValueKey(surah.number),
+                  title: Text(surah.name),
+                  subtitle: Text('${surah.totalAyahs} ayat • ${surah.nameAr}'),
+                  leading: Icon(selected ? Icons.check_circle : Icons.add_circle_outline),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.queue_music, color: colors.primary),
-                      const SizedBox(width: 10),
-                      Text(
-                        '${items.length} Surah',
-                        style: GoogleFonts.spaceGrotesk(
-                          fontSize: 12,
-                          color: colors.onSurface.withValues(alpha: 0.65),
-                        ),
+                      IconButton(
+                        onPressed: selected ? () => _playFrom(index) : () => _addSurah(surah),
+                        icon: Icon(selected ? Icons.play_arrow : Icons.add),
                       ),
-                      const Spacer(),
-                      Text(
-                        'Tahan lalu geser untuk mengurutkan',
-                        style: GoogleFonts.spaceGrotesk(
-                          fontSize: 10,
-                          color: colors.onSurface.withValues(alpha: 0.45),
+                      if (selected)
+                        IconButton(
+                          onPressed: () => _removeSurah(surah),
+                          icon: const Icon(Icons.delete_outline),
                         ),
-                      ),
+                      const Icon(Icons.drag_handle),
                     ],
                   ),
-                ),
-                Expanded(
-                  child: ReorderableListView.builder(
-                    padding: const EdgeInsets.fromLTRB(24, 4, 24, 120),
-                    itemCount: items.length,
-                    onReorder: (oldIndex, newIndex) async {
-                      if (newIndex > oldIndex) newIndex -= 1;
-                      final value = widget.playlist.surahNumbers.removeAt(oldIndex);
-                      widget.playlist.surahNumbers.insert(newIndex, value);
-                      await _saveAndRefresh();
-                    },
-                    itemBuilder: (context, index) {
-                      final surah = items[index];
-                      final playing = widget.audioService.currentSurah?.number == surah.number;
-                      return Container(
-                        key: ValueKey('${widget.playlist.id}_${surah.number}'),
-                        margin: const EdgeInsets.only(bottom: 10),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: playing ? colors.primary : colors.outline),
-                          color: playing
-                              ? colors.primary.withValues(alpha: 0.05)
-                              : Colors.transparent,
-                        ),
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            backgroundColor: colors.primary.withValues(alpha: 0.12),
-                            foregroundColor: colors.primary,
-                            child: Text(
-                              '${index + 1}',
-                              style: const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          title: Text(
-                            surah.name,
-                            style: GoogleFonts.spaceGrotesk(fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: Text(
-                            '${surah.nameAr} • ${surah.totalAyahs} Ayat',
-                            style: GoogleFonts.spaceGrotesk(fontSize: 11),
-                          ),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                onPressed: () => _playFrom(index),
-                                icon: Icon(
-                                  playing && widget.audioService.isPlaying
-                                      ? Icons.pause_circle
-                                      : Icons.play_circle,
-                                  color: colors.primary,
-                                  size: 30,
-                                ),
-                              ),
-                              IconButton(
-                                onPressed: () => _removeAt(index),
-                                icon: Icon(
-                                  Icons.remove_circle_outline,
-                                  color: colors.onSurface.withValues(alpha: 0.5),
-                                ),
-                              ),
-                              const Icon(Icons.drag_handle),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
+                );
+              },
             ),
+          ),
+        ],
+      ),
     );
+  }
+
+  List<Surah> _surahCandidates(List<Surah> items, List<Surah> all) {
+    final selected = {for (final surah in items) surah.number};
+    final ordered = <Surah>[...items];
+    for (final surah in all) {
+      if (!selected.contains(surah.number)) ordered.add(surah);
+    }
+    return ordered;
   }
 }
