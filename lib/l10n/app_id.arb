@@ -1976,9 +1976,33 @@
   "@hajjSubtitle": {
     "description": "Subjudul layar panduan Haji & Umrah"
   },
-  "hajjFootnote": "Ringkasan umum. Untuk praktik, ikuti bimbingan KBIHU / Kemenag.",
+  "hajjFootnote": "Ringkasan manasik menurut arus utama Indonesia. Untuk praktik, ikuti bimbingan KBIHU / Kemenag.",
   "@hajjFootnote": {
     "description": "Catatan kaki panduan manasik"
+  },
+  "hajjSunnah": "Sunah",
+  "@hajjSunnah": {
+    "description": "Label daftar sunah pada langkah manasik"
+  },
+  "hajjNote": "Catatan",
+  "@hajjNote": {
+    "description": "Label catatan pada langkah manasik"
+  },
+  "hajjDua": "Doa",
+  "@hajjDua": {
+    "description": "Label doa pada langkah manasik"
+  },
+  "hajjArabicNotice": "Teks Arab doa tidak disertakan. Bacalah dari buku manasik atau panduan Kemenag.",
+  "@hajjArabicNotice": {
+    "description": "Pemberitahuan bahwa teks Arab tidak disertakan"
+  },
+  "hajjOrderTitle": "Urutan manasik",
+  "@hajjOrderTitle": {
+    "description": "Judul bagian urutan langkah manasik"
+  },
+  "hajjOrderSubtitle": "Langkah demi langkah, berurutan.",
+  "@hajjOrderSubtitle": {
+    "description": "Subjudul bagian urutan langkah manasik"
   },
   "imsakiyahMonthly": "JADWAL BULANAN",
   "@imsakiyahMonthly": {

@@ -1975,9 +1975,33 @@
   "@hajjSubtitle": {
     "description": "Subtitle of the Hajj & Umrah guide screen"
   },
-  "hajjFootnote": "General summary. For practice, follow the guidance of your KBIHU / Ministry of Religious Affairs.",
+  "hajjFootnote": "A manasik summary following the Indonesian mainstream. For practice, follow the guidance of your KBIHU / Ministry of Religious Affairs.",
   "@hajjFootnote": {
     "description": "Footnote of the manasik guide"
+  },
+  "hajjSunnah": "Sunnah",
+  "@hajjSunnah": {
+    "description": "Label daftar sunah pada langkah manasik"
+  },
+  "hajjNote": "Note",
+  "@hajjNote": {
+    "description": "Label catatan pada langkah manasik"
+  },
+  "hajjDua": "Supplication",
+  "@hajjDua": {
+    "description": "Label doa pada langkah manasik"
+  },
+  "hajjArabicNotice": "The Arabic text of the supplications is not included. Read it from a manasik book or the Ministry guide.",
+  "@hajjArabicNotice": {
+    "description": "Pemberitahuan bahwa teks Arab tidak disertakan"
+  },
+  "hajjOrderTitle": "Order of the rites",
+  "@hajjOrderTitle": {
+    "description": "Judul bagian urutan langkah manasik"
+  },
+  "hajjOrderSubtitle": "Step by step, in order.",
+  "@hajjOrderSubtitle": {
+    "description": "Subjudul bagian urutan langkah manasik"
   },
   "imsakiyahMonthly": "MONTHLY SCHEDULE",
   "@imsakiyahMonthly": {

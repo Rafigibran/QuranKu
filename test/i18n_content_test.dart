@@ -85,12 +85,21 @@ void main() {
       );
     });
 
-    test('every section and step carries both languages', () {
+    test('every section, list, and step carries both languages', () {
       for (final section in hajjUmrahGuides) {
         expect(section.texts.keys, containsAll(<String>['id', 'en']));
         for (final text in section.texts.values) {
           expect(text.title.trim(), isNotEmpty);
           expect(text.intro.trim(), isNotEmpty);
+          // The reference lists are the reason this guide is not a summary.
+          expect(text.lists, isNotEmpty, reason: text.title);
+          for (final list in text.lists) {
+            expect(list.title.trim(), isNotEmpty);
+            expect(list.items, isNotEmpty, reason: list.title);
+            for (final item in list.items) {
+              expect(item.trim(), isNotEmpty, reason: list.title);
+            }
+          }
         }
         for (final step in section.steps) {
           expect(step.texts.keys, containsAll(<String>['id', 'en']));
@@ -98,7 +107,48 @@ void main() {
             expect(text.title.trim(), isNotEmpty);
             expect(text.place.trim(), isNotEmpty);
             expect(text.description.trim(), isNotEmpty);
+            for (final item in text.sunnah) {
+              expect(item.trim(), isNotEmpty, reason: text.title);
+            }
           }
+        }
+      }
+    });
+
+    test('both languages carry the same structure', () {
+      for (final section in hajjUmrahGuides) {
+        final id = section.textFor('id');
+        final en = section.textFor('en');
+        expect(
+          en.lists.length,
+          id.lists.length,
+          reason: '${id.title}: reference list count',
+        );
+        for (var i = 0; i < id.lists.length; i++) {
+          expect(
+            en.lists[i].items.length,
+            id.lists[i].items.length,
+            reason: '${id.lists[i].title}: item count',
+          );
+        }
+        for (final step in section.steps) {
+          final stepId = step.textFor('id');
+          final stepEn = step.textFor('en');
+          expect(
+            stepEn.sunnah.length,
+            stepId.sunnah.length,
+            reason: '${stepId.title}: sunnah count',
+          );
+          expect(
+            stepEn.note == null,
+            stepId.note == null,
+            reason: '${stepId.title}: note presence',
+          );
+          expect(
+            stepEn.dua == null,
+            stepId.dua == null,
+            reason: '${stepId.title}: dua presence',
+          );
         }
       }
     });
@@ -112,7 +162,7 @@ void main() {
       }
     });
 
-    test('id and en step counts match', () {
+    test('covers the rites of Hajj and Umrah', () {
       final total = hajjUmrahGuides.fold<int>(
         0,
         (sum, section) => sum + section.steps.length,
@@ -120,11 +170,74 @@ void main() {
       expect(total, 12);
     });
 
+    test('records more than ten sunnah acts across the guide', () {
+      final sunnah = [
+        for (final section in hajjUmrahGuides)
+          for (final step in section.steps) ...step.textFor('id').sunnah,
+      ];
+      expect(sunnah.length, greaterThan(10));
+    });
+
+    test('records where the schools of law differ', () {
+      final notes = [
+        for (final section in hajjUmrahGuides)
+          for (final step in section.steps)
+            if (step.textFor('id').note != null) step.textFor('id').note!,
+      ];
+      expect(notes.length, greaterThanOrEqualTo(5));
+      expect(
+        notes.any((n) => n.toLowerCase().contains('hanafi')),
+        isTrue,
+        reason: 'the farewell tawaf is the clearest difference to record',
+      );
+    });
+
+    test('carries no Arabic script, by design', () {
+      // PRODUCT.md forbids guessing sacred text. A mistyped Arabic formula is
+      // worse than none, so the guide names each supplication and explains it.
+      bool hasArabic(String value) => value.runes.any(
+        (r) =>
+            (r >= 0x0600 && r <= 0x06FF) ||
+            (r >= 0x0750 && r <= 0x077F) ||
+            (r >= 0xFB50 && r <= 0xFDFF) ||
+            (r >= 0xFE70 && r <= 0xFEFF),
+      );
+
+      for (final section in hajjUmrahGuides) {
+        for (final text in section.texts.values) {
+          expect(hasArabic(text.title), isFalse);
+          expect(hasArabic(text.intro), isFalse);
+          for (final list in text.lists) {
+            expect(hasArabic(list.title), isFalse);
+            for (final item in list.items) {
+              expect(hasArabic(item), isFalse);
+            }
+          }
+        }
+        for (final step in section.steps) {
+          for (final text in step.texts.values) {
+            expect(hasArabic(text.description), isFalse, reason: text.title);
+            for (final item in text.sunnah) {
+              expect(hasArabic(item), isFalse, reason: text.title);
+            }
+            if (text.dua != null) {
+              expect(hasArabic(text.dua!), isFalse, reason: text.title);
+            }
+            if (text.note != null) {
+              expect(hasArabic(text.note!), isFalse, reason: text.title);
+            }
+          }
+        }
+      }
+    });
+
     test('resolver returns language-appropriate text', () {
       final hajj = hajjUmrahGuides.first;
-      expect(hajj.steps.first.textFor('id').place, 'Miqat');
+      expect(hajj.steps.first.textFor('id').place, 'Miqat, bulan haji');
+      expect(hajj.steps.first.textFor('id').title, 'Ihram');
       expect(hajj.steps.first.textFor('en').description, contains('miqat'));
-      expect(hajj.steps[2].textFor('en').title, 'Wukuf at Arafah');
+      expect(hajj.steps[2].textFor('en').title, 'Standing at Arafah');
+      expect(hajj.steps[2].textFor('id').title, 'Wukuf');
     });
   });
 
