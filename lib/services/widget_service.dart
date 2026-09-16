@@ -19,7 +19,8 @@ Future<void> backgroundCallback(Uri? uri) async {
 }
 
 class WidgetService {
-  static const String _androidWidgetPrayerLocation = 'PrayerLocationWidgetReceiver';
+  static const String _androidWidgetPrayerLocation =
+      'PrayerLocationWidgetReceiver';
 
   static Future<void> init() async {
     await HomeWidget.registerBackgroundCallback(backgroundCallback);
@@ -33,18 +34,40 @@ class WidgetService {
   }) async {
     try {
       await HomeWidget.saveWidgetData('location_name', location);
-      await HomeWidget.saveWidgetData('date_str', DateFormat('d MMM').format(DateTime.now()));
+      await HomeWidget.saveWidgetData(
+        'date_str',
+        DateFormat('d MMM').format(DateTime.now()),
+      );
 
-      await HomeWidget.saveWidgetData('fajr_time', prayerTimes['Subuh'] ?? '--:--');
-      await HomeWidget.saveWidgetData('dhuhr_time', prayerTimes['Dzuhur'] ?? '--:--');
-      await HomeWidget.saveWidgetData('asr_time', prayerTimes['Ashar'] ?? '--:--');
-      await HomeWidget.saveWidgetData('maghrib_time', prayerTimes['Maghrib'] ?? '--:--');
-      await HomeWidget.saveWidgetData('isha_time', prayerTimes['Isya'] ?? '--:--');
+      await HomeWidget.saveWidgetData(
+        'fajr_time',
+        prayerTimes['Subuh'] ?? '--:--',
+      );
+      await HomeWidget.saveWidgetData(
+        'dhuhr_time',
+        prayerTimes['Dzuhur'] ?? '--:--',
+      );
+      await HomeWidget.saveWidgetData(
+        'asr_time',
+        prayerTimes['Ashar'] ?? '--:--',
+      );
+      await HomeWidget.saveWidgetData(
+        'maghrib_time',
+        prayerTimes['Maghrib'] ?? '--:--',
+      );
+      await HomeWidget.saveWidgetData(
+        'isha_time',
+        prayerTimes['Isya'] ?? '--:--',
+      );
 
       await HomeWidget.saveWidgetData('next_prayer_name', nextPrayerName);
       await HomeWidget.saveWidgetData('next_prayer_time', nextPrayerTime);
 
-      await HomeWidget.updateWidget(name: _androidWidgetPrayerLocation);
+      await HomeWidget.updateWidget(
+        name: _androidWidgetPrayerLocation,
+        qualifiedAndroidName:
+            'com.damarcreative.quran.PrayerLocationWidgetReceiver',
+      );
     } catch (e) {
       print('Error updating prayer widgets: $e');
     }

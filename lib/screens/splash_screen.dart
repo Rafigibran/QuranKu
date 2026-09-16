@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '../l10n/l10n.dart';
 import 'surah_list_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -44,12 +44,11 @@ class _SplashScreenState extends State<SplashScreen> {
             right: 0,
             child: Center(
               child: Text(
-                'RAFDEV',
-                style: GoogleFonts.spaceGrotesk(
+                context.l10n.appTitle,
+                style: TextStyle(
                   color: const Color(0xFF888888),
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
-                  letterSpacing: 1.2,
                 ),
               ),
             ),

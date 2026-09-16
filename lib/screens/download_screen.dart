@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '../l10n/l10n.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../services/download_service.dart';
 import '../services/settings_service.dart';
@@ -106,8 +106,8 @@ class _DownloadScreenState extends State<DownloadScreen> {
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: 'QURAN DOWNLOADS',
-                        style: GoogleFonts.spaceGrotesk(
+                        text: context.l10n.downloadsTitle,
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
                           color: colorScheme.onSurface,
@@ -116,7 +116,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
                       ),
                       TextSpan(
                         text: '.',
-                        style: GoogleFonts.spaceGrotesk(
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
                           color: colorScheme.primary,
@@ -127,16 +127,21 @@ class _DownloadScreenState extends State<DownloadScreen> {
                 ),
                 if (_service.status != DownloadStatus.idle)
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: colorScheme.primary.withValues(alpha: 0.2),
                       border: Border.all(color: colorScheme.primary),
                     ),
                     child: Text(
-                      _service.status == DownloadStatus.paused ? 'PAUSED' : 'DOWNLOADING',
-                      style: GoogleFonts.spaceGrotesk(
+                      _service.status == DownloadStatus.paused
+                          ? 'PAUSED'
+                          : 'DOWNLOADING',
+                      style: TextStyle(
                         color: colorScheme.primary,
-                        fontSize: 10,
+                        fontSize: 12,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -152,9 +157,9 @@ class _DownloadScreenState extends State<DownloadScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Download translations and tafsir for offline reading.',
-                    style: GoogleFonts.spaceGrotesk(
-                      color: colorScheme.onSurface.withValues(alpha: 0.5),
+                    context.l10n.downloadsSubtitle,
+                    style: TextStyle(
+                      color: colorScheme.onSurface.withValues(alpha: 0.72),
                       fontSize: 14,
                     ),
                   ),
@@ -169,19 +174,30 @@ class _DownloadScreenState extends State<DownloadScreen> {
                       child: DropdownButton<String>(
                         value: selectedEditionToAdd,
                         hint: Text(
-                          'Select edition to add',
-                          style: GoogleFonts.spaceGrotesk(
-                            color: colorScheme.onSurface.withValues(alpha: 0.5),
+                          context.l10n.downloadsSelect,
+                          style: TextStyle(
+                            color: colorScheme.onSurface.withValues(alpha: 0.72),
                           ),
                         ),
                         dropdownColor: Theme.of(context).cardColor,
                         isExpanded: true,
                         items: availableEditions
-                            .where((e) => !_service.queue.contains(e) && !_service.downloadedEditions.contains(e))
-                            .map((String value) => DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value, style: GoogleFonts.spaceGrotesk(color: colorScheme.onSurface)),
-                                ))
+                            .where(
+                              (e) =>
+                                  !_service.queue.contains(e) &&
+                                  !_service.downloadedEditions.contains(e),
+                            )
+                            .map(
+                              (String value) => DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(
+                                  value,
+                                  style: TextStyle(
+                                    color: colorScheme.onSurface,
+                                  ),
+                                ),
+                              ),
+                            )
                             .toList(),
                         onChanged: (newValue) {
                           if (newValue != null) {
@@ -195,21 +211,37 @@ class _DownloadScreenState extends State<DownloadScreen> {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  if (_service.status != DownloadStatus.idle || _service.queue.isNotEmpty) ...[
+                  if (_service.status != DownloadStatus.idle ||
+                      _service.queue.isNotEmpty) ...[
                     Row(
                       children: [
                         Expanded(
                           child: ElevatedButton.icon(
-                            onPressed: _service.status == DownloadStatus.downloading ? _service.pauseDownload : _service.startDownload,
-                            icon: Icon(_service.status == DownloadStatus.downloading ? Icons.pause : Icons.play_arrow, color: Colors.black),
+                            onPressed:
+                                _service.status == DownloadStatus.downloading
+                                ? _service.pauseDownload
+                                : _service.startDownload,
+                            icon: Icon(
+                              _service.status == DownloadStatus.downloading
+                                  ? Icons.pause
+                                  : Icons.play_arrow,
+                              color: colorScheme.onPrimary,
+                            ),
                             label: Text(
-                              _service.status == DownloadStatus.downloading ? 'Pause' : 'Resume',
-                              style: GoogleFonts.spaceGrotesk(fontWeight: FontWeight.bold, color: Colors.black),
+                              _service.status == DownloadStatus.downloading
+                                  ? 'Pause'
+                                  : 'Resume',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: colorScheme.onPrimary,
+                              ),
                             ),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: colorScheme.primary,
                               padding: const EdgeInsets.symmetric(vertical: 12),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(0),
+                              ),
                             ),
                           ),
                         ),
@@ -217,9 +249,14 @@ class _DownloadScreenState extends State<DownloadScreen> {
                         if (_service.status != DownloadStatus.idle)
                           IconButton(
                             onPressed: _service.stopDownload,
-                            icon: const Icon(Icons.stop, color: Colors.redAccent),
+                            icon: Icon(
+                              Icons.stop,
+                              color: colorScheme.error,
+                            ),
                             style: IconButton.styleFrom(
-                              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.zero,
+                              ),
                               side: BorderSide(color: colorScheme.outline),
                             ),
                           ),
@@ -235,13 +272,22 @@ class _DownloadScreenState extends State<DownloadScreen> {
                       const SizedBox(height: 8),
                       Text(
                         'Downloading ${_service.currentEdition}: Surah ${_settings.formatNumber(_service.currentSurah)} of ${_settings.formatNumber(114)}',
-                        style: GoogleFonts.spaceGrotesk(color: colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 12),
+                        style: TextStyle(
+                          color: colorScheme.onSurface.withValues(alpha: 0.72),
+                          fontSize: 12,
+                        ),
                       ),
                     ],
                     const SizedBox(height: 24),
                   ],
                   if (_service.queue.isNotEmpty) ...[
-                    Text('Queue:', style: GoogleFonts.spaceGrotesk(color: colorScheme.onSurface, fontWeight: FontWeight.bold)),
+                    Text(
+                      'Queue:',
+                      style: TextStyle(
+                        color: colorScheme.onSurface,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     const SizedBox(height: 12),
                     ListView.builder(
                       shrinkWrap: true,
@@ -251,18 +297,37 @@ class _DownloadScreenState extends State<DownloadScreen> {
                         final edition = _service.queue[index];
                         return Container(
                           margin: const EdgeInsets.only(bottom: 8),
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
                           width: double.infinity,
-                          decoration: BoxDecoration(border: Border.all(color: colorScheme.outline), borderRadius: BorderRadius.circular(0)),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: colorScheme.outline),
+                            borderRadius: BorderRadius.circular(0),
+                          ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(edition, style: GoogleFonts.spaceGrotesk(color: colorScheme.onSurface, fontSize: 14)),
+                              Text(
+                                edition,
+                                style: TextStyle(
+                                  color: colorScheme.onSurface,
+                                  fontSize: 14,
+                                ),
+                              ),
                               IconButton(
-                                icon: Icon(Icons.close, size: 18, color: colorScheme.onSurface.withValues(alpha: 0.5)),
+                                icon: Icon(
+                                  Icons.close,
+                                  size: 18,
+                                  color: colorScheme.onSurface.withValues(
+                                    alpha: 0.5,
+                                  ),
+                                ),
                                 padding: EdgeInsets.zero,
                                 constraints: const BoxConstraints(),
-                                onPressed: () => _service.removeFromQueue(edition),
+                                onPressed: () =>
+                                    _service.removeFromQueue(edition),
                               ),
                             ],
                           ),
@@ -274,7 +339,13 @@ class _DownloadScreenState extends State<DownloadScreen> {
                   if (_service.downloadedEditions.isNotEmpty) ...[
                     Container(height: 1, color: colorScheme.outline),
                     const SizedBox(height: 24),
-                    Text('Downloaded:', style: GoogleFonts.spaceGrotesk(color: colorScheme.onSurface, fontWeight: FontWeight.bold)),
+                    Text(
+                      'Downloaded:',
+                      style: TextStyle(
+                        color: colorScheme.onSurface,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     const SizedBox(height: 12),
                     ConstrainedBox(
                       constraints: const BoxConstraints(maxHeight: 200),
@@ -286,7 +357,10 @@ class _DownloadScreenState extends State<DownloadScreen> {
                             final edition = _service.downloadedEditions[index];
                             return Container(
                               margin: const EdgeInsets.only(bottom: 8),
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 12,
+                              ),
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 color: Theme.of(context).cardColor,
@@ -294,10 +368,23 @@ class _DownloadScreenState extends State<DownloadScreen> {
                                 borderRadius: BorderRadius.circular(0),
                               ),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(edition, style: GoogleFonts.spaceGrotesk(color: colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 14)),
-                                  const Icon(Icons.check_circle_outline, color: Color(0xFF40B779), size: 18),
+                                  Text(
+                                    edition,
+                                    style: TextStyle(
+                                      color: colorScheme.onSurface.withValues(
+                                        alpha: 0.5,
+                                      ),
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.check_circle_outline,
+                                    color: colorScheme.primary,
+                                    size: 18,
+                                  ),
                                 ],
                               ),
                             );

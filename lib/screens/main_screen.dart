@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import 'surah_list_screen.dart';
 import 'prayer_times_screen.dart';
 import 'murotal_screen.dart';
-import 'playlist_screen.dart';
-import 'settings_screen.dart';
+import 'kajian_screen.dart';
+import 'khatam_screen.dart';
 import '../services/audio_service.dart';
 import '../widgets/mini_player.dart';
 import '../widgets/full_player_view.dart';
-import '../widgets/liquid_glass.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -19,14 +19,18 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
   bool _showFullPlayer = false;
+  bool _hadAudio = false;
   final AudioService _audioService = AudioService();
 
+  // 5-tab IA: Home (dashboard + baca) / Jadwal Shalat (waktu shalat) /
+  // Murotal (audio) / Target (tujuan+progres) / Kajian (jadwal kajian).
   late final List<Widget?> _screens = List<Widget?>.filled(5, null);
 
   @override
   void initState() {
     super.initState();
     _screens[0] = const SurahListScreen();
+    _hadAudio = _audioService.currentSurah != null;
     _audioService.addListener(_onAudioUpdate);
   }
 
@@ -51,10 +55,10 @@ class _MainScreenState extends State<MainScreen> {
         _screens[index] = const MurotalScreen();
         break;
       case 3:
-        _screens[index] = const PlaylistScreen();
+        _screens[index] = const KhatamScreen();
         break;
       case 4:
-        _screens[index] = const SettingsScreen();
+        _screens[index] = const KajianScreen();
         break;
       default:
         _screens[index] = const SurahListScreen();
@@ -63,7 +67,12 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void _onAudioUpdate() {
-    if (mounted) setState(() {});
+    // Rebuild host only when player visibility changes (surah set/cleared).
+    // Position ticks are consumed by MiniPlayer/FullPlayerView listeners.
+    final hasAudio = _audioService.currentSurah != null;
+    if (hasAudio != _hadAudio && mounted) {
+      setState(() => _hadAudio = hasAudio);
+    }
   }
 
   void _onItemTapped(int index) {
@@ -74,178 +83,104 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
-  DateTime? _currentBackPressTime;
+  List<NavigationDestination> _barDestinations(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    return [
+      NavigationDestination(icon: const Icon(Icons.home_outlined), selectedIcon: const Icon(Icons.home_rounded), label: l.navHome, tooltip: l.navHome),
+      NavigationDestination(icon: const Icon(Icons.schedule_rounded), selectedIcon: const Icon(Icons.schedule), label: l.navJadwalShalat, tooltip: l.navJadwalShalat),
+      NavigationDestination(icon: const Icon(Icons.audiotrack_outlined), selectedIcon: const Icon(Icons.audiotrack_rounded), label: l.navMurotal, tooltip: l.navMurotal),
+      NavigationDestination(icon: const Icon(Icons.track_changes_outlined), selectedIcon: const Icon(Icons.track_changes_rounded), label: l.navTarget, tooltip: l.navTarget),
+      NavigationDestination(icon: const Icon(Icons.school_outlined), selectedIcon: const Icon(Icons.school_rounded), label: l.navKajian, tooltip: l.navKajian),
+    ];
+  }
 
-  Future<bool> _onWillPop() async {
-    if (_showFullPlayer) {
-      setState(() => _showFullPlayer = false);
-      return false;
-    }
+  List<NavigationRailDestination> _railDestinations(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    return [
+      NavigationRailDestination(icon: const Icon(Icons.home_outlined), selectedIcon: const Icon(Icons.home_rounded), label: Text(l.navHome)),
+      NavigationRailDestination(icon: const Icon(Icons.schedule_rounded), selectedIcon: const Icon(Icons.schedule), label: Text(l.navJadwalShalat)),
+      NavigationRailDestination(icon: const Icon(Icons.audiotrack_outlined), selectedIcon: const Icon(Icons.audiotrack_rounded), label: Text(l.navMurotal)),
+      NavigationRailDestination(icon: const Icon(Icons.track_changes_outlined), selectedIcon: const Icon(Icons.track_changes_rounded), label: Text(l.navTarget)),
+      NavigationRailDestination(icon: const Icon(Icons.school_outlined), selectedIcon: const Icon(Icons.school_rounded), label: Text(l.navKajian)),
+    ];
+  }
 
-    final now = DateTime.now();
-    if (_currentBackPressTime == null ||
-        now.difference(_currentBackPressTime!) > const Duration(seconds: 2)) {
-      _currentBackPressTime = now;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Ketuk sekali lagi untuk keluar'),
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0.92),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-          elevation: 8,
+  Widget _playerStack(bool hasAudio) {
+    return Stack(
+      children: [
+        IndexedStack(
+          index: _selectedIndex,
+          children: List<Widget>.generate(
+            _screens.length,
+            (index) => _screens[index] ?? const SizedBox.shrink(),
+            growable: false,
+          ),
         ),
-      );
-      return false;
-    }
-    return true;
+        if (!_showFullPlayer && hasAudio)
+          Positioned(
+            left: 16,
+            right: 16,
+            bottom: 16,
+            child: MiniPlayer(
+              onTap: () => setState(() => _showFullPlayer = true),
+            ),
+          ),
+        if (_showFullPlayer && hasAudio)
+          Positioned.fill(
+            child: FullPlayerView(
+              onCollapse: () => setState(() => _showFullPlayer = false),
+            ),
+          ),
+      ],
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final hasAudio = _audioService.currentSurah != null;
-    final children = List<Widget>.generate(
-      _screens.length,
-      (index) => _screens[index] ?? const SizedBox.shrink(),
-      growable: false,
-    );
+    final content = _playerStack(hasAudio);
 
-    return WillPopScope(
-      onWillPop: _onWillPop,
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        extendBody: true,
-        body: Stack(
-          children: [
-            IndexedStack(index: _selectedIndex, children: children),
-            if (!_showFullPlayer && hasAudio)
-              Positioned(
-                left: 16,
-                right: 16,
-                bottom: 154,
-                child: SafeArea(
-                  top: false,
-                  bottom: false,
-                  child: MiniPlayer(
-                    onTap: () => setState(() => _showFullPlayer = true),
-                  ),
-                ),
-              ),
-            if (_showFullPlayer && hasAudio)
-              Positioned.fill(
-                child: FullPlayerView(
-                  onCollapse: () => setState(() => _showFullPlayer = false),
-                ),
-              ),
-          ],
-        ),
-        bottomNavigationBar: _showFullPlayer
-            ? null
-            : _buildReferenceNavigation(context),
-      ),
-    );
-  }
-
-  Widget _buildReferenceNavigation(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final selected = scheme.primary;
-    final unselected = isDark
-        ? Colors.white.withValues(alpha: 0.78)
-        : scheme.onSurface.withValues(alpha: 0.70);
-    final navigationTint = isDark
-        ? scheme.surface.withValues(alpha: 0.32)
-        : Colors.white.withValues(alpha: 0.84);
-    final navigationBorder = isDark
-        ? Colors.white.withValues(alpha: 0.12)
-        : scheme.outline.withValues(alpha: 0.60);
-
-    return SafeArea(
-      top: false,
-      minimum: const EdgeInsets.fromLTRB(18, 6, 18, 12),
-      child: LiquidGlassCard(
-        radius: 34,
-        blur: 28,
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-        tint: navigationTint,
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(28),
-            border: Border.all(color: navigationBorder),
-          ),
-          child: SizedBox(
-            height: 86,
-            child: Row(
+    // System Back is never trapped: it collapses the full player when open,
+    // otherwise it follows the OS default (backgrounds the app at root).
+    return PopScope(
+      canPop: !_showFullPlayer,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop && _showFullPlayer) {
+          setState(() => _showFullPlayer = false);
+        }
+      },
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final wide = constraints.maxWidth >= 840;
+          Widget body = content;
+          if (wide) {
+            body = Row(
               children: [
-                _navItem(context, 0, Icons.home_rounded, 'Al-Quran', selected, unselected),
-                _navItem(context, 1, Icons.mosque_rounded, 'Jadwal', selected, unselected),
-                _navItem(context, 2, Icons.person_rounded, 'Murotal', selected, unselected),
-                _navItem(context, 3, Icons.queue_music_rounded, 'Playlist', selected, unselected),
-                _navItem(context, 4, Icons.settings_rounded, 'Pengaturan', selected, unselected),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _navItem(
-    BuildContext context,
-    int index,
-    IconData icon,
-    String label,
-    Color selected,
-    Color unselected,
-  ) {
-    final isSelected = _selectedIndex == index;
-
-    return Expanded(
-      child: Semantics(
-        button: true,
-        selected: isSelected,
-        label: label,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(28),
-          onTap: () => _onItemTapped(index),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 180),
-            curve: Curves.easeOutCubic,
-            margin: const EdgeInsets.symmetric(horizontal: 2),
-            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-            decoration: BoxDecoration(
-              color: isSelected ? selected.withValues(alpha: 0.18) : Colors.transparent,
-              borderRadius: BorderRadius.circular(28),
-              border: isSelected ? Border.all(color: selected.withValues(alpha: 0.20)) : null,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                AnimatedScale(
-                  duration: const Duration(milliseconds: 180),
-                  scale: isSelected ? 1.06 : 1.0,
-                  child: Icon(
-                    icon,
-                    size: isSelected ? 31 : 28,
-                    color: isSelected ? selected : unselected,
+                if (!_showFullPlayer)
+                  NavigationRail(
+                    selectedIndex: _selectedIndex,
+                    onDestinationSelected: _onItemTapped,
+                    labelType: NavigationRailLabelType.all,
+                    destinations: _railDestinations(context),
                   ),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    fontSize: 10.5,
-                    height: 1,
-                    fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                    color: isSelected ? selected : unselected,
-                  ),
-                ),
+                Expanded(child: content),
               ],
-            ),
-          ),
-        ),
+            );
+          }
+          return Scaffold(
+            backgroundColor: Theme.of(context).colorScheme.surface,
+            body: body,
+            bottomNavigationBar: _showFullPlayer || wide
+                ? null
+                : NavigationBar(
+                    selectedIndex: _selectedIndex,
+                    onDestinationSelected: _onItemTapped,
+                    labelBehavior:
+                        NavigationDestinationLabelBehavior.alwaysShow,
+                    destinations: _barDestinations(context),
+                  ),
+          );
+        },
       ),
     );
   }

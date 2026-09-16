@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:quranku/l10n/l10n.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/surah.dart';
@@ -9,11 +9,8 @@ import '../services/api_service.dart';
 import '../services/audio_service.dart';
 
 class _Playlist {
-  _Playlist({
-    required this.id,
-    required this.name,
-    List<int>? surahNumbers,
-  }) : surahNumbers = surahNumbers ?? <int>[];
+  _Playlist({required this.id, required this.name, List<int>? surahNumbers})
+    : surahNumbers = surahNumbers ?? <int>[];
 
   final String id;
   String name;
@@ -22,25 +19,27 @@ class _Playlist {
   factory _Playlist.fromJson(Map<String, dynamic> json) {
     final rawNumbers = json['surahNumbers'];
     return _Playlist(
-      id: json['id']?.toString() ?? DateTime.now().microsecondsSinceEpoch.toString(),
+      id:
+          json['id']?.toString() ??
+          DateTime.now().microsecondsSinceEpoch.toString(),
       name: json['name']?.toString().trim().isNotEmpty == true
           ? json['name'].toString()
           : 'Playlist',
       surahNumbers: rawNumbers is List
           ? rawNumbers
-              .map((value) => int.tryParse(value.toString()))
-              .whereType<int>()
-              .where((value) => value >= 1 && value <= 114)
-              .toList()
+                .map((value) => int.tryParse(value.toString()))
+                .whereType<int>()
+                .where((value) => value >= 1 && value <= 114)
+                .toList()
           : <int>[],
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'surahNumbers': surahNumbers,
-      };
+    'id': id,
+    'name': name,
+    'surahNumbers': surahNumbers,
+  };
 }
 
 class PlaylistScreen extends StatefulWidget {
@@ -104,11 +103,13 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
             .where((value) => value >= 1 && value <= 114)
             .toList();
         if (legacyNumbers.isNotEmpty) {
-          loaded.add(_Playlist(
-            id: DateTime.now().microsecondsSinceEpoch.toString(),
-            name: 'Favorit',
-            surahNumbers: legacyNumbers,
-          ));
+          loaded.add(
+            _Playlist(
+              id: DateTime.now().microsecondsSinceEpoch.toString(),
+              name: 'Favorites',
+              surahNumbers: legacyNumbers,
+            ),
+          );
         }
       }
 
@@ -146,25 +147,26 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
     final name = await showDialog<String>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Playlist Baru'),
+        title: Text(context.l10n.playlistNew),
         content: TextField(
           controller: controller,
           autofocus: true,
           textInputAction: TextInputAction.done,
           onSubmitted: (value) => Navigator.pop(dialogContext, value.trim()),
-          decoration: const InputDecoration(
-            labelText: 'Nama playlist',
+          decoration: InputDecoration(
+            labelText: context.l10n.playlistNameLabel,
             hintText: 'Kajian & Tilawah',
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Batal'),
+            child: Text(context.l10n.commonCancel),
           ),
           ElevatedButton(
-            onPressed: () => Navigator.pop(dialogContext, controller.text.trim()),
-            child: const Text('Buat'),
+            onPressed: () =>
+                Navigator.pop(dialogContext, controller.text.trim()),
+            child: Text(context.l10n.playlistCreate),
           ),
         ],
       ),
@@ -175,10 +177,12 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
     if (cleanName.isEmpty) return;
 
     setState(() {
-      _playlists.add(_Playlist(
-        id: DateTime.now().microsecondsSinceEpoch.toString(),
-        name: cleanName,
-      ));
+      _playlists.add(
+        _Playlist(
+          id: DateTime.now().microsecondsSinceEpoch.toString(),
+          name: cleanName,
+        ),
+      );
     });
     await _save();
   }
@@ -188,20 +192,21 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
     final name = await showDialog<String>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Ganti Nama Playlist'),
+        title: Text(context.l10n.playlistRenameTitle),
         content: TextField(
           controller: controller,
           autofocus: true,
-          decoration: const InputDecoration(labelText: 'Nama playlist'),
+          decoration: InputDecoration(labelText: context.l10n.playlistNameLabel),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Batal'),
+            child: Text(context.l10n.commonCancel),
           ),
           ElevatedButton(
-            onPressed: () => Navigator.pop(dialogContext, controller.text.trim()),
-            child: const Text('Simpan'),
+            onPressed: () =>
+                Navigator.pop(dialogContext, controller.text.trim()),
+            child: Text(context.l10n.commonSave),
           ),
         ],
       ),
@@ -218,18 +223,18 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Hapus Playlist?'),
-        content: const Text(
-          'Playlist ini dan Surah yang tersimpan di dalamnya akan dihapus.',
+        title: Text(context.l10n.playlistDeleteTitle),
+        content: Text(
+          context.l10n.playlistDeleteBody,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext, false),
-            child: const Text('Batal'),
+            child: Text(context.l10n.commonCancel),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(dialogContext, true),
-            child: const Text('Hapus'),
+            child: Text(context.l10n.commonDelete),
           ),
         ],
       ),
@@ -281,7 +286,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
         title: Text.rich(
           TextSpan(
             text: 'PLAYLIST',
-            style: GoogleFonts.spaceGrotesk(
+            style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
               color: colors.onSurface,
@@ -289,7 +294,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
             children: [
               TextSpan(
                 text: '.',
-                style: GoogleFonts.spaceGrotesk(color: colors.primary),
+                style: TextStyle(color: colors.primary),
               ),
             ],
           ),
@@ -298,35 +303,39 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
           IconButton(
             onPressed: _createPlaylist,
             icon: const Icon(Icons.add),
-            tooltip: 'Playlist baru',
+            tooltip: context.l10n.playlistNewTooltip,
           ),
         ],
       ),
       body: _loading
           ? Center(child: CircularProgressIndicator(color: colors.primary))
           : _playlists.isEmpty
-              ? _buildEmptyHome(colors)
-              : ListView.separated(
-                  padding: const EdgeInsets.fromLTRB(24, 10, 24, 120),
-                  itemCount: _playlists.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 12),
-                  itemBuilder: (context, index) {
-                    final playlist = _playlists[index];
-                    final items = _itemsFor(playlist);
-                    final isPlaying = items.isNotEmpty &&
-                        items.any((surah) => _audioService.currentSurah?.number == surah.number);
-                    return _PlaylistCard(
-                      playlist: playlist,
-                      itemCount: items.length,
-                      isPlaying: isPlaying,
-                      colors: colors,
-                      onTap: () => _openPlaylist(playlist),
-                      onPlay: items.isEmpty ? null : () => _playPlaylist(playlist),
-                      onRename: () => _renamePlaylist(playlist),
-                      onDelete: () => _deletePlaylist(playlist),
+          ? _buildEmptyHome(colors)
+          : ListView.separated(
+              padding: const EdgeInsets.fromLTRB(24, 10, 24, 120),
+              itemCount: _playlists.length,
+              separatorBuilder: (_, __) => const SizedBox(height: 12),
+              itemBuilder: (context, index) {
+                final playlist = _playlists[index];
+                final items = _itemsFor(playlist);
+                final isPlaying =
+                    items.isNotEmpty &&
+                    items.any(
+                      (surah) =>
+                          _audioService.currentSurah?.number == surah.number,
                     );
-                  },
-                ),
+                return _PlaylistCard(
+                  playlist: playlist,
+                  itemCount: items.length,
+                  isPlaying: isPlaying,
+                  colors: colors,
+                  onTap: () => _openPlaylist(playlist),
+                  onPlay: items.isEmpty ? null : () => _playPlaylist(playlist),
+                  onRename: () => _renamePlaylist(playlist),
+                  onDelete: () => _deletePlaylist(playlist),
+                );
+              },
+            ),
     );
   }
 
@@ -339,25 +348,25 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
           children: [
             Icon(Icons.library_music_outlined, size: 68, color: colors.primary),
             const SizedBox(height: 18),
-            const Text(
-              'Buat playlist pertamamu',
+            Text(
+              context.l10n.playlistEmptyTitle,
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Text(
-              'Pisahkan Surah ke dalam banyak playlist, seperti Spotify.',
+              context.l10n.playlistEmptyHint,
               textAlign: TextAlign.center,
-              style: GoogleFonts.spaceGrotesk(
+              style: TextStyle(
                 fontSize: 12,
-                color: colors.onSurface.withValues(alpha: 0.6),
+                color: colors.onSurface.withValues(alpha: 0.72),
               ),
             ),
             const SizedBox(height: 20),
             ElevatedButton.icon(
               onPressed: _createPlaylist,
               icon: const Icon(Icons.add),
-              label: const Text('Buat Playlist'),
+              label: Text(context.l10n.playlistCreateAction),
             ),
           ],
         ),
@@ -421,17 +430,17 @@ class _PlaylistCard extends StatelessWidget {
                       playlist.name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.spaceGrotesk(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '$itemCount Surah',
-                      style: GoogleFonts.spaceGrotesk(
-                        fontSize: 11,
-                        color: colors.onSurface.withValues(alpha: 0.6),
+                      context.l10n.commonSurahCount(itemCount),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: colors.onSurface.withValues(alpha: 0.72),
                       ),
                     ),
                   ],
@@ -440,7 +449,9 @@ class _PlaylistCard extends StatelessWidget {
               IconButton(
                 onPressed: onPlay,
                 icon: Icon(
-                  isPlaying ? Icons.pause_circle_filled : Icons.play_circle_fill,
+                  isPlaying
+                      ? Icons.pause_circle_filled
+                      : Icons.play_circle_fill,
                   color: onPlay == null
                       ? colors.onSurface.withValues(alpha: 0.25)
                       : colors.primary,
@@ -452,14 +463,14 @@ class _PlaylistCard extends StatelessWidget {
                   if (value == 'rename') onRename();
                   if (value == 'delete') onDelete();
                 },
-                itemBuilder: (_) => const [
+                itemBuilder: (_) => [
                   PopupMenuItem(
                     value: 'rename',
-                    child: Text('Ganti Nama'),
+                    child: Text(context.l10n.playlistRename),
                   ),
                   PopupMenuItem(
                     value: 'delete',
-                    child: Text('Hapus'),
+                    child: Text(context.l10n.commonDelete),
                   ),
                 ],
               ),
@@ -533,15 +544,16 @@ class _PlaylistDetailScreenState extends State<_PlaylistDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
     final items = _items;
     final visible = _query.trim().isEmpty
         ? _surahCandidates(items, widget.surahs)
         : _surahCandidates(items, widget.surahs)
-            .where((surah) =>
-                surah.name.toLowerCase().contains(_query.toLowerCase()) ||
-                surah.nameAr.contains(_query))
-            .toList();
+              .where(
+                (surah) =>
+                    surah.name.toLowerCase().contains(_query.toLowerCase()) ||
+                    surah.nameAr.contains(_query),
+              )
+              .toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -550,14 +562,16 @@ class _PlaylistDetailScreenState extends State<_PlaylistDetailScreen> {
           IconButton(
             onPressed: () async {
               for (final surah in items) {
-                if (!widget.audioService.currentSurah!.number.toString().contains(surah.number.toString())) {
+                if (!widget.audioService.currentSurah!.number
+                    .toString()
+                    .contains(surah.number.toString())) {
                   break;
                 }
               }
               if (items.isNotEmpty) _playFrom(0);
             },
             icon: const Icon(Icons.play_arrow),
-            tooltip: 'Putar playlist',
+            tooltip: context.l10n.playlistPlay,
           ),
         ],
       ),
@@ -567,8 +581,8 @@ class _PlaylistDetailScreenState extends State<_PlaylistDetailScreen> {
             padding: const EdgeInsets.all(16),
             child: TextField(
               onChanged: (value) => setState(() => _query = value),
-              decoration: const InputDecoration(
-                hintText: 'Tambah Surah ke playlist...',
+              decoration: InputDecoration(
+                hintText: context.l10n.playlistAddSurahHint,
                 prefixIcon: Icon(Icons.search),
               ),
             ),
@@ -576,24 +590,44 @@ class _PlaylistDetailScreenState extends State<_PlaylistDetailScreen> {
           Expanded(
             child: ReorderableListView.builder(
               itemCount: visible.length,
-              onReorder: (oldIndex, newIndex) async {
-                final actualOld = widget.playlist.surahNumbers.indexOf(visible[oldIndex].number);
-                final actualNew = widget.playlist.surahNumbers.indexOf(visible[newIndex.clamp(0, visible.length - 1)].number);
-                if (actualOld >= 0 && actualNew >= 0) await _reorder(actualOld, actualNew);
-              },
+              onReorder: _query.isNotEmpty
+                  ? null
+                  : (oldIndex, newIndex) async {
+                      // Disable reorder when filtered — mapping would be ambiguous
+                      if (_query.isNotEmpty) return;
+                      if (newIndex > oldIndex) newIndex -= 1;
+                      final actualOld = widget.playlist.surahNumbers.indexOf(
+                        visible[oldIndex].number,
+                      );
+                      // When dragging to end, newIndex == visible.length, insert at end
+                      final actualNew = newIndex >= visible.length
+                          ? widget.playlist.surahNumbers.length
+                          : widget.playlist.surahNumbers.indexOf(
+                              visible[newIndex.clamp(0, visible.length - 1)]
+                                  .number,
+                            );
+                      if (actualOld >= 0 && actualNew >= 0)
+                        await _reorder(actualOld, actualNew);
+                    },
               itemBuilder: (context, index) {
                 final surah = visible[index];
-                final selected = widget.playlist.surahNumbers.contains(surah.number);
+                final selected = widget.playlist.surahNumbers.contains(
+                  surah.number,
+                );
                 return ListTile(
                   key: ValueKey(surah.number),
                   title: Text(surah.name),
                   subtitle: Text('${surah.totalAyahs} ayat • ${surah.nameAr}'),
-                  leading: Icon(selected ? Icons.check_circle : Icons.add_circle_outline),
+                  leading: Icon(
+                    selected ? Icons.check_circle : Icons.add_circle_outline,
+                  ),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
-                        onPressed: selected ? () => _playFrom(index) : () => _addSurah(surah),
+                        onPressed: selected
+                            ? () => _playFrom(index)
+                            : () => _addSurah(surah),
                         icon: Icon(selected ? Icons.play_arrow : Icons.add),
                       ),
                       if (selected)

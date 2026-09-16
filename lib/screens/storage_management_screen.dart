@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '../l10n/l10n.dart';
 import '../services/settings_service.dart';
 import '../services/api_service.dart';
 import '../models/surah.dart';
@@ -106,12 +106,11 @@ class _StorageManagementScreenState extends State<StorageManagementScreen>
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(
-          'MANAGE STORAGE',
-          style: GoogleFonts.spaceGrotesk(
+          context.l10n.storageTitle,
+          style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
             color: colorScheme.onSurface,
-            letterSpacing: 1,
           ),
         ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -120,9 +119,9 @@ class _StorageManagementScreenState extends State<StorageManagementScreen>
         bottom: TabBar(
           controller: _tabController,
           labelColor: colorScheme.primary,
-          unselectedLabelColor: colorScheme.onSurface.withValues(alpha: 0.5),
+          unselectedLabelColor: colorScheme.onSurface.withValues(alpha: 0.72),
           indicatorColor: colorScheme.primary,
-          labelStyle: GoogleFonts.spaceGrotesk(fontWeight: FontWeight.bold),
+          labelStyle: TextStyle(fontWeight: FontWeight.bold),
           tabs: const [
             Tab(text: 'Audio'),
             Tab(text: 'Data'),
@@ -139,17 +138,15 @@ class _StorageManagementScreenState extends State<StorageManagementScreen>
   }
 
   Widget _buildAudioTab() {
-    final colorScheme = Theme.of(context).colorScheme;
-
     if (_audioDetails.isEmpty) {
-      return _buildEmptyState('No audio files downloaded');
+      return _buildEmptyState(context.l10n.storageNoAudio);
     }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildSummaryCard(
-          'Total Audio Storage',
+          context.l10n.storageTotalAudio,
           _settings.formatBytes(_totalAudioSize),
         ),
         Expanded(
@@ -161,17 +158,17 @@ class _StorageManagementScreenState extends State<StorageManagementScreen>
               final surahNum = item['surahNumber'];
               final surah = _surahMap[surahNum];
 
-              final surahName = surah != null ? surah.name : 'Surah $surahNum';
+              final surahName = surah != null ? surah.name : context.l10n.storageSurahLabel(surahNum);
               final totalAyahs = surah?.totalAyahs ?? 0;
               final downloadCount = item['fileCount'];
 
               return _buildStorageItem(
                 title: surahName,
-                subtitle: '$downloadCount / $totalAyahs Ayahs Downloaded',
+                subtitle: context.l10n.storageAyahsDownloaded(downloadCount, totalAyahs),
                 size: _settings.formatBytes(item['totalSize']),
                 onDelete: () => _confirmDelete(
-                  title: 'Delete Audio?',
-                  content: 'Delete audio files for $surahName?',
+                  title: context.l10n.storageDeleteAudioTitle,
+                  content: context.l10n.storageDeleteAudioBody(surahName),
                   onConfirm: () => _deleteAudio(surahNum),
                 ),
               );
@@ -183,13 +180,11 @@ class _StorageManagementScreenState extends State<StorageManagementScreen>
   }
 
   Widget _buildDataTab() {
-    final colorScheme = Theme.of(context).colorScheme;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildSummaryCard(
-          'Total Cached Data',
+          context.l10n.storageTotalData,
           _settings.formatBytes(_totalDataSize),
         ),
 
@@ -199,13 +194,13 @@ class _StorageManagementScreenState extends State<StorageManagementScreen>
           child: Row(
             children: [
               _buildFilterChip(
-                'By Surah',
+                context.l10n.storageBySurah,
                 _showSurahData,
                 () => setState(() => _showSurahData = true),
               ),
               const SizedBox(width: 8),
               _buildFilterChip(
-                'By Translation',
+                context.l10n.storageByTranslation,
                 !_showSurahData,
                 () => setState(() => _showSurahData = false),
               ),
@@ -221,8 +216,7 @@ class _StorageManagementScreenState extends State<StorageManagementScreen>
   }
 
   Widget _buildSurahList() {
-    final colorScheme = Theme.of(context).colorScheme;
-    if (_surahDetails.isEmpty) return _buildEmptyState('No cached surahs');
+    if (_surahDetails.isEmpty) return _buildEmptyState(context.l10n.storageNoCachedSurahs);
 
     return ListView.builder(
       padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
@@ -232,21 +226,21 @@ class _StorageManagementScreenState extends State<StorageManagementScreen>
         final surahNum = item['surahNumber'];
         final surah = _surahMap[surahNum];
 
-        final surahName = surah != null ? surah.name : 'Surah $surahNum';
+        final surahName = surah != null ? surah.name : context.l10n.storageSurahLabel(surahNum);
         final totalAyahs = surah?.totalAyahs ?? 0;
 
         // Since we cache full surahs, it's safe to say "X / X Ayahs"
         // or just "X Ayahs Downloaded"
-        final subtitle = '$totalAyahs / $totalAyahs Ayahs Downloaded';
+        final subtitle = context.l10n.storageAyahsDownloaded(totalAyahs, totalAyahs);
 
         return _buildStorageItem(
           title: surahName,
           subtitle: subtitle,
           size: _settings.formatBytes(item['totalSize']),
           onDelete: () => _confirmDelete(
-            title: 'Delete Cache?',
+            title: context.l10n.storageDeleteCacheTitle,
             content:
-                'Delete cached data for $surahName? You will need to re-download it to read offline.',
+                context.l10n.storageDeleteCacheBody(surahName),
             onConfirm: () => _deleteSurahData(surahNum),
           ),
         );
@@ -255,9 +249,8 @@ class _StorageManagementScreenState extends State<StorageManagementScreen>
   }
 
   Widget _buildTranslationList() {
-    final colorScheme = Theme.of(context).colorScheme;
     if (_translationDetails.isEmpty)
-      return _buildEmptyState('No cached translations');
+      return _buildEmptyState(context.l10n.storageNoCachedTranslations);
 
     return ListView.builder(
       padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
@@ -266,11 +259,11 @@ class _StorageManagementScreenState extends State<StorageManagementScreen>
         final item = _translationDetails[index];
         return _buildStorageItem(
           title: item['name'],
-          subtitle: '${item['surahCount']} Surahs cached',
+          subtitle: context.l10n.storageSurahsCached(item['surahCount'] as int),
           size: _settings.formatBytes(item['totalSize']),
           onDelete: () => _confirmDelete(
-            title: 'Delete Translation?',
-            content: 'Delete all cached data for ${item['name']} edition?',
+            title: context.l10n.storageDeleteTranslationTitle,
+            content: context.l10n.storageDeleteTranslationBody('${item['name']}'),
             onConfirm: () => _deleteTranslationData(item['edition']),
           ),
         );
@@ -293,7 +286,7 @@ class _StorageManagementScreenState extends State<StorageManagementScreen>
         ),
         child: Text(
           label,
-          style: GoogleFonts.spaceGrotesk(
+          style: TextStyle(
             color: isSelected ? colorScheme.onPrimary : colorScheme.onSurface,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
           ),
@@ -318,10 +311,9 @@ class _StorageManagementScreenState extends State<StorageManagementScreen>
               ),
               const SizedBox(width: 8),
               Text(
-                title.toUpperCase(),
-                style: GoogleFonts.spaceGrotesk(
+                title,
+                style: TextStyle(
                   fontSize: 12,
-                  letterSpacing: 2.0,
                   fontWeight: FontWeight.bold,
                   color: colorScheme.primary,
                 ),
@@ -331,7 +323,7 @@ class _StorageManagementScreenState extends State<StorageManagementScreen>
           const SizedBox(height: 4),
           Text(
             value,
-            style: GoogleFonts.spaceGrotesk(
+            style: TextStyle(
               fontSize: 40,
               fontWeight: FontWeight.bold,
               letterSpacing: -1.0,
@@ -357,8 +349,8 @@ class _StorageManagementScreenState extends State<StorageManagementScreen>
           const SizedBox(height: 16),
           Text(
             message,
-            style: GoogleFonts.spaceGrotesk(
-              color: colorScheme.onSurface.withValues(alpha: 0.5),
+            style: TextStyle(
+              color: colorScheme.onSurface.withValues(alpha: 0.72),
               fontSize: 16,
             ),
           ),
@@ -381,16 +373,16 @@ class _StorageManagementScreenState extends State<StorageManagementScreen>
         contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
         title: Text(
           title,
-          style: GoogleFonts.spaceGrotesk(
+          style: TextStyle(
             fontWeight: FontWeight.bold,
             color: colorScheme.onSurface,
           ),
         ),
         subtitle: Text(
           subtitle,
-          style: GoogleFonts.spaceGrotesk(
+          style: TextStyle(
             fontSize: 12,
-            color: colorScheme.onSurface.withValues(alpha: 0.6),
+            color: colorScheme.onSurface.withValues(alpha: 0.72),
           ),
         ),
         trailing: Row(
@@ -398,7 +390,7 @@ class _StorageManagementScreenState extends State<StorageManagementScreen>
           children: [
             Text(
               size,
-              style: GoogleFonts.spaceGrotesk(
+              style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: colorScheme.primary,
               ),
@@ -432,22 +424,19 @@ class _StorageManagementScreenState extends State<StorageManagementScreen>
         ),
         title: Text(
           title,
-          style: GoogleFonts.spaceGrotesk(
+          style: TextStyle(
             fontWeight: FontWeight.bold,
             color: colorScheme.onSurface,
           ),
         ),
-        content: Text(
-          content,
-          style: GoogleFonts.spaceGrotesk(color: colorScheme.onSurface),
-        ),
+        content: Text(content, style: TextStyle(color: colorScheme.onSurface)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
               'Cancel',
-              style: GoogleFonts.spaceGrotesk(
-                color: colorScheme.onSurface.withValues(alpha: 0.6),
+              style: TextStyle(
+                color: colorScheme.onSurface.withValues(alpha: 0.72),
               ),
             ),
           ),
@@ -456,10 +445,12 @@ class _StorageManagementScreenState extends State<StorageManagementScreen>
               Navigator.pop(context);
               onConfirm();
             },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: colorScheme.error,
+            ),
             child: Text(
               'Delete',
-              style: GoogleFonts.spaceGrotesk(color: Colors.white),
+              style: TextStyle(color: colorScheme.onError),
             ),
           ),
         ],

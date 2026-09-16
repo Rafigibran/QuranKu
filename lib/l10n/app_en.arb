@@ -1,0 +1,2637 @@
+{
+  "@@locale": "en",
+  "appTitle": "QuranKu",
+  "@appTitle": {
+    "description": "App name"
+  },
+  "navHome": "Home",
+  "@navHome": {
+    "description": "Home tab"
+  },
+  "navJadwalShalat": "Prayers",
+  "@navJadwalShalat": {
+    "description": "Prayer Schedule tab"
+  },
+  "navMurotal": "Recitation",
+  "@navMurotal": {
+    "description": "Recitation tab"
+  },
+  "navTarget": "Goals",
+  "@navTarget": {
+    "description": "Goals tab"
+  },
+  "navKajian": "Study",
+  "@navKajian": {
+    "description": "Study tab"
+  },
+  "homeTitle": "QuranKu",
+  "@homeTitle": {
+    "description": "Home title"
+  },
+  "homeSubtitle": "Read calmly, anytime.",
+  "@homeSubtitle": {
+    "description": "Home subtitle STE: short, no idiom"
+  },
+  "homeSearchHint": "Search surah, ayah, or ask",
+  "@homeSearchHint": {
+    "description": "Search hint STE"
+  },
+  "homeSearchHintExample": "e.g. Yasin, 2:255",
+  "@homeSearchHintExample": {
+    "description": "Example"
+  },
+  "homeSearchClear": "Clear search",
+  "@homeSearchClear": {
+    "description": "Clear tooltip"
+  },
+  "homeRecentEmpty": "One column: title • ayah • 2:255 • natural question",
+  "@homeRecentEmpty": {
+    "description": "Placeholder"
+  },
+  "homeSearchSearching": "Searching…",
+  "@homeSearchSearching": {
+    "description": "Searching"
+  },
+  "homeSearchAiLoading": "Local results ready. AI follows…",
+  "@homeSearchAiLoading": {
+    "description": "AI follows"
+  },
+  "homeSearchAiOffline": "Local results. AI offline.",
+  "@homeSearchAiOffline": {
+    "description": "AI offline"
+  },
+  "homeSearchLocal": "Local + AI semantic results",
+  "@homeSearchLocal": {
+    "description": "Local + AI"
+  },
+  "homeSearchInstant": "Local results",
+  "@homeSearchInstant": {
+    "description": "Local"
+  },
+  "homeRecentTitle": "Recent",
+  "@homeRecentTitle": {
+    "description": "Recent"
+  },
+  "actionClear": "Clear",
+  "@actionClear": {
+    "description": "Clear action"
+  },
+  "homeTipJump": "Tip: type 2:255 to jump to an ayah",
+  "@homeTipJump": {
+    "description": "Jump tip"
+  },
+  "homeEmptySearchTitle": "No results for \"{query}\"",
+  "@homeEmptySearchTitle": {
+    "description": "No results",
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "homeEmptySearchSubtitle": "Try other words or open a surah to index more ayahs.",
+  "@homeEmptySearchSubtitle": {
+    "description": "Subtitle"
+  },
+  "homeLoadingQuran": "Loading Quran…",
+  "@homeLoadingQuran": {
+    "description": "Loading"
+  },
+  "homeLoadFailedTitle": "Cannot load Quran.",
+  "@homeLoadFailedTitle": {
+    "description": "Load failed"
+  },
+  "homeLoadFailedSubtitle": "Check the internet connection and try again.",
+  "@homeLoadFailedSubtitle": {
+    "description": "Subtitle"
+  },
+  "actionRetry": "Try again",
+  "@actionRetry": {
+    "description": "Try again"
+  },
+  "homeSurahCount": "{count} surahs",
+  "@homeSurahCount": {
+    "description": "Count",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "homePickSurah": "Select a surah to start reading",
+  "@homePickSurah": {
+    "description": "Pick surah"
+  },
+  "homeOfflineEmpty": "Quran not offline",
+  "@homeOfflineEmpty": {
+    "description": "Not offline"
+  },
+  "homeOfflineProgress": "Quran offline {count}/114",
+  "@homeOfflineProgress": {
+    "description": "Progress",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "homeOfflineHint": "Open without internet after download",
+  "@homeOfflineHint": {
+    "description": "Hint"
+  },
+  "actionDownload": "Download",
+  "@actionDownload": {
+    "description": "Download"
+  },
+  "actionCompleteDownload": "Complete",
+  "@actionCompleteDownload": {
+    "description": "Complete"
+  },
+  "homeLastRead": "Last: ayah {ayah}",
+  "@homeLastRead": {
+    "description": "Last read",
+    "placeholders": {
+      "ayah": {
+        "type": "String"
+      }
+    }
+  },
+  "homeLastReadEmpty": "Last read",
+  "@homeLastReadEmpty": {
+    "description": "Last read empty"
+  },
+  "actionContinue": "Continue",
+  "@actionContinue": {
+    "description": "Continue"
+  },
+  "khatamTargetTitle": "Khatam Target",
+  "@khatamTargetTitle": {
+    "description": "Khatam target"
+  },
+  "khatamStartNext": "Start next khatam",
+  "@khatamStartNext": {
+    "description": "Start next"
+  },
+  "khatamDailyHint": "Daily target / date, reset at 00:00",
+  "@khatamDailyHint": {
+    "description": "Daily hint"
+  },
+  "khatamTitle": "Khatam target",
+  "@khatamTitle": {
+    "description": "Judul layar target khatam"
+  },
+  "khatamSubtitle": "Complete the Qur''an",
+  "@khatamSubtitle": {
+    "description": "Subjudul khatam"
+  },
+  "khatamPickSurahFirst": "Choose a starting surah first",
+  "@khatamPickSurahFirst": {
+    "description": "Validasi surah mulai"
+  },
+  "khatamStartAyahRange": "The starting ayah must be 1-{max} for {name}",
+  "@khatamStartAyahRange": {
+    "description": "Validasi ayat mulai",
+    "placeholders": {
+      "max": {
+        "type": "int"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "khatamTargetSaved": "Khatam target saved",
+  "@khatamTargetSaved": {
+    "description": "Konfirmasi target tersimpan"
+  },
+  "khatamMarkReading": "Mark reading",
+  "@khatamMarkReading": {
+    "description": "Aksi tandai bacaan"
+  },
+  "khatamMarkRange": "From {surah}:{ayah} to the next ayah. Finishing at 114:6 completes the khatam.",
+  "@khatamMarkRange": {
+    "description": "Penjelasan penandaan bacaan",
+    "placeholders": {
+      "surah": {
+        "type": "int"
+      },
+      "ayah": {
+        "type": "int"
+      }
+    }
+  },
+  "khatamUntilSurah": "Until surah",
+  "@khatamUntilSurah": {
+    "description": "Label sampai surah"
+  },
+  "khatamUntilAyahRange": "Until ayah (1-{max})",
+  "@khatamUntilAyahRange": {
+    "description": "Label sampai ayat dengan rentang",
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "khatamUntilAyah": "Until ayah",
+  "@khatamUntilAyah": {
+    "description": "Label sampai ayat"
+  },
+  "khatamReadingLogged": "Reading logged",
+  "@khatamReadingLogged": {
+    "description": "Konfirmasi bacaan tercatat"
+  },
+  "khatamDeleteTargetTitle": "Delete the target?",
+  "@khatamDeleteTargetTitle": {
+    "description": "Judul konfirmasi hapus target"
+  },
+  "khatamDeleteTargetBody": "The active target will be deleted. Your history and reading summary are kept.",
+  "@khatamDeleteTargetBody": {
+    "description": "Isi konfirmasi hapus target"
+  },
+  "khatamDeleteTargetAction": "Delete target",
+  "@khatamDeleteTargetAction": {
+    "description": "Tooltip hapus target"
+  },
+  "khatamLateDays": "{days} days past the target",
+  "@khatamLateDays": {
+    "description": "Peringatan melewati target",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "khatamLastDay": "The last day is today",
+  "@khatamLastDay": {
+    "description": "Penanda hari terakhir"
+  },
+  "khatamDaysLeft": "{days} days left",
+  "@khatamDaysLeft": {
+    "description": "Sisa hari",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "khatamEstimate": "About {days} days to go ({pages} pages/day)",
+  "@khatamEstimate": {
+    "description": "Estimasi penyelesaian",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      },
+      "pages": {
+        "type": "int"
+      }
+    }
+  },
+  "khatamDailyTarget": "DAILY TARGET",
+  "@khatamDailyTarget": {
+    "description": "Label target harian"
+  },
+  "khatamDateTarget": "DATE TARGET",
+  "@khatamDateTarget": {
+    "description": "Label target tanggal"
+  },
+  "khatamCompletedCount": "{count}x completed",
+  "@khatamCompletedCount": {
+    "description": "Jumlah khatam selesai",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "khatamPosition": "Position: {curSurah}:{curAyah} • Started at {startSurah}:{startAyah}",
+  "@khatamPosition": {
+    "description": "Ringkasan posisi bacaan",
+    "placeholders": {
+      "curSurah": {
+        "type": "int"
+      },
+      "curAyah": {
+        "type": "int"
+      },
+      "startSurah": {
+        "type": "int"
+      },
+      "startAyah": {
+        "type": "int"
+      }
+    }
+  },
+  "khatamPositionTarget": " • Target {date}",
+  "@khatamPositionTarget": {
+    "description": "Akhiran target tanggal",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "khatamTodayTarget": "Today''s target",
+  "@khatamTodayTarget": {
+    "description": "Judul target hari ini"
+  },
+  "khatamRemainingToday": "{left} pages left today • resets at 00:00",
+  "@khatamRemainingToday": {
+    "description": "Sisa halaman hari ini",
+    "placeholders": {
+      "left": {
+        "type": "int"
+      }
+    }
+  },
+  "khatamTodayReached": "Today''s target reached • resets at 00:00",
+  "@khatamTodayReached": {
+    "description": "Target hari ini tercapai"
+  },
+  "khatamSummary": "Reading summary",
+  "@khatamSummary": {
+    "description": "Judul rekap bacaan"
+  },
+  "khatamSummaryEmpty": "No reading logged yet. Tap \"Mark reading\" after you read.",
+  "@khatamSummaryEmpty": {
+    "description": "Rekap bacaan kosong"
+  },
+  "khatamHistoryTitle": "Khatam history ({count}x)",
+  "@khatamHistoryTitle": {
+    "description": "Judul riwayat khatam",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "khatamHistoryEntry": "{date} • {pages} pages • {days} days",
+  "@khatamHistoryEntry": {
+    "description": "Entri riwayat khatam",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "pages": {
+        "type": "int"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "khatamAlreadyCompleted": "Completed {count}x • MashaAllah",
+  "@khatamAlreadyCompleted": {
+    "description": "Penanda sudah khatam",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "khatamTargetType": "Target type",
+  "@khatamTargetType": {
+    "description": "Label jenis target"
+  },
+  "khatamPagesPerDay": "Pages / day",
+  "@khatamPagesPerDay": {
+    "description": "Pilihan target halaman harian"
+  },
+  "khatamDateLabel": "Completion date",
+  "@khatamDateLabel": {
+    "description": "Pilihan target tanggal"
+  },
+  "khatamPagesPerDayLabel": "Pages per day target",
+  "@khatamPagesPerDayLabel": {
+    "description": "Label target halaman per hari"
+  },
+  "khatamMustFinishBy": "Must finish by",
+  "@khatamMustFinishBy": {
+    "description": "Label tanggal wajib khatam"
+  },
+  "khatamPickDate": "Pick a date",
+  "@khatamPickDate": {
+    "description": "Aksi pilih tanggal"
+  },
+  "khatamDailyNeedNote": "The daily requirement is calculated from the remaining pages and days.",
+  "@khatamDailyNeedNote": {
+    "description": "Catatan kebutuhan harian"
+  },
+  "khatamStartFrom": "Start from",
+  "@khatamStartFrom": {
+    "description": "Label mulai dari"
+  },
+  "khatamSurahLabel": "Surah",
+  "@khatamSurahLabel": {
+    "description": "Label surah"
+  },
+  "khatamFromAyahRange": "From ayah (1-{max})",
+  "@khatamFromAyahRange": {
+    "description": "Label dari ayat dengan rentang",
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "khatamFromAyah": "From ayah",
+  "@khatamFromAyah": {
+    "description": "Label dari ayat"
+  },
+  "khatamStartTarget": "Start the khatam target",
+  "@khatamStartTarget": {
+    "description": "Tombol mulai target"
+  },
+  "khatamStoredNote": "Progress, summaries, and khatam counts are stored on this device.",
+  "@khatamStoredNote": {
+    "description": "Catatan penyimpanan khatam"
+  },
+  "khatamDeleteHistoryTitle": "Delete the history?",
+  "@khatamDeleteHistoryTitle": {
+    "description": "Judul konfirmasi hapus riwayat"
+  },
+  "khatamDeleteHistoryBody": "Your reading summary and khatam history will be permanently deleted.",
+  "@khatamDeleteHistoryBody": {
+    "description": "Isi konfirmasi hapus riwayat"
+  },
+  "khatamDeleteHistoryAction": "Delete history & summary",
+  "@khatamDeleteHistoryAction": {
+    "description": "Tombol hapus riwayat"
+  },
+  "settingsTitle": "Settings",
+  "@settingsTitle": {
+    "description": "Settings title"
+  },
+  "settingsSubtitle": "Adjust QuranKu for comfortable use.",
+  "@settingsSubtitle": {
+    "description": "Settings subtitle"
+  },
+  "settingsAppearance": "Appearance & Reading",
+  "@settingsAppearance": {
+    "description": "Appearance"
+  },
+  "settingsAppearanceSubtitle": "Control how verses are displayed.",
+  "@settingsAppearanceSubtitle": {
+    "description": "Appearance section subtitle"
+  },
+  "settingsTheme": "App theme",
+  "@settingsTheme": {
+    "description": "Theme"
+  },
+  "settingsThemeLight": "Light",
+  "@settingsThemeLight": {
+    "description": "Light"
+  },
+  "settingsThemeDark": "Dark",
+  "@settingsThemeDark": {
+    "description": "Dark"
+  },
+  "settingsTranslation": "Default translation",
+  "@settingsTranslation": {
+    "description": "Translation"
+  },
+  "settingsLatinType": "Latin type",
+  "@settingsLatinType": {
+    "description": "Latin type"
+  },
+  "settingsQari": "Reciter",
+  "@settingsQari": {
+    "description": "Reciter"
+  },
+  "settingsQariAlsoInMurotal": "{name} • also in Recitation",
+  "@settingsQariAlsoInMurotal": {
+    "description": "Also in Recitation",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsShowArabic": "Show Arabic",
+  "@settingsShowArabic": {
+    "description": "Show Arabic"
+  },
+  "settingsShowArabicSubtitle": "Uthmani Arabic script",
+  "@settingsShowArabicSubtitle": {
+    "description": "Subtitle"
+  },
+  "settingsShowLatin": "Show Latin",
+  "@settingsShowLatin": {
+    "description": "Show Latin"
+  },
+  "settingsShowLatinSubtitle": "Transliteration for reading",
+  "@settingsShowLatinSubtitle": {
+    "description": "Subtitle"
+  },
+  "settingsShowTranslation": "Show translation",
+  "@settingsShowTranslation": {
+    "description": "Show translation"
+  },
+  "settingsShowTranslationSubtitle": "Translation per language choice",
+  "@settingsShowTranslationSubtitle": {
+    "description": "Subtitle"
+  },
+  "settingsArabicNumerals": "Arabic numerals",
+  "@settingsArabicNumerals": {
+    "description": "Arabic numerals"
+  },
+  "settingsArabicNumeralsSubtitle": "Use ١٢٣ for 123",
+  "@settingsArabicNumeralsSubtitle": {
+    "description": "Subtitle"
+  },
+  "settingsTajwid": "Colored tajweed",
+  "@settingsTajwid": {
+    "description": "Tajwid"
+  },
+  "settingsTajwidSubtitle": "International ghunnah/qalqalah colours",
+  "@settingsTajwidSubtitle": {
+    "description": "Tajwid subtitle"
+  },
+  "settingsFontSize": "Font size",
+  "@settingsFontSize": {
+    "description": "Font size"
+  },
+  "settingsContinueReading": "Continue reading & bookmarks",
+  "@settingsContinueReading": {
+    "description": "Continue reading"
+  },
+  "settingsStorage": "Storage",
+  "@settingsStorage": {
+    "description": "Storage"
+  },
+  "settingsAbout": "About",
+  "@settingsAbout": {
+    "description": "About"
+  },
+  "settingsAboutQuranKu": "About QuranKu",
+  "@settingsAboutQuranKu": {
+    "description": "About QuranKu"
+  },
+  "settingsPrivacy": "Privacy Policy",
+  "@settingsPrivacy": {
+    "description": "Privacy"
+  },
+  "settingsPrivacySubtitle": "How QuranKu handles data",
+  "@settingsPrivacySubtitle": {
+    "description": "Privacy subtitle"
+  },
+  "settingsContinueReadingSubtitle": "Quick access to your last ayah.",
+  "@settingsContinueReadingSubtitle": {
+    "description": "Continue reading section subtitle"
+  },
+  "settingsLastReadSubtitle": "Ayah {surah}:{ayah} • Tap to continue",
+  "@settingsLastReadSubtitle": {
+    "description": "Last read row subtitle",
+    "placeholders": {
+      "surah": {
+        "type": "int"
+      },
+      "ayah": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsNoReading": "No reading history yet",
+  "@settingsNoReading": {
+    "description": "No reading history"
+  },
+  "settingsNoReadingHint": "Start reading to build your history",
+  "@settingsNoReadingHint": {
+    "description": "Empty reading history hint"
+  },
+  "settingsBookmarkCount": "{count, plural, =0{No ayahs saved} one{{count} ayah saved} other{{count} ayahs saved}}",
+  "@settingsBookmarkCount": {
+    "description": "Number of saved ayahs",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsNoBookmarks": "No bookmarks yet",
+  "@settingsNoBookmarks": {
+    "description": "No bookmarks yet"
+  },
+  "settingsStorageSubtitle": "Manage cached and stored Qur''an files.",
+  "@settingsStorageSubtitle": {
+    "description": "Storage section subtitle"
+  },
+  "settingsClearCache": "Clear cache",
+  "@settingsClearCache": {
+    "description": "Clear cache row"
+  },
+  "settingsCalculating": "Calculating…",
+  "@settingsCalculating": {
+    "description": "Calculating cache size"
+  },
+  "settingsCacheCleanable": "{size} can be cleared",
+  "@settingsCacheCleanable": {
+    "description": "Size of the cache that can be cleared",
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsQuranDownloads": "Qur''an downloads",
+  "@settingsQuranDownloads": {
+    "description": "Quran downloads row"
+  },
+  "settingsQuranDownloadsSubtitle": "Manage offline text per translation",
+  "@settingsQuranDownloadsSubtitle": {
+    "description": "Quran downloads subtitle"
+  },
+  "settingsManageStorage": "Manage storage",
+  "@settingsManageStorage": {
+    "description": "Manage storage row"
+  },
+  "settingsStorageUsed": "{size} used",
+  "@settingsStorageUsed": {
+    "description": "Storage used",
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsAboutSubtitle": "App and developer information.",
+  "@settingsAboutSubtitle": {
+    "description": "About section subtitle"
+  },
+  "settingsClearCacheConfirmTitle": "Clear cache?",
+  "@settingsClearCacheConfirmTitle": {
+    "description": "Clear cache confirmation title"
+  },
+  "settingsClearCacheConfirmBody": "Arabic text, transliteration, translations, prayer times, and audio will be deleted.",
+  "@settingsClearCacheConfirmBody": {
+    "description": "Clear cache confirmation body"
+  },
+  "settingsCacheCleared": "Cache cleared",
+  "@settingsCacheCleared": {
+    "description": "Cache cleared confirmation"
+  },
+  "settingsSearchLanguage": "Search a language…",
+  "@settingsSearchLanguage": {
+    "description": "Language search hint"
+  },
+  "settingsFollowSystem": "Follow the device language",
+  "@settingsFollowSystem": {
+    "description": "Follow-system language option"
+  },
+  "settingsLanguageIndonesianSubtitle": "Indonesian",
+  "@settingsLanguageIndonesianSubtitle": {
+    "description": "Indonesian language option subtitle"
+  },
+  "settingsLanguageEnglishSubtitle": "English US",
+  "@settingsLanguageEnglishSubtitle": {
+    "description": "English language option subtitle"
+  },
+  "settingsQariOfflineVoice": "Voice used for offline files",
+  "@settingsQariOfflineVoice": {
+    "description": "Default qari subtitle"
+  },
+  "settingsTapToOpen": "Tap to open",
+  "@settingsTapToOpen": {
+    "description": "Hint to open the bookmark list"
+  },
+  "settingsMadeWithHeart": "Made with care for the ummah.",
+  "@settingsMadeWithHeart": {
+    "description": "Made with care"
+  },
+  "settingsTagline": "Read • Reflect • Practice",
+  "@settingsTagline": {
+    "description": "Tagline"
+  },
+  "settingsLanguage": "Language",
+  "@settingsLanguage": {
+    "description": "Language"
+  },
+  "settingsLanguageSubtitle": "Select interface language",
+  "@settingsLanguageSubtitle": {
+    "description": "Subtitle"
+  },
+  "settingsLanguageIndonesian": "Indonesia",
+  "@settingsLanguageIndonesian": {
+    "description": "Indonesia"
+  },
+  "settingsLanguageEnglish": "English",
+  "@settingsLanguageEnglish": {
+    "description": "English"
+  },
+  "settingsTafsir": "Tafsir",
+  "@settingsTafsir": {
+    "description": "Tafsir settings row title"
+  },
+  "settingsTafsirSearchHint": "Search tafsir…",
+  "@settingsTafsirSearchHint": {
+    "description": "Search hint for the tafsir edition picker"
+  },
+  "settingsTafsirRecommended": "Recommended",
+  "@settingsTafsirRecommended": {
+    "description": "Group of curated tafsir editions"
+  },
+  "settingsTafsirAllEditions": "All editions",
+  "@settingsTafsirAllEditions": {
+    "description": "Group of remaining tafsir editions"
+  },
+  "settingsTafsirLoading": "Loading the tafsir catalogue…",
+  "@settingsTafsirLoading": {
+    "description": "Loading state for the tafsir catalogue"
+  },
+  "settingsTafsirUnavailable": "The tafsir catalogue could not be loaded. Check your connection and open this again.",
+  "@settingsTafsirUnavailable": {
+    "description": "Tafsir catalogue failed to load"
+  },
+  "tafsirLanguageIndonesian": "Indonesian",
+  "@tafsirLanguageIndonesian": {
+    "description": "Language label of a tafsir edition"
+  },
+  "tafsirLanguageEnglish": "English",
+  "@tafsirLanguageEnglish": {
+    "description": "Language label of a tafsir edition"
+  },
+  "tafsirLanguageArabic": "Arabic",
+  "@tafsirLanguageArabic": {
+    "description": "Language label of a tafsir edition"
+  },
+  "tafsirLanguageOther": "Other language",
+  "@tafsirLanguageOther": {
+    "description": "Language label of an unrecognised tafsir edition"
+  },
+  "readerTafsir": "Tafsir",
+  "@readerTafsir": {
+    "description": "Tooltip for the per-ayah tafsir icon"
+  },
+  "readerTafsirTitle": "Tafsir {surah}:{ayah}",
+  "@readerTafsirTitle": {
+    "description": "Tafsir sheet title",
+    "placeholders": {
+      "surah": {
+        "type": "int"
+      },
+      "ayah": {
+        "type": "int"
+      }
+    }
+  },
+  "readerTafsirUnavailable": "No tafsir for this ayah in this edition.",
+  "@readerTafsirUnavailable": {
+    "description": "The edition has no content for this ayah"
+  },
+  "readerTafsirOffline": "The tafsir could not be loaded. Check your internet connection and try again.",
+  "@readerTafsirOffline": {
+    "description": "Tafsir failed to load because of the network"
+  },
+  "readerTafsirRetry": "Try again",
+  "@readerTafsirRetry": {
+    "description": "Reload the tafsir"
+  },
+  "readerAyahRange": "Enter 1 - {max}",
+  "@readerAyahRange": {
+    "description": "Ayah number out of range error",
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "readerDescriptionOffline": "No description available offline.",
+  "@readerDescriptionOffline": {
+    "description": "Surah description unavailable offline"
+  },
+  "readerAyahCopied": "Ayah copied",
+  "@readerAyahCopied": {
+    "description": "Confirmation that the ayah was copied"
+  },
+  "readerShowArabic": "Arabic text",
+  "@readerShowArabic": {
+    "description": "Show Arabic text label"
+  },
+  "readerShowArabicSubtitle": "Show the Arabic script",
+  "@readerShowArabicSubtitle": {
+    "description": "Show Arabic text subtitle"
+  },
+  "readerShowLatin": "Latin transliteration",
+  "@readerShowLatin": {
+    "description": "Show transliteration label"
+  },
+  "readerShowTranslation": "Translation",
+  "@readerShowTranslation": {
+    "description": "Show translation label"
+  },
+  "readerShowTranslationSubtitle": "Show the translation",
+  "@readerShowTranslationSubtitle": {
+    "description": "Show translation subtitle"
+  },
+  "readerReadingDisplay": "Reading display",
+  "@readerReadingDisplay": {
+    "description": "Reading display panel title"
+  },
+  "readerFontArabic": "Arabic",
+  "@readerFontArabic": {
+    "description": "Arabic font size slider label"
+  },
+  "readerJumpToAyah": "Jump to ayah",
+  "@readerJumpToAyah": {
+    "description": "Jump to ayah label"
+  },
+  "readerShown": "Shown",
+  "@readerShown": {
+    "description": "Display toggles group title"
+  },
+  "readerTajwidVerified": "Verified against quran.com, plain fallback",
+  "@readerTajwidVerified": {
+    "description": "Note about the tajwid data source"
+  },
+  "readerTajwidLegend": "Tajwid legend",
+  "@readerTajwidLegend": {
+    "description": "Tajwid colour legend title"
+  },
+  "readerTajwidLoading": "Loading tajwid colours…",
+  "@readerTajwidLoading": {
+    "description": "Tajwid loading state"
+  },
+  "readerTajwidFailed": "Could not load tajwid • tap to retry",
+  "@readerTajwidFailed": {
+    "description": "Tajwid failed to load and can be retried"
+  },
+  "readerTajwidPreparing": "Preparing tajwid colours…",
+  "@readerTajwidPreparing": {
+    "description": "Tajwid preparing state"
+  },
+  "readerTajwidOffHint": "Try turning tajwid off if the ayah does not appear",
+  "@readerTajwidOffHint": {
+    "description": "Hint to disable tajwid"
+  },
+  "readerBasmalahHint": "It is recommended to recite the ta''awwudh, then go straight to Ayah 1 without the basmalah",
+  "@readerBasmalahHint": {
+    "description": "Reading etiquette note"
+  },
+  "readerNoAyahMatch": "No ayah matches \"{query}\"",
+  "@readerNoAyahMatch": {
+    "description": "Empty ayah search result",
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "readerSurahFinished": "{name} finished",
+  "@readerSurahFinished": {
+    "description": "Marker for the end of a surah",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "readerContinueTo": "Continue to",
+  "@readerContinueTo": {
+    "description": "Prefix for continuing to the next surah"
+  },
+  "readerOpenSurah": "Open {name}",
+  "@readerOpenSurah": {
+    "description": "Open surah button",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "readerSwipeHint": "Swipe or tap to continue",
+  "@readerSwipeHint": {
+    "description": "Hint for navigating between surahs"
+  },
+  "readerJuz": "Juz {juz}",
+  "@readerJuz": {
+    "description": "Juz label",
+    "placeholders": {
+      "juz": {
+        "type": "String"
+      }
+    }
+  },
+  "readerRemoveBookmark": "Remove bookmark",
+  "@readerRemoveBookmark": {
+    "description": "Tooltip to remove an ayah bookmark"
+  },
+  "readerBookmark": "Bookmark",
+  "@readerBookmark": {
+    "description": "Tooltip to add an ayah bookmark"
+  },
+  "readerPrevSurah": "Previous surah",
+  "@readerPrevSurah": {
+    "description": "Previous surah tooltip"
+  },
+  "readerNextSurah": "Next surah",
+  "@readerNextSurah": {
+    "description": "Next surah tooltip"
+  },
+  "readerReadingSettings": "Reading settings",
+  "@readerReadingSettings": {
+    "description": "Reading settings tooltip"
+  },
+  "readerSearchHint": "Search the ayah, Latin, or translation",
+  "@readerSearchHint": {
+    "description": "In-surah search hint"
+  },
+  "readerCopyAyah": "Copy ayah",
+  "@readerCopyAyah": {
+    "description": "Copy ayah tooltip"
+  },
+  "readerAboutSurah": "About this surah",
+  "@readerAboutSurah": {
+    "description": "Surah description title"
+  },
+  "readerFollowMurotal": "Follow the recitation",
+  "@readerFollowMurotal": {
+    "description": "Tooltip to follow the recitation"
+  },
+  "readerUnfollowMurotal": "Stop following the recitation",
+  "@readerUnfollowMurotal": {
+    "description": "Tooltip to stop following the recitation"
+  },
+  "readerKhatamComplete": "MashaAllah, the khatam is complete! Saved to your history.",
+  "@readerKhatamComplete": {
+    "description": "Khatam completion confirmation"
+  },
+  "readerMarkedReadKhatam": "Ayah {surah}:{ayah} marked as read • added to khatam progress",
+  "@readerMarkedReadKhatam": {
+    "description": "Ayah marked as read and counted towards khatam",
+    "placeholders": {
+      "surah": {
+        "type": "int"
+      },
+      "ayah": {
+        "type": "int"
+      }
+    }
+  },
+  "readerMarkedRead": "Ayah {surah}:{ayah} marked as read",
+  "@readerMarkedRead": {
+    "description": "Ayah marked as read",
+    "placeholders": {
+      "surah": {
+        "type": "int"
+      },
+      "ayah": {
+        "type": "int"
+      }
+    }
+  },
+  "readerMarkRead": "Mark as read",
+  "@readerMarkRead": {
+    "description": "Tooltip to mark an ayah as read"
+  },
+  "readerUnmarkRead": "Mark as unread",
+  "@readerUnmarkRead": {
+    "description": "Tooltip to unmark an ayah"
+  },
+  "readerLoadFailed": "The ayah could not be loaded",
+  "@readerLoadFailed": {
+    "description": "Ayah load failure title"
+  },
+  "readerLoadFailedHint": "Check your internet connection and try again.",
+  "@readerLoadFailedHint": {
+    "description": "Hint when the ayah fails to load"
+  },
+  "readerContinueReading": "Continue {surah}:{ayah}",
+  "@readerContinueReading": {
+    "description": "Prompt to continue from the last read ayah",
+    "placeholders": {
+      "surah": {
+        "type": "int"
+      },
+      "ayah": {
+        "type": "int"
+      }
+    }
+  },
+  "commonLoading": "Loading…",
+  "@commonLoading": {
+    "description": "Loading"
+  },
+  "commonNoResults": "No results.",
+  "@commonNoResults": {
+    "description": "No results"
+  },
+  "commonOfflineNeedInternet": "Open without internet after download",
+  "@commonOfflineNeedInternet": {
+    "description": "Offline"
+  },
+  "murotalTitle": "Recitation",
+  "@murotalTitle": {
+    "description": "murotalTitle"
+  },
+  "murotalSubtitle": "Listen to the Quran calmly",
+  "@murotalSubtitle": {
+    "description": "murotalSubtitle"
+  },
+  "murotalSearchHint": "Search surah or type offline…",
+  "@murotalSearchHint": {
+    "description": "murotalSearchHint"
+  },
+  "murotalSearchNoResults": "Surah not found",
+  "@murotalSearchNoResults": {
+    "description": "murotalSearchNoResults"
+  },
+  "murotalHelpTitle": "About Recitation",
+  "@murotalHelpTitle": {
+    "description": "murotalHelpTitle"
+  },
+  "murotalHelpDesc": "Select a surah to start listening. Type offline to show downloaded surahs.",
+  "@murotalHelpDesc": {
+    "description": "murotalHelpDesc"
+  },
+  "murotalHelpTapHint": "Tap a card to select start ayah.",
+  "@murotalHelpTapHint": {
+    "description": "murotalHelpTapHint"
+  },
+  "murotalHelpOffline": "Checkmark means audio is offline.",
+  "@murotalHelpOffline": {
+    "description": "murotalHelpOffline"
+  },
+  "murotalPlaylist": "Playlist",
+  "@murotalPlaylist": {
+    "description": "murotalPlaylist"
+  },
+  "murotalDownloads": "Downloads",
+  "@murotalDownloads": {
+    "description": "murotalDownloads"
+  },
+  "murotalHelp": "Help",
+  "@murotalHelp": {
+    "description": "murotalHelp"
+  },
+  "murotalNowPlaying": "Now playing",
+  "@murotalNowPlaying": {
+    "description": "murotalNowPlaying"
+  },
+  "murotalReady": "Ready to continue",
+  "@murotalReady": {
+    "description": "murotalReady"
+  },
+  "murotalQari": "Reciter",
+  "@murotalQari": {
+    "description": "murotalQari"
+  },
+  "playlistTitle": "Playlist",
+  "@playlistTitle": {
+    "description": "playlistTitle"
+  },
+  "playlistEmpty": "No playlists yet",
+  "@playlistEmpty": {
+    "description": "playlistEmpty"
+  },
+  "helpTitle": "Help",
+  "@helpTitle": {
+    "description": "helpTitle"
+  },
+  "searchNoResults": "No results",
+  "@searchNoResults": {
+    "description": "searchNoResults"
+  },
+  "searchNoResultsHint": "Try other words",
+  "@searchNoResultsHint": {
+    "description": "searchNoResultsHint"
+  },
+  "commonCancel": "Cancel",
+  "@commonCancel": {
+    "description": "commonCancel"
+  },
+  "commonSave": "Save",
+  "@commonSave": {
+    "description": "commonSave"
+  },
+  "commonDelete": "Delete",
+  "@commonDelete": {
+    "description": "commonDelete"
+  },
+  "commonEdit": "Edit",
+  "@commonEdit": {
+    "description": "commonEdit"
+  },
+  "commonShare": "Share",
+  "@commonShare": {
+    "description": "commonShare"
+  },
+  "commonCopy": "Copy",
+  "@commonCopy": {
+    "description": "commonCopy"
+  },
+  "commonCopied": "Copied",
+  "@commonCopied": {
+    "description": "commonCopied"
+  },
+  "commonUndo": "Undo",
+  "@commonUndo": {
+    "description": "Undo action"
+  },
+  "settingsBookmarkRemoved": "Bookmark for {surah}:{ayah} removed",
+  "@settingsBookmarkRemoved": {
+    "description": "Confirmation that an ayah bookmark was removed",
+    "placeholders": {
+      "surah": {
+        "type": "int"
+      },
+      "ayah": {
+        "type": "int"
+      }
+    }
+  },
+  "commonClose": "Close",
+  "@commonClose": {
+    "description": "commonClose"
+  },
+  "commonOk": "OK",
+  "@commonOk": {
+    "description": "commonOk"
+  },
+  "commonYes": "Yes",
+  "@commonYes": {
+    "description": "commonYes"
+  },
+  "commonNo": "No",
+  "@commonNo": {
+    "description": "commonNo"
+  },
+  "commonAyahCount": "{count, plural, =0{No ayahs} one{{count} ayah} other{{count} ayahs}}",
+  "@commonAyahCount": {
+    "description": "Ayah count (plural)",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "commonSurahCount": "{count, plural, =0{No surahs} one{{count} surah} other{{count} surahs}}",
+  "@commonSurahCount": {
+    "description": "Surah count (plural)",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "commonPageCount": "{count, plural, =0{No pages} one{{count} page} other{{count} pages}}",
+  "@commonPageCount": {
+    "description": "Page count (plural)",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "commonDayCount": "{count, plural, =0{No days} one{{count} day} other{{count} days}}",
+  "@commonDayCount": {
+    "description": "Day count (plural)",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "commonMinuteCount": "{count, plural, =0{Less than a minute} one{{count} minute} other{{count} minutes}}",
+  "@commonMinuteCount": {
+    "description": "Minute count (plural)",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeReloadFailed": "Reload failed: {error}",
+  "@homeReloadFailed": {
+    "description": "Kegagalan memuat ulang beranda",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "homeAiSemanticResults": "AI semantic results",
+  "@homeAiSemanticResults": {
+    "description": "Judul hasil pencarian AI"
+  },
+  "homeAiUnderstanding": "AI is working out what you mean…",
+  "@homeAiUnderstanding": {
+    "description": "Status AI sedang memproses"
+  },
+  "homeAiNeedsInternet": "AI needs the internet. The local results above are still complete.",
+  "@homeAiNeedsInternet": {
+    "description": "Catatan AI tanpa internet"
+  },
+  "homeNoBookmarks": "No bookmarks yet. Tap to view your collection.",
+  "@homeNoBookmarks": {
+    "description": "Keadaan bookmark kosong di beranda"
+  },
+  "homeOpenSettings": "Open settings",
+  "@homeOpenSettings": {
+    "description": "Label aksesibilitas tombol pengaturan"
+  },
+  "homeSearchOtherSurah": "Try another surah name or number.",
+  "@homeSearchOtherSurah": {
+    "description": "Saran saat surah tidak ditemukan"
+  },
+  "homeJuzRange": "Juz 1–30",
+  "@homeJuzRange": {
+    "description": "Label rentang juz"
+  },
+  "homeMushafOrder": "mushaf order",
+  "@homeMushafOrder": {
+    "description": "Label urutan mushaf"
+  },
+  "homeJumpToJuz": "Jump to Juz",
+  "@homeJumpToJuz": {
+    "description": "Judul dialog lompat ke juz"
+  },
+  "homeCurrentJuz": "My position: Juz {juz}",
+  "@homeCurrentJuz": {
+    "description": "Posisi juz saat ini",
+    "placeholders": {
+      "juz": {
+        "type": "String"
+      }
+    }
+  },
+  "homeJuzSummary": "Juz {juz}, {range}, {percent}% read",
+  "@homeJuzSummary": {
+    "description": "Ringkasan progres juz",
+    "placeholders": {
+      "juz": {
+        "type": "String"
+      },
+      "range": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "homeJuzSummaryCurrent": "Juz {juz}, {range}, {percent}% read, current position",
+  "@homeJuzSummaryCurrent": {
+    "description": "Ringkasan juz yang sedang dibaca",
+    "placeholders": {
+      "juz": {
+        "type": "String"
+      },
+      "range": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "homeCurrentPosition": "Current",
+  "@homeCurrentPosition": {
+    "description": "Penanda posisi juz saat ini"
+  },
+  "prayerNext": "Next Prayer",
+  "@prayerNext": {
+    "description": "prayerNext"
+  },
+  "prayerTimePassed": "Passed",
+  "@prayerTimePassed": {
+    "description": "prayerTimePassed"
+  },
+  "prayerTimeUpcoming": "Starts at {time}",
+  "@prayerTimeUpcoming": {
+    "description": "prayerTimeUpcoming"
+  },
+  "prayerAllPassed": "Today done",
+  "@prayerAllPassed": {
+    "description": "prayerAllPassed"
+  },
+  "prayerAllPassedDesc": "All prayers have passed. Fajr tomorrow {time}",
+  "@prayerAllPassedDesc": {
+    "description": "prayerAllPassedDesc"
+  },
+  "prayerProgress": "Day progress",
+  "@prayerProgress": {
+    "description": "prayerProgress"
+  },
+  "prayerSetLocation": "Set Location",
+  "@prayerSetLocation": {
+    "description": "prayerSetLocation"
+  },
+  "prayerChangeLocation": "Change location",
+  "@prayerChangeLocation": {
+    "description": "prayerChangeLocation"
+  },
+  "prayerLoadFailed": "Failed to load schedule",
+  "@prayerLoadFailed": {
+    "description": "prayerLoadFailed"
+  },
+  "prayerScheduleTitle": "PRAYER SCHEDULE",
+  "@prayerScheduleTitle": {
+    "description": "Judul jadwal shalat"
+  },
+  "prayerTodaySchedule": "Today''s schedule",
+  "@prayerTodaySchedule": {
+    "description": "Judul jadwal hari ini"
+  },
+  "prayerAdhanSettings": "Adhan settings",
+  "@prayerAdhanSettings": {
+    "description": "Judul pengaturan adzan"
+  },
+  "prayerAdhanSubtitle": "Configure each time: full adhan, tone, vibrate, or off.",
+  "@prayerAdhanSubtitle": {
+    "description": "Subjudul pengaturan adzan"
+  },
+  "prayerAdhanEnable": "Enable reminders",
+  "@prayerAdhanEnable": {
+    "description": "Label aktifkan pengingat"
+  },
+  "prayerAdhanMuezzin": "Muezzin",
+  "@prayerAdhanMuezzin": {
+    "description": "Label pilihan muadzin"
+  },
+  "prayerAdhanMakkah": "Makkah",
+  "@prayerAdhanMakkah": {
+    "description": "Pilihan muadzin Makkah"
+  },
+  "prayerAdhanMadinah": "Madinah",
+  "@prayerAdhanMadinah": {
+    "description": "Pilihan muadzin Madinah"
+  },
+  "prayerAdhanVolume": "Adhan volume",
+  "@prayerAdhanVolume": {
+    "description": "Label volume adzan"
+  },
+  "prayerAdhanTest": "Test",
+  "@prayerAdhanTest": {
+    "description": "Tombol tes adzan"
+  },
+  "prayerAdhanTestFajr": "Test (Fajr version)",
+  "@prayerAdhanTestFajr": {
+    "description": "Tombol tes adzan versi Subuh"
+  },
+  "prayerSelectLocation": "Choose location",
+  "@prayerSelectLocation": {
+    "description": "Judul dialog pilih lokasi"
+  },
+  "prayerProvince": "Province",
+  "@prayerProvince": {
+    "description": "Label provinsi"
+  },
+  "prayerCity": "City / Regency",
+  "@prayerCity": {
+    "description": "Label kota"
+  },
+  "prayerWorldSearchHint": "Search cities worldwide",
+  "@prayerWorldSearchHint": {
+    "description": "Hint pencarian kota dunia"
+  },
+  "prayerOrPickIndonesia": "or pick an Indonesian region",
+  "@prayerOrPickIndonesia": {
+    "description": "Pemisah pilihan wilayah"
+  },
+  "prayerWorldNotFound": "Not found. Try the English spelling (e.g. Mecca, Cairo).",
+  "@prayerWorldNotFound": {
+    "description": "Kota dunia tidak ditemukan"
+  },
+  "prayerWorldOffline": "An internet connection is needed to search cities. {error}",
+  "@prayerWorldOffline": {
+    "description": "Pencarian kota butuh internet",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "prayerGpsFailed": "GPS failed",
+  "@prayerGpsFailed": {
+    "description": "Pesan GPS gagal"
+  },
+  "prayerGpsStale": "GPS could not be refreshed; using the saved position.",
+  "@prayerGpsStale": {
+    "description": "Pesan GPS memakai posisi tersimpan"
+  },
+  "prayerWorldCity": "World city",
+  "@prayerWorldCity": {
+    "description": "Label kota dunia"
+  },
+  "prayerOfflineGps": "Offline from GPS",
+  "@prayerOfflineGps": {
+    "description": "Sumber jadwal GPS offline"
+  },
+  "prayerOfflineCity": "Offline for this city",
+  "@prayerOfflineCity": {
+    "description": "Sumber jadwal kota offline"
+  },
+  "prayerScheduleKemenag": "Ministry schedule",
+  "@prayerScheduleKemenag": {
+    "description": "Sumber jadwal Kemenag"
+  },
+  "prayerEidFitr": "Eid al-Fitr",
+  "@prayerEidFitr": {
+    "description": "Penanda Idul Fitri"
+  },
+  "prayerEidAdha": "Eid al-Adha",
+  "@prayerEidAdha": {
+    "description": "Penanda Idul Adha"
+  },
+  "prayerArafah": "Day of Arafah",
+  "@prayerArafah": {
+    "description": "Penanda hari Arafah"
+  },
+  "prayerRamadan": "Ramadan",
+  "@prayerRamadan": {
+    "description": "Penanda bulan Ramadan"
+  },
+  "prayerDate": "Date",
+  "@prayerDate": {
+    "description": "Label tanggal"
+  },
+  "prayerLocation": "Location",
+  "@prayerLocation": {
+    "description": "Label lokasi"
+  },
+  "prayerMonthly": "Monthly",
+  "@prayerMonthly": {
+    "description": "Tombol jadwal bulanan"
+  },
+  "prayerCountdown": "{hours}h {minutes}m left",
+  "@prayerCountdown": {
+    "description": "Hitung mundur shalat berikutnya",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "prayerCountdownMinutes": "{minutes}m left",
+  "@prayerCountdownMinutes": {
+    "description": "Hitung mundur kurang dari satu jam",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "commonError": "Something went wrong.",
+  "@commonError": {
+    "description": "Generic error message"
+  },
+  "commonReload": "Reload",
+  "@commonReload": {
+    "description": "Reload action"
+  },
+  "prayerImsak": "Imsak",
+  "@prayerImsak": {
+    "description": "Nama waktu imsak"
+  },
+  "prayerFajr": "Fajr",
+  "@prayerFajr": {
+    "description": "Nama waktu Subuh"
+  },
+  "prayerDhuha": "Duha",
+  "@prayerDhuha": {
+    "description": "Nama waktu Dhuha"
+  },
+  "prayerDhuhr": "Dhuhr",
+  "@prayerDhuhr": {
+    "description": "Nama waktu Dzuhur"
+  },
+  "prayerAsr": "Asr",
+  "@prayerAsr": {
+    "description": "Nama waktu Ashar"
+  },
+  "prayerMaghrib": "Maghrib",
+  "@prayerMaghrib": {
+    "description": "Nama waktu Maghrib"
+  },
+  "prayerIsha": "Isha",
+  "@prayerIsha": {
+    "description": "Nama waktu Isya"
+  },
+  "prayerRetry": "Try again",
+  "@prayerRetry": {
+    "description": "prayerRetry"
+  },
+  "kajianTitle": "Study",
+  "@kajianTitle": {
+    "description": "kajianTitle"
+  },
+  "kajianSubtitle": "Upcoming study schedule",
+  "@kajianSubtitle": {
+    "description": "kajianSubtitle"
+  },
+  "kajianFilter": "Filter study",
+  "@kajianFilter": {
+    "description": "kajianFilter"
+  },
+  "kajianAllTime": "All time",
+  "@kajianAllTime": {
+    "description": "kajianAllTime"
+  },
+  "kajianToday": "Today",
+  "@kajianToday": {
+    "description": "kajianToday"
+  },
+  "kajianNext7Days": "Next 7 days",
+  "@kajianNext7Days": {
+    "description": "kajianNext7Days"
+  },
+  "kajianNext30Days": "Next 30 days",
+  "@kajianNext30Days": {
+    "description": "kajianNext30Days"
+  },
+  "kajianSortNearest": "Nearest",
+  "@kajianSortNearest": {
+    "description": "kajianSortNearest"
+  },
+  "kajianSortNewest": "Newest",
+  "@kajianSortNewest": {
+    "description": "kajianSortNewest"
+  },
+  "kajianCity": "City",
+  "@kajianCity": {
+    "description": "kajianCity"
+  },
+  "kajianSearchCity": "Search city…",
+  "@kajianSearchCity": {
+    "description": "kajianSearchCity"
+  },
+  "kajianApply": "Apply",
+  "@kajianApply": {
+    "description": "kajianApply"
+  },
+  "kajianReset": "Reset",
+  "@kajianReset": {
+    "description": "kajianReset"
+  },
+  "kajianNoResults": "No matching study found.",
+  "@kajianNoResults": {
+    "description": "kajianNoResults"
+  },
+  "kajianOpenTelegram": "Open in Telegram",
+  "@kajianOpenTelegram": {
+    "description": "kajianOpenTelegram"
+  },
+  "tasbihTitle": "Tasbih",
+  "@tasbihTitle": {
+    "description": "tasbihTitle"
+  },
+  "tasbihSubtitle": "Count daily dhikr",
+  "@tasbihSubtitle": {
+    "description": "tasbihSubtitle"
+  },
+  "tasbihTapHint": "Tap to count",
+  "@tasbihTapHint": {
+    "description": "tasbihTapHint"
+  },
+  "tasbihCompleted": "Done",
+  "@tasbihCompleted": {
+    "description": "tasbihCompleted"
+  },
+  "tasbihTarget": "Target",
+  "@tasbihTarget": {
+    "description": "tasbihTarget"
+  },
+  "tasbihCompletedNext": "Alhamdulillah • {target} done, next: {next}",
+  "@tasbihCompletedNext": {
+    "description": "Konfirmasi dzikir selesai lalu lanjut",
+    "placeholders": {
+      "target": {
+        "type": "int"
+      },
+      "next": {
+        "type": "String"
+      }
+    }
+  },
+  "tasbihCompletedOne": "Alhamdulillah • {target} done {dzikr}",
+  "@tasbihCompletedOne": {
+    "description": "Konfirmasi dzikir selesai",
+    "placeholders": {
+      "target": {
+        "type": "int"
+      },
+      "dzikr": {
+        "type": "String"
+      }
+    }
+  },
+  "tasbihAddTitle": "Add a dhikr / blessing",
+  "@tasbihAddTitle": {
+    "description": "Judul sheet tambah dzikir"
+  },
+  "tasbihEditTitle": "Edit dhikr",
+  "@tasbihEditTitle": {
+    "description": "Judul sheet edit dzikir"
+  },
+  "tasbihAddHint": "Write it as you normally recite it: Arabic, Latin, or translation",
+  "@tasbihAddHint": {
+    "description": "Petunjuk pengisian dzikir"
+  },
+  "tasbihFieldArabic": "Arabic (required)",
+  "@tasbihFieldArabic": {
+    "description": "Label isian Arab"
+  },
+  "tasbihFieldLatin": "Latin (optional)",
+  "@tasbihFieldLatin": {
+    "description": "Label isian Latin"
+  },
+  "tasbihFieldTranslation": "Translation (optional)",
+  "@tasbihFieldTranslation": {
+    "description": "Label isian terjemahan"
+  },
+  "tasbihTranslationHint": "O Allah, send blessings…",
+  "@tasbihTranslationHint": {
+    "description": "Contoh isian terjemahan"
+  },
+  "tasbihArabicRequired": "The Arabic text is required",
+  "@tasbihArabicRequired": {
+    "description": "Validasi tulisan Arab"
+  },
+  "tasbihTargetHint": "The default target is 33, change it to 99/100 to suit your habit",
+  "@tasbihTargetHint": {
+    "description": "Petunjuk target dzikir"
+  },
+  "tasbihReset": "Reset",
+  "@tasbihReset": {
+    "description": "Aksi reset hitungan"
+  },
+  "tasbihAddTooltip": "Add a dhikr",
+  "@tasbihAddTooltip": {
+    "description": "Tooltip tambah dzikir"
+  },
+  "tasbihEmpty": "No dhikr yet",
+  "@tasbihEmpty": {
+    "description": "Keadaan daftar dzikir kosong"
+  },
+  "tasbihListTitle": "Dhikr list",
+  "@tasbihListTitle": {
+    "description": "Judul daftar dzikir"
+  },
+  "tasbihListSubtitle": "Tap to switch",
+  "@tasbihListSubtitle": {
+    "description": "Subjudul daftar dzikir"
+  },
+  "tasbihAdd": "Add",
+  "@tasbihAdd": {
+    "description": "Tombol tambah dzikir"
+  },
+  "tasbihVibration": "Vibrate",
+  "@tasbihVibration": {
+    "description": "Label opsi getar"
+  },
+  "tasbihVibrationHint": "Vibrate on every count, stronger every 33",
+  "@tasbihVibrationHint": {
+    "description": "Petunjuk getar"
+  },
+  "tasbihAutoAdvanceHint": "Move to the next dhikr when the target is reached",
+  "@tasbihAutoAdvanceHint": {
+    "description": "Petunjuk lanjut otomatis"
+  },
+  "tasbihResetTitle": "Reset the count?",
+  "@tasbihResetTitle": {
+    "description": "Judul konfirmasi reset"
+  },
+  "tasbihResetBody": "The count for {dzikr} will be reset to 0",
+  "@tasbihResetBody": {
+    "description": "Isi konfirmasi reset",
+    "placeholders": {
+      "dzikr": {
+        "type": "String"
+      }
+    }
+  },
+  "tasbihDeleteTitle": "Delete this dhikr?",
+  "@tasbihDeleteTitle": {
+    "description": "Judul konfirmasi hapus dzikir"
+  },
+  "tasbihCounter": "{count} of {target}",
+  "@tasbihCounter": {
+    "description": "Nilai hitungan saat ini",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "tasbihTotalKhatam": "{count} rounds",
+  "@tasbihTotalKhatam": {
+    "description": "Jumlah putaran selesai",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tasbihGoTo": "Count {dzikr}",
+  "@tasbihGoTo": {
+    "description": "Label aksesibilitas tombol hitung",
+    "placeholders": {
+      "dzikr": {
+        "type": "String"
+      }
+    }
+  },
+  "tasbihCategoryDzikir": "Dhikr",
+  "@tasbihCategoryDzikir": {
+    "description": "Dhikr category label"
+  },
+  "tasbihCategoryShalawat": "Blessings",
+  "@tasbihCategoryShalawat": {
+    "description": "Blessings category label"
+  },
+  "tasbihCategoryDoa": "Supplication",
+  "@tasbihCategoryDoa": {
+    "description": "Supplication category label"
+  },
+  "tasbihCategoryCustom": "Custom",
+  "@tasbihCategoryCustom": {
+    "description": "User-authored dhikr category label"
+  },
+  "zakatTitle": "Zakat Calculator",
+  "@zakatTitle": {
+    "description": "zakatTitle"
+  },
+  "zakatSubtitle": "Calculate your zakat",
+  "@zakatSubtitle": {
+    "description": "zakatSubtitle"
+  },
+  "zakatTypeMal": "Wealth 2.5%",
+  "@zakatTypeMal": {
+    "description": "Label jenis zakat mal"
+  },
+  "zakatTypeFitrah": "Fitrah",
+  "@zakatTypeFitrah": {
+    "description": "Label jenis zakat fitrah"
+  },
+  "zakatTypePertanian": "Agriculture",
+  "@zakatTypePertanian": {
+    "description": "Label jenis zakat pertanian"
+  },
+  "zakatTypeGold": "Gold",
+  "@zakatTypeGold": {
+    "description": "Label jenis zakat emas"
+  },
+  "zakatResult": "Result",
+  "@zakatResult": {
+    "description": "Judul hasil perhitungan"
+  },
+  "zakatGoldRateNote": "Live gold price XAU/IDR per gram. You can edit it manually.",
+  "@zakatGoldRateNote": {
+    "description": "Catatan harga emas"
+  },
+  "zakatGoldRateFailed": "The live price could not be loaded. Enter the gold price per gram manually.",
+  "@zakatGoldRateFailed": {
+    "description": "Harga emas gagal dimuat"
+  },
+  "zakatInvalidMal": "Enter a valid total wealth and gold price",
+  "@zakatInvalidMal": {
+    "description": "Validasi zakat mal"
+  },
+  "zakatBelowNisab": "Zakat is not due yet. Nisab of 85 g = {nisab}. Your wealth is {wealth}.",
+  "@zakatBelowNisab": {
+    "description": "Harta di bawah nisab",
+    "placeholders": {
+      "nisab": {
+        "type": "String"
+      },
+      "wealth": {
+        "type": "String"
+      }
+    }
+  },
+  "zakatMalResult": "Wealth zakat of 2.5% on {wealth}. The {nisab} nisab is met.",
+  "@zakatMalResult": {
+    "description": "Hasil zakat mal",
+    "placeholders": {
+      "wealth": {
+        "type": "String"
+      },
+      "nisab": {
+        "type": "String"
+      }
+    }
+  },
+  "zakatInvalidFitrah": "Enter a valid number of people and rice price",
+  "@zakatInvalidFitrah": {
+    "description": "Validasi zakat fitrah"
+  },
+  "zakatFitrahResult": "Fitrah zakat for {souls} people x 2.5 kg x {rice}.",
+  "@zakatFitrahResult": {
+    "description": "Hasil zakat fitrah",
+    "placeholders": {
+      "souls": {
+        "type": "String"
+      },
+      "rice": {
+        "type": "String"
+      }
+    }
+  },
+  "zakatInvalidHarvest": "Enter a valid harvest value",
+  "@zakatInvalidHarvest": {
+    "description": "Validasi zakat pertanian"
+  },
+  "zakatHarvestResult": "Rain-fed 10% = {rain}. Irrigated 5% = {irrigation}.",
+  "@zakatHarvestResult": {
+    "description": "Hasil zakat pertanian",
+    "placeholders": {
+      "rain": {
+        "type": "String"
+      },
+      "irrigation": {
+        "type": "String"
+      }
+    }
+  },
+  "zakatGoldBelowNisab": "{gram} g of gold is below the 85 g nisab.",
+  "@zakatGoldBelowNisab": {
+    "description": "Emas di bawah nisab",
+    "placeholders": {
+      "gram": {
+        "type": "String"
+      }
+    }
+  },
+  "zakatGoldResult": "Gold zakat on {gram} g at 2.5%, valued at {price}/g.",
+  "@zakatGoldResult": {
+    "description": "Hasil zakat emas",
+    "placeholders": {
+      "gram": {
+        "type": "String"
+      },
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "zakatFieldWealth": "Total wealth for one year (Rp)",
+  "@zakatFieldWealth": {
+    "description": "Label isian total harta"
+  },
+  "zakatFieldGoldPrice": "Gold price per gram (Rp)",
+  "@zakatFieldGoldPrice": {
+    "description": "Label isian harga emas"
+  },
+  "zakatFieldSouls": "Number of people",
+  "@zakatFieldSouls": {
+    "description": "Label isian jumlah jiwa"
+  },
+  "zakatFieldRicePrice": "Rice price per kg (Rp)",
+  "@zakatFieldRicePrice": {
+    "description": "Label isian harga beras"
+  },
+  "zakatFieldHarvest": "Harvest value (Rp)",
+  "@zakatFieldHarvest": {
+    "description": "Label isian nilai panen"
+  },
+  "zakatHarvestNote": "The nisab is 653 kg of grain. Harvests below it are not liable.",
+  "@zakatHarvestNote": {
+    "description": "Catatan nisab pertanian"
+  },
+  "zakatFieldGoldWeight": "Gold weight (grams)",
+  "@zakatFieldGoldWeight": {
+    "description": "Label isian berat emas"
+  },
+  "zakatCalculate": "Calculate zakat",
+  "@zakatCalculate": {
+    "description": "Tombol hitung zakat"
+  },
+  "zakatReference": "Reference: nisab is 85 g gold, 595 g silver; wealth 2.5%, fitrah 2.5 kg, agriculture 5/10%. Prices change, so check your local gold dealer.",
+  "@zakatReference": {
+    "description": "Catatan rujukan zakat"
+  },
+  "qiblaTitle": "Qibla Direction",
+  "@qiblaTitle": {
+    "description": "qiblaTitle"
+  },
+  "qiblaSubtitle": "Direction to Kaaba",
+  "@qiblaSubtitle": {
+    "description": "qiblaSubtitle"
+  },
+  "asmaulTitle": "Asmaul Husna",
+  "@asmaulTitle": {
+    "description": "asmaulTitle"
+  },
+  "asmaulSubtitle": "99 Names of Allah",
+  "@asmaulSubtitle": {
+    "description": "asmaulSubtitle"
+  },
+  "asmaulSearchHint": "Search name or meaning…",
+  "@asmaulSearchHint": {
+    "description": "asmaulSearchHint"
+  },
+  "duasTitle": "Daily Duas",
+  "@duasTitle": {
+    "description": "duasTitle"
+  },
+  "duasSubtitle": "Collection of daily duas",
+  "@duasSubtitle": {
+    "description": "duasSubtitle"
+  },
+  "duasSearchHint": "Search duas…",
+  "@duasSearchHint": {
+    "description": "duasSearchHint"
+  },
+  "commonFilterAll": "All",
+  "@commonFilterAll": {
+    "description": "Filter showing all items"
+  },
+  "commonFilterSaved": "Saved",
+  "@commonFilterSaved": {
+    "description": "Filter showing saved items only"
+  },
+  "duasLoading": "Loading duas…",
+  "@duasLoading": {
+    "description": "Loading state for the dua list"
+  },
+  "asmaulSavedCount": "Saved ({count})",
+  "@asmaulSavedCount": {
+    "description": "Chip label counting saved Asmaul Husna names",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "asmaulSaveName": "Save this name",
+  "@asmaulSaveName": {
+    "description": "Accessibility label for the save-name button"
+  },
+  "asmaulUnsaveName": "Remove from saved",
+  "@asmaulUnsaveName": {
+    "description": "Accessibility label for the remove-name button"
+  },
+  "hajjTitle": "Hajj & Umrah",
+  "@hajjTitle": {
+    "description": "Title of the Hajj & Umrah guide screen"
+  },
+  "hajjSubtitle": "A concise manasik guide",
+  "@hajjSubtitle": {
+    "description": "Subtitle of the Hajj & Umrah guide screen"
+  },
+  "hajjFootnote": "General summary. For practice, follow the guidance of your KBIHU / Ministry of Religious Affairs.",
+  "@hajjFootnote": {
+    "description": "Footnote of the manasik guide"
+  },
+  "imsakiyahMonthly": "MONTHLY SCHEDULE",
+  "@imsakiyahMonthly": {
+    "description": "Monthly imsakiyah schedule title"
+  },
+  "murotalDownloadsTitle": "MUROTAL DOWNLOADS",
+  "@murotalDownloadsTitle": {
+    "description": "Murotal download manager title"
+  },
+  "murotalDownloadsSubtitle": "Download murotal audio to listen offline.",
+  "@murotalDownloadsSubtitle": {
+    "description": "Murotal download manager subtitle"
+  },
+  "murotalDownloadsSelect": "Select a surah to add",
+  "@murotalDownloadsSelect": {
+    "description": "Hint to pick a surah to download"
+  },
+  "downloadsTitle": "QUR''AN DOWNLOADS",
+  "@downloadsTitle": {
+    "description": "Translation download manager title"
+  },
+  "downloadsSubtitle": "Download translations and tafsir to read offline.",
+  "@downloadsSubtitle": {
+    "description": "Translation download manager subtitle"
+  },
+  "downloadsSelect": "Select an edition to add",
+  "@downloadsSelect": {
+    "description": "Hint to pick a translation edition"
+  },
+  "playerBackgroundSound": "Background sound",
+  "@playerBackgroundSound": {
+    "description": "Background sound title"
+  },
+  "playerBackgroundSoundSubtitle": "Plays alongside the Qur''an audio.",
+  "@playerBackgroundSoundSubtitle": {
+    "description": "Background sound subtitle"
+  },
+  "playerVolumeQuran": "Qur''an volume",
+  "@playerVolumeQuran": {
+    "description": "Recitation volume label"
+  },
+  "playerVolumeRain": "Rain volume",
+  "@playerVolumeRain": {
+    "description": "Rain sound volume label"
+  },
+  "featureAsmaulHusna": "Asmaul\nHusna",
+  "@featureAsmaulHusna": {
+    "description": "Asmaul Husna shortcut label"
+  },
+  "featureDailyDuas": "Daily\nDuas",
+  "@featureDailyDuas": {
+    "description": "Daily duas shortcut label"
+  },
+  "featureHajjUmrah": "Hajj &\nUmrah",
+  "@featureHajjUmrah": {
+    "description": "Hajj and Umrah shortcut label"
+  },
+  "featureQibla": "Qibla\nDirection",
+  "@featureQibla": {
+    "description": "Qibla direction shortcut label"
+  },
+  "featureTasbih": "Tasbih",
+  "@featureTasbih": {
+    "description": "Tasbih shortcut label"
+  },
+  "featureZakat": "Zakat\nCalculator",
+  "@featureZakat": {
+    "description": "Zakat calculator shortcut label"
+  },
+  "aboutUpdateFailed": "Update check failed.",
+  "@aboutUpdateFailed": {
+    "description": "Update check failed"
+  },
+  "aboutNoUpdate": "No update found.",
+  "@aboutNoUpdate": {
+    "description": "No update available"
+  },
+  "aboutLatestVersion": "QuranKu v{version} is the latest version.",
+  "@aboutLatestVersion": {
+    "description": "Already on the latest version",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "aboutPrayerSource": "Prayer Times Source",
+  "@aboutPrayerSource": {
+    "description": "Prayer times source label"
+  },
+  "aboutDownloading": "Downloading {percent}%. Keep the app open.",
+  "@aboutDownloading": {
+    "description": "Update download progress",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "aboutDownloadInstall": "Download and Install",
+  "@aboutDownloadInstall": {
+    "description": "Download and install update button"
+  },
+  "qiblaPermissionDenied": "Location permission denied. Enable location for an accurate qibla.",
+  "@qiblaPermissionDenied": {
+    "description": "Location permission denied"
+  },
+  "qiblaGpsOff": "GPS is off. Turn on location for a real-time qibla.",
+  "@qiblaGpsOff": {
+    "description": "GPS is off"
+  },
+  "qiblaGpsFailed": "Could not get your location",
+  "@qiblaGpsFailed": {
+    "description": "Location lookup failed (detail follows)"
+  },
+  "qiblaSearching": "Finding your location…",
+  "@qiblaSearching": {
+    "description": "Locating state"
+  },
+  "qiblaFromNorth": "{degrees}° from north",
+  "@qiblaFromNorth": {
+    "description": "Qibla bearing from north",
+    "placeholders": {
+      "degrees": {
+        "type": "String"
+      }
+    }
+  },
+  "qiblaDistanceToKaaba": "{km} km to the Kaaba",
+  "@qiblaDistanceToKaaba": {
+    "description": "Distance to the Kaaba",
+    "placeholders": {
+      "km": {
+        "type": "String"
+      }
+    }
+  },
+  "qiblaCompassUnavailable": "The compass is not available on this device",
+  "@qiblaCompassUnavailable": {
+    "description": "Compass unavailable"
+  },
+  "qiblaAlignHint": "Turn your phone until the green needle points up. Calibrate with a figure-8 motion if it jumps.",
+  "@qiblaAlignHint": {
+    "description": "Compass alignment hint"
+  },
+  "qiblaSourceNote": "The direction is computed in real time from GPS to 21.4225, 39.8262. No internet needed once GPS locks.",
+  "@qiblaSourceNote": {
+    "description": "Qibla source note"
+  },
+  "kajianSearchHint": "Search a topic, teacher, or city…",
+  "@kajianSearchHint": {
+    "description": "Kajian search hint"
+  },
+  "kajianNoConnection": "No connection",
+  "@kajianNoConnection": {
+    "description": "No connection state"
+  },
+  "kajianOfflineHint": "Connect to the internet to load the study schedule.",
+  "@kajianOfflineHint": {
+    "description": "Hint shown when kajian is offline"
+  },
+  "kajianFallbackTopic": "Islamic study",
+  "@kajianFallbackTopic": {
+    "description": "Fallback study title"
+  },
+  "kajianTime": "Time",
+  "@kajianTime": {
+    "description": "Judul bagian waktu pada filter kajian"
+  },
+  "playlistNew": "New Playlist",
+  "@playlistNew": {
+    "description": "New playlist dialog title"
+  },
+  "playlistNameLabel": "Playlist name",
+  "@playlistNameLabel": {
+    "description": "Playlist name field label"
+  },
+  "playlistCreate": "Create",
+  "@playlistCreate": {
+    "description": "Create playlist button"
+  },
+  "playlistRenameTitle": "Rename Playlist",
+  "@playlistRenameTitle": {
+    "description": "Rename playlist dialog title"
+  },
+  "playlistDeleteTitle": "Delete Playlist?",
+  "@playlistDeleteTitle": {
+    "description": "Delete playlist confirmation title"
+  },
+  "playlistDeleteBody": "This playlist and the surahs saved in it will be deleted.",
+  "@playlistDeleteBody": {
+    "description": "Delete playlist confirmation body"
+  },
+  "playlistNewTooltip": "New playlist",
+  "@playlistNewTooltip": {
+    "description": "New playlist tooltip"
+  },
+  "playlistEmptyTitle": "Create your first playlist",
+  "@playlistEmptyTitle": {
+    "description": "Empty playlist title"
+  },
+  "playlistEmptyHint": "Split surahs across several playlists.",
+  "@playlistEmptyHint": {
+    "description": "Empty playlist hint"
+  },
+  "playlistCreateAction": "Create Playlist",
+  "@playlistCreateAction": {
+    "description": "Create playlist button"
+  },
+  "playlistRename": "Rename",
+  "@playlistRename": {
+    "description": "Rename playlist menu item"
+  },
+  "playlistPlay": "Play playlist",
+  "@playlistPlay": {
+    "description": "Play playlist tooltip"
+  },
+  "playlistAddSurahHint": "Add a surah to the playlist…",
+  "@playlistAddSurahHint": {
+    "description": "Add surah to playlist hint"
+  },
+  "storageTitle": "MANAGE STORAGE",
+  "@storageTitle": {
+    "description": "Storage screen title"
+  },
+  "storageNoAudio": "No audio files downloaded",
+  "@storageNoAudio": {
+    "description": "No audio downloaded"
+  },
+  "storageTotalAudio": "Total Audio Storage",
+  "@storageTotalAudio": {
+    "description": "Total audio storage heading"
+  },
+  "storageAyahsDownloaded": "{done} / {total} ayahs downloaded",
+  "@storageAyahsDownloaded": {
+    "description": "Ayah download progress",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storageDeleteAudioTitle": "Delete audio?",
+  "@storageDeleteAudioTitle": {
+    "description": "Delete audio confirmation title"
+  },
+  "storageDeleteAudioBody": "Delete the audio files for {name}?",
+  "@storageDeleteAudioBody": {
+    "description": "Delete audio confirmation body",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storageTotalData": "Total Stored Data",
+  "@storageTotalData": {
+    "description": "Total cached data heading"
+  },
+  "storageBySurah": "By Surah",
+  "@storageBySurah": {
+    "description": "By surah tab"
+  },
+  "storageByTranslation": "By Translation",
+  "@storageByTranslation": {
+    "description": "By translation tab"
+  },
+  "storageNoCachedSurahs": "No cached surahs",
+  "@storageNoCachedSurahs": {
+    "description": "No cached surahs"
+  },
+  "storageDeleteCacheTitle": "Delete cache?",
+  "@storageDeleteCacheTitle": {
+    "description": "Delete cache confirmation title"
+  },
+  "storageDeleteCacheBody": "Delete cached data for {name}? You will need to download it again to read offline.",
+  "@storageDeleteCacheBody": {
+    "description": "Delete cache confirmation body",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storageNoCachedTranslations": "No cached translations",
+  "@storageNoCachedTranslations": {
+    "description": "No cached translations"
+  },
+  "storageSurahsCached": "{count} surahs cached",
+  "@storageSurahsCached": {
+    "description": "Number of cached surahs",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "storageDeleteTranslationTitle": "Delete translation?",
+  "@storageDeleteTranslationTitle": {
+    "description": "Delete translation confirmation title"
+  },
+  "storageDeleteTranslationBody": "Delete all cached data for the {name} edition?",
+  "@storageDeleteTranslationBody": {
+    "description": "Delete translation confirmation body",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storageSurahLabel": "Surah {number}",
+  "@storageSurahLabel": {
+    "description": "Fallback surah name",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "bookmarksTitle": "Bookmarks",
+  "@bookmarksTitle": {
+    "description": "bookmarksTitle"
+  },
+  "bookmarksSubtitle": "{count} ayahs • {doa} duas • {asmaul} asmaul",
+  "@bookmarksSubtitle": {
+    "description": "bookmarksSubtitle"
+  },
+  "bookmarksTabAyah": "Ayahs ({count})",
+  "@bookmarksTabAyah": {
+    "description": "bookmarksTabAyah"
+  },
+  "bookmarksTabDoa": "Duas ({count})",
+  "@bookmarksTabDoa": {
+    "description": "bookmarksTabDoa"
+  },
+  "bookmarksTabAsmaul": "Asmaul ({count})",
+  "@bookmarksTabAsmaul": {
+    "description": "bookmarksTabAsmaul"
+  },
+  "bookmarksEmptyAyah": "No favorite ayahs yet",
+  "@bookmarksEmptyAyah": {
+    "description": "bookmarksEmptyAyah"
+  },
+  "bookmarksEmptyDoa": "No favorite duas yet",
+  "@bookmarksEmptyDoa": {
+    "description": "bookmarksEmptyDoa"
+  },
+  "bookmarksEmptyAsmaul": "No favorite Asmaul yet",
+  "@bookmarksEmptyAsmaul": {
+    "description": "bookmarksEmptyAsmaul"
+  },
+  "bookmarksEmptyAyahHint": "Mark an ayah while reading with the bookmark icon",
+  "@bookmarksEmptyAyahHint": {
+    "description": "How to save an ayah"
+  },
+  "bookmarksEmptyDoaHint": "Save a dua from the Daily Duas page with the bookmark icon",
+  "@bookmarksEmptyDoaHint": {
+    "description": "How to save a dua"
+  },
+  "bookmarksEmptyAsmaulHint": "Save a name from the Asmaul Husna page",
+  "@bookmarksEmptyAsmaulHint": {
+    "description": "How to save an Asmaul Husna name"
+  },
+  "bookmarksDuaMissing": "Dua no longer available",
+  "@bookmarksDuaMissing": {
+    "description": "A saved dua that could not be resolved"
+  },
+  "privacyTitle": "Privacy Policy",
+  "@privacyTitle": {
+    "description": "privacyTitle"
+  },
+  "privacySubtitle": "How QuranKu handles data",
+  "@privacySubtitle": {
+    "description": "privacySubtitle"
+  },
+  "privacyEffectiveDate": "Effective date: 15 Sep 2026",
+  "@privacyEffectiveDate": {
+    "description": "Tanggal berlaku kebijakan privasi"
+  },
+  "privacyPurposeTitle": "1  Purpose",
+  "@privacyPurposeTitle": {
+    "description": "Judul bagian 1"
+  },
+  "privacyPurposeBody": "QuranKu helps you read Al-Quran, listen to murotal, and track prayer times. This policy explains what data QuranKu collects and how QuranKu uses the data.",
+  "@privacyPurposeBody": {
+    "description": "Isi bagian 1"
+  },
+  "privacyCollectedTitle": "2  Data that QuranKu collects",
+  "@privacyCollectedTitle": {
+    "description": "Judul bagian 2"
+  },
+  "privacyCollectedLocation": "Prayer location. You enter a province and city, or you allow GPS. QuranKu uses the location only to show prayer times and the qibla direction.",
+  "@privacyCollectedLocation": {
+    "description": "Butir lokasi shalat"
+  },
+  "privacyCollectedPreferences": "App preferences. QuranKu stores your choices, for example theme, text size, last read position, saved bookmarks, saved asmaul, and saved duas. QuranKu stores these choices on the device.",
+  "@privacyCollectedPreferences": {
+    "description": "Butir preferensi"
+  },
+  "privacyCollectedAudio": "Audio and download status. QuranKu tracks which surah files you download so QuranKu can play them offline.",
+  "@privacyCollectedAudio": {
+    "description": "Butir audio dan unduhan"
+  },
+  "privacyCollectedUpdate": "App version and update check. When you check for updates, QuranKu sends a request to GitHub to read the latest release tag.",
+  "@privacyCollectedUpdate": {
+    "description": "Butir pemeriksaan pembaruan"
+  },
+  "privacyNotCollectedTitle": "3  Data that QuranKu does not collect",
+  "@privacyNotCollectedTitle": {
+    "description": "Judul bagian 3"
+  },
+  "privacyNotCollectedIdentity": "QuranKu does not collect your name, email, or phone number.",
+  "@privacyNotCollectedIdentity": {
+    "description": "Butir identitas"
+  },
+  "privacyNotCollectedGps": "QuranKu does not collect precise GPS history. QuranKu keeps only the last city you select.",
+  "@privacyNotCollectedGps": {
+    "description": "Butir riwayat GPS"
+  },
+  "privacyNotCollectedSell": "QuranKu does not sell data to other parties.",
+  "@privacyNotCollectedSell": {
+    "description": "Butir penjualan data"
+  },
+  "privacyNotCollectedAds": "QuranKu does not show third-party ads.",
+  "@privacyNotCollectedAds": {
+    "description": "Butir iklan"
+  },
+  "privacyPermissionsTitle": "4  Permissions",
+  "@privacyPermissionsTitle": {
+    "description": "Judul bagian 4"
+  },
+  "privacyPermissionInternet": "Internet. QuranKu needs internet to fetch Quran text, translations, prayer times, and update info.",
+  "@privacyPermissionInternet": {
+    "description": "Butir izin internet"
+  },
+  "privacyPermissionLocation": "Location. QuranKu needs location only when you use GPS for prayer times or qibla. You can use manual city selection instead.",
+  "@privacyPermissionLocation": {
+    "description": "Butir izin lokasi"
+  },
+  "privacyPermissionNotifications": "Notifications. QuranKu needs notification permission only when you enable adhan reminders.",
+  "@privacyPermissionNotifications": {
+    "description": "Butir izin notifikasi"
+  },
+  "privacyPermissionInstall": "Install packages (Android only). QuranKu needs this permission only when you download and install an update from GitHub releases.",
+  "@privacyPermissionInstall": {
+    "description": "Butir izin pemasangan paket"
+  },
+  "privacyThirdPartyTitle": "5  Third-party services",
+  "@privacyThirdPartyTitle": {
+    "description": "Judul bagian 5"
+  },
+  "privacyThirdPartyEquran": "Equran.id provides Quran text, translations, and prayer schedules.",
+  "@privacyThirdPartyEquran": {
+    "description": "Butir equran.id"
+  },
+  "privacyThirdPartyGithub": "GitHub hosts app releases. When you check for updates, the app contacts api.github.com.",
+  "@privacyThirdPartyGithub": {
+    "description": "Butir GitHub"
+  },
+  "privacyThirdPartyQuranCom": "Quran.com provides tajweed color data when you enable colored tajweed.",
+  "@privacyThirdPartyQuranCom": {
+    "description": "Butir quran.com"
+  },
+  "privacyStorageTitle": "6  Data storage and retention",
+  "@privacyStorageTitle": {
+    "description": "Judul bagian 6"
+  },
+  "privacyStorageBody": "QuranKu stores preferences and download status on the device with shared preferences and app storage. QuranKu keeps the data until you clear app data or uninstall the app. Uninstall removes the locally stored data.",
+  "@privacyStorageBody": {
+    "description": "Isi bagian 6"
+  },
+  "privacyChoicesTitle": "7  Your choices",
+  "@privacyChoicesTitle": {
+    "description": "Judul bagian 7"
+  },
+  "privacyChoiceLocation": "You can deny location permission and use manual city selection.",
+  "@privacyChoiceLocation": {
+    "description": "Butir pilihan lokasi"
+  },
+  "privacyChoiceNotifications": "You can disable adhan notifications in the Prayer Times screen.",
+  "@privacyChoiceNotifications": {
+    "description": "Butir pilihan notifikasi"
+  },
+  "privacyChoiceDownloads": "You can clear downloads in the Storage screen.",
+  "@privacyChoiceDownloads": {
+    "description": "Butir pilihan unduhan"
+  },
+  "privacyChoiceSaved": "You can remove saved asmaul and saved duas from their screens.",
+  "@privacyChoiceSaved": {
+    "description": "Butir pilihan simpanan"
+  },
+  "privacyChildrenTitle": "8  Children",
+  "@privacyChildrenTitle": {
+    "description": "Judul bagian 8"
+  },
+  "privacyChildrenBody": "QuranKu does not target children with data collection. QuranKu does not knowingly collect data from children.",
+  "@privacyChildrenBody": {
+    "description": "Isi bagian 8"
+  },
+  "privacyChangesTitle": "9  Changes to this policy",
+  "@privacyChangesTitle": {
+    "description": "Judul bagian 9"
+  },
+  "privacyChangesBody": "QuranKu may update this policy when the app changes. QuranKu will update the effective date at the top of this screen when a change occurs.",
+  "@privacyChangesBody": {
+    "description": "Isi bagian 9"
+  },
+  "privacyContactTitle": "10  Contact",
+  "@privacyContactTitle": {
+    "description": "Judul bagian 10"
+  },
+  "privacyContactBody": "For questions about this policy, open an issue at github.com/Rafigibran/QuranKu/issues.",
+  "@privacyContactBody": {
+    "description": "Isi bagian 10"
+  },
+  "aboutTitle": "About QuranKu",
+  "@aboutTitle": {
+    "description": "aboutTitle"
+  },
+  "aboutDeveloper": "Developer",
+  "@aboutDeveloper": {
+    "description": "aboutDeveloper"
+  },
+  "aboutVersion": "App Version",
+  "@aboutVersion": {
+    "description": "aboutVersion"
+  },
+  "aboutGithub": "GitHub",
+  "@aboutGithub": {
+    "description": "aboutGithub"
+  },
+  "aboutRepository": "Repository",
+  "@aboutRepository": {
+    "description": "aboutRepository"
+  },
+  "aboutSupport": "Support",
+  "@aboutSupport": {
+    "description": "aboutSupport"
+  },
+  "aboutReportIssue": "Report Issue",
+  "@aboutReportIssue": {
+    "description": "aboutReportIssue"
+  },
+  "aboutCheckUpdate": "Check for Updates",
+  "@aboutCheckUpdate": {
+    "description": "aboutCheckUpdate"
+  },
+  "playerTitle": "Player",
+  "@playerTitle": {
+    "description": "playerTitle"
+  },
+  "playerLyrics": "Lyrics",
+  "@playerLyrics": {
+    "description": "playerLyrics"
+  },
+  "playerHideLyrics": "Hide lyrics",
+  "@playerHideLyrics": {
+    "description": "playerHideLyrics"
+  },
+  "playerShowLyrics": "Show lyrics",
+  "@playerShowLyrics": {
+    "description": "playerShowLyrics"
+  },
+  "playerQueue": "Queue",
+  "@playerQueue": {
+    "description": "playerQueue"
+  },
+  "playerRepeatAuto": "Auto next",
+  "@playerRepeatAuto": {
+    "description": "playerRepeatAuto"
+  },
+  "playerRepeatOne": "Repeat one",
+  "@playerRepeatOne": {
+    "description": "playerRepeatOne"
+  },
+  "playerRepeatOff": "Stop after finish",
+  "@playerRepeatOff": {
+    "description": "playerRepeatOff"
+  },
+  "playerRainSound": "Rain sound",
+  "@playerRainSound": {
+    "description": "Judul suara hujan"
+  },
+  "playerLyricsUnavailable": "No ayah available yet.",
+  "@playerLyricsUnavailable": {
+    "description": "Lirik belum tersedia"
+  },
+  "playerRepeatNone": "No repeat",
+  "@playerRepeatNone": {
+    "description": "Label mode tanpa ulangan"
+  },
+  "playerRepeatMode": "Play mode",
+  "@playerRepeatMode": {
+    "description": "Judul sheet mode putar"
+  },
+  "playerRepeatAutoSubtitle": "Automatically continue to the next surah",
+  "@playerRepeatAutoSubtitle": {
+    "description": "Subjudul lanjut otomatis"
+  },
+  "playerRepeatOneSubtitle": "Repeat the same surah continuously",
+  "@playerRepeatOneSubtitle": {
+    "description": "Subjudul ulang satu surah"
+  },
+  "playerRepeatOffSubtitle": "Stop after one surah finishes",
+  "@playerRepeatOffSubtitle": {
+    "description": "Subjudul berhenti setelah selesai"
+  },
+  "playerShowAll": "Show all",
+  "@playerShowAll": {
+    "description": "Tombol tampilkan semua surah"
+  },
+  "playerQueueUnavailable": "The surah list is not available yet.",
+  "@playerQueueUnavailable": {
+    "description": "Daftar surah kosong"
+  },
+  "playerQueueFiltered": "Filtered queue: {count} surahs",
+  "@playerQueueFiltered": {
+    "description": "Penanda antrian terfilter",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "playerNowPlayingAyah": "Ayah {ayah} • QuranKu Murotal",
+  "@playerNowPlayingAyah": {
+    "description": "Info ayat yang sedang diputar",
+    "placeholders": {
+      "ayah": {
+        "type": "String"
+      }
+    }
+  },
+  "playerLyricsEmpty": "Lyrics not available yet.",
+  "@playerLyricsEmpty": {
+    "description": "Lirik kosong"
+  },
+  "playerNext": "Next",
+  "@playerNext": {
+    "description": "playerNext"
+  },
+  "playerPrevious": "Previous",
+  "@playerPrevious": {
+    "description": "playerPrevious"
+  },
+  "playerPause": "Pause",
+  "@playerPause": {
+    "description": "playerPause"
+  },
+  "playerPlay": "Play",
+  "@playerPlay": {
+    "description": "playerPlay"
+  }
+}
