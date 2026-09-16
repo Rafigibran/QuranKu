@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -44,9 +43,26 @@ class BackgroundAudioService extends ChangeNotifier {
     _backgroundVolume = prefs.getDouble(_backgroundVolumeKey) ?? 0.20;
     _mainVolume = prefs.getDouble(_mainVolumeKey) ?? 1.0;
 
-    await _backgroundPlayer.setVolume(_backgroundVolume);
-    await _quranAudio.init();
-    await _quranAudio.setVolume(_mainVolume);
+    if (Platform.isLinux) {
+      debugPrint('BackgroundAudio disabled on Linux');
+      try {
+        await _quranAudio.init();
+      } catch (_) {}
+      _quranAudio.addListener(_syncWithQuranPlayback);
+      return;
+    }
+
+    try {
+      await _backgroundPlayer.setVolume(_backgroundVolume);
+    } catch (e) {
+      debugPrint('Background player init failed: $e');
+    }
+    try {
+      await _quranAudio.init();
+      await _quranAudio.setVolume(_mainVolume);
+    } catch (e) {
+      debugPrint('Quran audio init failed: $e');
+    }
     _quranAudio.addListener(_syncWithQuranPlayback);
   }
 
@@ -78,6 +94,7 @@ class BackgroundAudioService extends ChangeNotifier {
   }
 
   Future<void> _startAmbient() async {
+    if (Platform.isLinux) return;
     if (!_enabled || !_quranAudio.isPlaying) return;
 
     final path = await _ensureRainFile();
@@ -98,8 +115,13 @@ class BackgroundAudioService extends ChangeNotifier {
   }
 
   Future<void> _pauseAmbient() async {
-    if (_backgroundPlayer.playing) {
-      await _backgroundPlayer.pause();
+    if (Platform.isLinux) return;
+    try {
+      if (_backgroundPlayer.playing) {
+        await _backgroundPlayer.pause();
+      }
+    } catch (e) {
+      debugPrint('Pause ambient failed: $e');
     }
   }
 
@@ -118,7 +140,13 @@ class BackgroundAudioService extends ChangeNotifier {
 
   Future<void> setBackgroundVolume(double value) async {
     _backgroundVolume = value.clamp(0.0, 1.0);
-    await _backgroundPlayer.setVolume(_backgroundVolume);
+    if (!Platform.isLinux) {
+      try {
+        await _backgroundPlayer.setVolume(_backgroundVolume);
+      } catch (e) {
+        debugPrint('setBackgroundVolume failed: $e');
+      }
+    }
     final prefs = await SharedPreferences.getInstance();
     await prefs.setDouble(_backgroundVolumeKey, _backgroundVolume);
     notifyListeners();
@@ -126,7 +154,11 @@ class BackgroundAudioService extends ChangeNotifier {
 
   Future<void> setMainVolume(double value) async {
     _mainVolume = value.clamp(0.0, 1.0);
-    await _quranAudio.setVolume(_mainVolume);
+    try {
+      await _quranAudio.setVolume(_mainVolume);
+    } catch (e) {
+      debugPrint('setMainVolume failed: $e');
+    }
     final prefs = await SharedPreferences.getInstance();
     await prefs.setDouble(_mainVolumeKey, _mainVolume);
     notifyListeners();
@@ -134,7 +166,13 @@ class BackgroundAudioService extends ChangeNotifier {
 
   Future<void> disposeService() async {
     _quranAudio.removeListener(_syncWithQuranPlayback);
-    await _backgroundPlayer.dispose();
+    if (!Platform.isLinux) {
+      try {
+        await _backgroundPlayer.dispose();
+      } catch (e) {
+        debugPrint('dispose background failed: $e');
+      }
+    }
   }
 
   @override

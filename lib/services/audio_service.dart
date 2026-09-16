@@ -7,8 +7,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:synchronized/synchronized.dart';
 import '../models/surah.dart';
 import '../services/api_service.dart';
-import '../services/murotal_download_service.dart';
-import '../services/widget_service.dart';
+import '../services/equran_service.dart';
+import '../services/settings_service.dart';
 
 enum RepeatMode { none, autoNext, repeatOne }
 
@@ -28,14 +28,24 @@ class AudioService extends ChangeNotifier {
 
   Surah? _currentSurah;
   int _currentAyah = 1;
+
+  /// Streaming URL for an ayah: offline file wins, else equran.id v2 CDN
+  /// with the user-selected qari (default Misyari = offline voice).
+  String _streamUrl(int surahNumber, int ayahNumber) {
+    return EquranService.audioAyahUrl(
+      SettingsService().qariId,
+      surahNumber,
+      ayahNumber,
+    );
+  }
   int _lastAddedAyah = 0;
   bool _isPlaying = false;
   bool _isBuffering = false;
+  double _volume = 1.0;
 
   RepeatMode _repeatMode = RepeatMode.autoNext;
   SurahOrder _surahOrder = SurahOrder.ascending;
 
-  final bool _isPlayingBismillah = false;
   bool _isCompletionHandled = false;
   bool _isChangingTrack = false;
   int _loadingOperationId = 0;
@@ -50,21 +60,56 @@ class AudioService extends ChangeNotifier {
   int get currentAyah => _currentAyah;
   bool get isPlaying => _isPlaying;
   bool get isBuffering => _isBuffering;
+  double get volume => _volume;
 
   RepeatMode get repeatMode => _repeatMode;
   SurahOrder get surahOrder => _surahOrder;
 
-  Stream<Duration> get positionStream => _player.positionStream;
-  Stream<Duration?> get durationStream => _player.durationStream;
-  Stream<PlayerState> get playerStateStream => _player.playerStateStream;
+  Stream<Duration> get positionStream {
+    if (Platform.isLinux) return const Stream.empty();
+    try {
+      return _player.positionStream;
+    } catch (_) {
+      return const Stream.empty();
+    }
+  }
+
+  Stream<Duration?> get durationStream {
+    if (Platform.isLinux) return const Stream.empty();
+    try {
+      return _player.durationStream;
+    } catch (_) {
+      return const Stream.empty();
+    }
+  }
+
+  Stream<PlayerState> get playerStateStream {
+    if (Platform.isLinux) return const Stream.empty();
+    try {
+      return _player.playerStateStream;
+    } catch (_) {
+      return const Stream.empty();
+    }
+  }
 
   Future<void> seek(Duration position) async {
-    final duration = _player.duration;
-    if (duration == null) return;
-    final clamped = position < Duration.zero
-        ? Duration.zero
-        : (position > duration ? duration : position);
-    await _player.seek(clamped);
+    if (Platform.isLinux) return;
+    try {
+      final duration = _player.duration;
+      if (duration == null) return;
+      final clamped = position < Duration.zero
+          ? Duration.zero
+          : (position > duration ? duration : position);
+      await _player.seek(clamped);
+    } catch (e) {
+      debugPrint('seek failed: $e');
+    }
+  }
+
+  void setRepeatMode(RepeatMode mode) {
+    if (_repeatMode == mode) return;
+    _repeatMode = mode;
+    notifyListeners();
   }
 
   void toggleRepeatMode() {
@@ -78,11 +123,25 @@ class AudioService extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setSurahOrder(SurahOrder order) {
+    if (_surahOrder == order) return;
+    _surahOrder = order;
+    notifyListeners();
+  }
+
   void toggleSurahOrder() {
     _surahOrder = _surahOrder == SurahOrder.ascending
         ? SurahOrder.descending
         : SurahOrder.ascending;
     notifyListeners();
+  }
+
+  List<int> get customSurahSequence => List.unmodifiable(_customSurahSequence);
+  List<int> get effectiveQueue {
+    if (_customSurahSequence.isNotEmpty) return List.unmodifiable(_customSurahSequence);
+    final base = List<int>.generate(114, (i) => i + 1);
+    if (_surahOrder == SurahOrder.descending) return base.reversed.toList();
+    return base;
   }
 
   void setCustomSurahSequence(List<int> sequence) {
@@ -203,13 +262,29 @@ class AudioService extends ChangeNotifier {
 
   Future<void> init() async {
     if (_localPath != null) return;
+    if (Platform.isLinux) {
+      debugPrint('AudioService disabled on Linux (just_audio not supported)');
+      final dir = await getApplicationDocumentsDirectory();
+      _localPath = '${dir.path}/audio';
+      try {
+        await Directory(_localPath!).create(recursive: true);
+      } catch (_) {}
+      return;
+    }
     final dir = await getApplicationDocumentsDirectory();
     _localPath = '${dir.path}/audio';
     await Directory(_localPath!).create(recursive: true);
+    try {
+      await _player.setVolume(_volume);
+    } catch (e) {
+      debugPrint('Audio init failed (likely Linux): $e');
+      return;
+    }
 
     _player.playerStateStream.listen((state) {
       _isPlaying = state.playing;
-      _isBuffering = state.processingState == ProcessingState.buffering ||
+      _isBuffering =
+          state.processingState == ProcessingState.buffering ||
           state.processingState == ProcessingState.loading;
       notifyListeners();
     });
@@ -241,6 +316,13 @@ class AudioService extends ChangeNotifier {
   }
 
   Future<void> playAyah(Surah surah, int ayahNumber) async {
+    if (Platform.isLinux) {
+      debugPrint('playAyah skipped on Linux');
+      _currentSurah = surah;
+      _currentAyah = ayahNumber;
+      notifyListeners();
+      return;
+    }
     final int opId = ++_loadingOperationId;
     _currentSurah = surah;
     _currentAyah = ayahNumber;
@@ -259,15 +341,19 @@ class AudioService extends ChangeNotifier {
         if (opId != _loadingOperationId) return;
         final uri = bismillahPath != null
             ? Uri.parse(bismillahPath)
-            : Uri.parse('https://damarjati1323.github.io/audio/001-001.mp3');
+            : Uri.parse(_streamUrl(1, 1));
         initialSources.add(AudioSource.uri(uri, tag: 0));
       }
 
-      final targetPath = await _getFileWithLock(surah.number, ayahNumber, onlyCheck: true);
+      final targetPath = await _getFileWithLock(
+        surah.number,
+        ayahNumber,
+        onlyCheck: true,
+      );
       if (opId != _loadingOperationId) return;
       final targetUri = targetPath != null
           ? Uri.parse(targetPath)
-          : Uri.parse('https://damarjati1323.github.io/audio/${surah.number.toString().padLeft(3, '0')}-${ayahNumber.toString().padLeft(3, '0')}.mp3');
+          : Uri.parse(_streamUrl(surah.number, ayahNumber));
       initialSources.add(AudioSource.uri(targetUri, tag: ayahNumber));
 
       _playlist = ConcatenatingAudioSource(children: initialSources);
@@ -275,7 +361,8 @@ class AudioService extends ChangeNotifier {
         await _player.setAudioSource(_playlist!);
         _lastAddedAyah = ayahNumber;
       } catch (e) {
-        if (e.toString().contains('Platform player') && e.toString().contains('already exists')) {
+        if (e.toString().contains('Platform player') &&
+            e.toString().contains('already exists')) {
           await Future.delayed(const Duration(milliseconds: 100));
           if (opId != _loadingOperationId) return;
           await _player.setAudioSource(_playlist!);
@@ -299,7 +386,11 @@ class AudioService extends ChangeNotifier {
     }
   }
 
-  Future<void> _bufferNextAyahsInBackground(Surah surah, int startAyah, int opId) async {
+  Future<void> _bufferNextAyahsInBackground(
+    Surah surah,
+    int startAyah,
+    int opId,
+  ) async {
     await Future.delayed(const Duration(milliseconds: 100));
     if (opId != _loadingOperationId) return;
 
@@ -328,7 +419,8 @@ class AudioService extends ChangeNotifier {
   bool _isAddingToPlaylist = false;
 
   void _maintainPlaylistQueue() async {
-    if (_playlist == null || _currentSurah == null || _isAddingToPlaylist) return;
+    if (_playlist == null || _currentSurah == null || _isAddingToPlaylist)
+      return;
     _isAddingToPlaylist = true;
     try {
       await _playlistLock.synchronized(() async {
@@ -341,7 +433,10 @@ class AudioService extends ChangeNotifier {
           int nextAyahNum = (lastAyahNum == 0) ? 1 : lastAyahNum + 1;
           if (nextAyahNum <= _currentSurah!.totalAyahs) {
             if (nextAyahNum > _lastAddedAyah) {
-              final source = await _resolveAudioSource(_currentSurah!, nextAyahNum);
+              final source = await _resolveAudioSource(
+                _currentSurah!,
+                nextAyahNum,
+              );
               if (_playlist != null) {
                 await _playlist!.add(source);
                 _lastAddedAyah = nextAyahNum;
@@ -411,7 +506,13 @@ class AudioService extends ChangeNotifier {
       if (opId != _loadingOperationId) return;
       final nextSurah = surahs.firstWhere(
         (s) => s.number == number,
-        orElse: () => Surah(number: number, name: 'Surah $number', nameAr: '', type: '', totalAyahs: 7),
+        orElse: () => Surah(
+          number: number,
+          name: 'Surah $number',
+          nameAr: '',
+          type: '',
+          totalAyahs: 7,
+        ),
       );
       _currentSurah = nextSurah;
       _currentAyah = 1;
@@ -443,14 +544,18 @@ class AudioService extends ChangeNotifier {
         if (opId != _loadingOperationId) return;
         final uri = bismillahPath != null
             ? Uri.parse(bismillahPath)
-            : Uri.parse('https://damarjati1323.github.io/audio/001-001.mp3');
+            : Uri.parse(_streamUrl(1, 1));
         initialSources.add(AudioSource.uri(uri, tag: 0));
       }
-      final ayah1Path = await _getFileWithLock(surah.number, 1, onlyCheck: true);
+      final ayah1Path = await _getFileWithLock(
+        surah.number,
+        1,
+        onlyCheck: true,
+      );
       if (opId != _loadingOperationId) return;
       final ayah1Uri = ayah1Path != null
           ? Uri.parse(ayah1Path)
-          : Uri.parse('https://damarjati1323.github.io/audio/${surah.number.toString().padLeft(3, '0')}-001.mp3');
+          : Uri.parse(_streamUrl(surah.number, 1));
       initialSources.add(AudioSource.uri(ayah1Uri, tag: 1));
 
       _playlist = ConcatenatingAudioSource(children: initialSources);
@@ -473,13 +578,52 @@ class AudioService extends ChangeNotifier {
   Future<AudioSource> _resolveAudioSource(Surah surah, int ayahNum) async {
     final path = await _getFileWithLock(surah.number, ayahNum, onlyCheck: true);
     if (path != null) return AudioSource.uri(Uri.parse(path), tag: ayahNum);
-    final fileName = '${surah.number.toString().padLeft(3, '0')}-${ayahNum.toString().padLeft(3, '0')}.mp3';
-    return AudioSource.uri(Uri.parse('https://damarjati1323.github.io/audio/$fileName'), tag: ayahNum);
+    return AudioSource.uri(
+      Uri.parse(_streamUrl(surah.number, ayahNum)),
+      tag: ayahNum,
+    );
   }
 
-  Future<void> pause() async => _player.pause();
-  Future<void> resume() async => _player.play();
-  Future<void> stop() async => _player.stop();
+  Future<void> setVolume(double value) async {
+    _volume = value.clamp(0.0, 1.0);
+    if (Platform.isLinux) {
+      notifyListeners();
+      return;
+    }
+    try {
+      await _player.setVolume(_volume);
+    } catch (e) {
+      debugPrint('setVolume failed: $e');
+    }
+    notifyListeners();
+  }
+
+  Future<void> pause() async {
+    if (Platform.isLinux) return;
+    try {
+      await _player.pause();
+    } catch (e) {
+      debugPrint('pause failed: $e');
+    }
+  }
+
+  Future<void> resume() async {
+    if (Platform.isLinux) return;
+    try {
+      await _player.play();
+    } catch (e) {
+      debugPrint('resume failed: $e');
+    }
+  }
+
+  Future<void> stop() async {
+    if (Platform.isLinux) return;
+    try {
+      await _player.stop();
+    } catch (e) {
+      debugPrint('stop failed: $e');
+    }
+  }
 
   Future<void> next() async {
     if (_player.hasNext) {
@@ -512,30 +656,59 @@ class AudioService extends ChangeNotifier {
     }
   }
 
-  Future<String?> _getFileWithLock(int surahNum, int ayahNum, {bool onlyCheck = false}) async {
+  Future<String?> _getFileWithLock(
+    int surahNum,
+    int ayahNum, {
+    bool onlyCheck = false,
+  }) async {
     if (_localPath == null) await init();
-    final fileName = '${surahNum.toString().padLeft(3, '0')}-${ayahNum.toString().padLeft(3, '0')}.mp3';
-    final lock = _downloadLocks.putIfAbsent(fileName, () => Lock());
+    final fileName =
+        '${surahNum.toString().padLeft(3, '0')}-${ayahNum.toString().padLeft(3, '0')}.mp3';
+    // Per-qari cache: selected qari determines folder. Legacy files (Misyari)
+    // at root are checked for backward compatibility when default is selected.
+    final qari = SettingsService().qariId;
+    final lockKey = '$qari/$fileName';
+    final lock = _downloadLocks.putIfAbsent(lockKey, () => Lock());
     return lock.synchronized(() async {
-      final localFilePath = '$_localPath/$fileName';
+      final qariDir = '$_localPath/$qari';
+      try {
+        await Directory(qariDir).create(recursive: true);
+      } catch (_) {}
+      final localFilePath = '$qariDir/$fileName';
       final file = File(localFilePath);
       if (await file.exists()) {
         final length = await file.length();
         if (length > 1024) return file.uri.toString();
         await file.delete();
       }
+      // Backward compat: legacy Misyari files at root when default qari selected.
+      if (qari == EquranService.defaultQariId) {
+        final legacyPath = '$_localPath/$fileName';
+        final legacyFile = File(legacyPath);
+        if (await legacyFile.exists()) {
+          final length = await legacyFile.length();
+          if (length > 1024) return legacyFile.uri.toString();
+          try {
+            await legacyFile.delete();
+          } catch (_) {}
+        }
+      }
       if (onlyCheck) return null;
-      final url = 'https://damarjati1323.github.io/audio/$fileName';
+      final url = EquranService.audioAyahUrl(qari, surahNum, ayahNum);
       final tempFile = '$localFilePath.tmp';
       try {
-        await _dio.download(url, tempFile, options: Options(responseType: ResponseType.bytes));
+        await _dio.download(
+          url,
+          tempFile,
+          options: Options(responseType: ResponseType.bytes),
+        );
         final downloaded = File(tempFile);
         if (await downloaded.exists() && await downloaded.length() > 1024) {
           await downloaded.rename(localFilePath);
           return File(localFilePath).uri.toString();
         }
       } catch (e) {
-        debugPrint('Download error $fileName: $e');
+        debugPrint('Download error $fileName (qari $qari): $e');
       }
       try {
         final temp = File(tempFile);

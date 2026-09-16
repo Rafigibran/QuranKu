@@ -1,13 +1,14 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
+import '../l10n/l10n.dart';
 import '../services/audio_service.dart';
 import '../services/background_audio_service.dart';
 import '../services/settings_service.dart';
 import 'liquid_glass.dart';
 
+/// Single live lamp in the system: the playing state.
+/// Docked tonal bar above the Material nav; progress reads as one
+/// continuous thread (the tasbih string), not a floating glass pill.
 class MiniPlayer extends StatefulWidget {
   final VoidCallback onTap;
 
@@ -46,16 +47,13 @@ class _MiniPlayerState extends State<MiniPlayer> {
   Future<void> _openBackground() async {
     await showModalBottomSheet<void>(
       context: context,
-      backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (context) => SafeArea(
         top: false,
         child: LiquidGlassCard(
-          radius: 30,
+          radius: 24,
           margin: const EdgeInsets.fromLTRB(14, 0, 14, 14),
           padding: const EdgeInsets.fromLTRB(22, 14, 22, 28),
-          blur: 26,
-          tint: Theme.of(context).colorScheme.surface.withValues(alpha: .52),
           child: StatefulBuilder(
             builder: (context, setSheetState) {
               final scheme = Theme.of(context).colorScheme;
@@ -63,17 +61,6 @@ class _MiniPlayerState extends State<MiniPlayer> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Center(
-                    child: Container(
-                      width: 42,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: scheme.onSurface.withValues(alpha: .25),
-                        borderRadius: BorderRadius.circular(99),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 18),
                   Row(
                     children: [
                       Container(
@@ -83,7 +70,10 @@ class _MiniPlayerState extends State<MiniPlayer> {
                           shape: BoxShape.circle,
                           color: scheme.primary.withValues(alpha: .14),
                         ),
-                        child: Icon(Icons.water_drop_rounded, color: scheme.primary),
+                        child: Icon(
+                          Icons.water_drop_rounded,
+                          color: scheme.primary,
+                        ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
@@ -91,14 +81,14 @@ class _MiniPlayerState extends State<MiniPlayer> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Suara latar',
-                              style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+                              context.l10n.playerBackgroundSound,
+                              style: Theme.of(context).textTheme.titleLarge
+                                  ?.copyWith(fontWeight: FontWeight.w800),
                             ),
                             Text(
-                              'Berjalan bersama audio Al-Qur’an.',
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: scheme.onSurface.withValues(alpha: .62),
-                                  ),
+                              context.l10n.playerBackgroundSoundSubtitle,
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(color: scheme.onSurfaceVariant),
                             ),
                           ],
                         ),
@@ -113,14 +103,20 @@ class _MiniPlayerState extends State<MiniPlayer> {
                     ],
                   ),
                   const SizedBox(height: 18),
-                  _slider('Volume Al-Qur’an', _background.mainVolume, (value) async {
+                  _slider(context.l10n.playerVolumeQuran, _background.mainVolume, (
+                    value,
+                  ) async {
                     await _background.setMainVolume(value);
                     setSheetState(() {});
                   }),
-                  _slider('Volume hujan', _background.backgroundVolume, (value) async {
-                    await _background.setBackgroundVolume(value);
-                    setSheetState(() {});
-                  }),
+                  _slider(
+                    context.l10n.playerVolumeRain,
+                    _background.backgroundVolume,
+                    (value) async {
+                      await _background.setBackgroundVolume(value);
+                      setSheetState(() {});
+                    },
+                  ),
                 ],
               );
             },
@@ -141,7 +137,10 @@ class _MiniPlayerState extends State<MiniPlayer> {
             Text(title, style: const TextStyle(fontWeight: FontWeight.w700)),
             Text(
               '${(value * 100).round()}%',
-              style: TextStyle(color: scheme.primary, fontWeight: FontWeight.w800),
+              style: TextStyle(
+                color: scheme.primary,
+                fontWeight: FontWeight.w800,
+              ),
             ),
           ],
         ),
@@ -179,13 +178,15 @@ class _MiniPlayerState extends State<MiniPlayer> {
             final duration = durationSnapshot.data ?? Duration.zero;
             final position = positionSnapshot.data ?? Duration.zero;
             final total = duration.inMilliseconds;
-            final current = total > 0 ? (position.inMilliseconds / total).clamp(0.0, 1.0) : 0.0;
+            final current = total > 0
+                ? (position.inMilliseconds / total).clamp(0.0, 1.0)
+                : 0.0;
             return ClipRRect(
               borderRadius: BorderRadius.circular(99),
               child: LinearProgressIndicator(
-                minHeight: 3,
+                minHeight: 4,
                 value: current,
-                backgroundColor: scheme.onSurface.withValues(alpha: isDark ? .10 : .12),
+                backgroundColor: scheme.surfaceContainerHighest,
                 valueColor: AlwaysStoppedAnimation<Color>(scheme.primary),
               ),
             );
@@ -194,113 +195,171 @@ class _MiniPlayerState extends State<MiniPlayer> {
       },
     );
 
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(28),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
-        child: Container(
-          decoration: BoxDecoration(
-            color: scheme.surface.withValues(alpha: isDark ? .72 : .86),
-            borderRadius: BorderRadius.circular(28),
-            border: Border.all(
-              color: isDark
-                  ? Colors.white.withValues(alpha: .10)
-                  : scheme.outline.withValues(alpha: .55),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: isDark ? .22 : .08),
-                blurRadius: 24,
-                offset: const Offset(0, 10),
-              ),
-            ],
+    return Container(
+      decoration: BoxDecoration(
+        color: scheme.surfaceContainer,
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: scheme.outlineVariant),
+        boxShadow: [
+          BoxShadow(
+            color: isDark
+                ? Colors.black.withValues(alpha: 0.35)
+                : Colors.black.withValues(alpha: 0.08),
+            blurRadius: 22,
+            offset: const Offset(0, 10),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10, 9, 10, 8),
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      onTap: _openPlayer,
-                      child: Container(
-                        width: 54,
-                        height: 54,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(17),
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [scheme.primary, scheme.primary.withValues(alpha: .34)],
-                          ),
-                          border: Border.all(color: Colors.white.withValues(alpha: .13)),
-                        ),
-                        child: const Icon(Icons.menu_book_rounded, color: Colors.white, size: 28),
-                      ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(10, 9, 10, 8),
+            child: Row(
+              children: [
+                GestureDetector(
+                  onTap: _openPlayer,
+                  child: Container(
+                    width: 54,
+                    height: 54,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      color: scheme.primary,
                     ),
-                    const SizedBox(width: 11),
-                    Expanded(
-                      child: GestureDetector(
-                        behavior: HitTestBehavior.opaque,
-                        onTap: _openPlayer,
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            '${surah.number}. ${surah.name}',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.spaceGrotesk(
-                              fontSize: 15.5,
-                              fontWeight: FontWeight.w800,
-                              color: scheme.onSurface,
+                    child: Icon(
+                      Icons.menu_book_rounded,
+                      color: scheme.onPrimary,
+                      size: 28,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 11),
+                Expanded(
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: _openPlayer,
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Row(
+                        children: [
+                          if (_audio.isPlaying)
+                            Container(
+                              width: 8,
+                              height: 8,
+                              margin: const EdgeInsets.only(right: 8),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: scheme.tertiary,
+                              ),
+                            ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  '${surah.number}. ${surah.name}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Theme.of(context).textTheme.titleMedium
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.w800,
+                                        color: scheme.onSurface,
+                                        height: 1.1,
+                                      ),
+                                ),
+                                Text(
+                                  'QS ${surah.number}:${_settings.formatNumber(_audio.currentAyah)} • ${_audio.isPlaying ? "Diputar" : "Jeda"}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Theme.of(context).textTheme.labelSmall
+                                      ?.copyWith(
+                                        color: scheme.onSurfaceVariant,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                ),
+                              ],
                             ),
                           ),
-                        ),
+                        ],
                       ),
                     ),
-                    _actionButton(
-                      Icons.water_drop_outlined,
-                      _background.enabled ? scheme.primary : scheme.onSurface.withValues(alpha: .72),
-                      _openBackground,
-                      'Suara latar',
-                    ),
-                    const SizedBox(width: 5),
-                    _actionButton(
-                      _audio.isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
-                      scheme.onSurface,
-                      _togglePlay,
-                      _audio.isPlaying ? 'Jeda' : 'Putar',
-                    ),
-                    const SizedBox(width: 5),
-                    _actionButton(
-                      Icons.skip_next_rounded,
-                      _audio.hasNextSurah() ? scheme.onSurface : scheme.onSurface.withValues(alpha: .26),
-                      _audio.hasNextSurah() ? _audio.playNextSurah : null,
-                      'Berikutnya',
-                    ),
-                  ],
+                  ),
                 ),
+                _actionButton(
+                  Icons.water_drop_outlined,
+                  _background.enabled
+                      ? scheme.primary
+                      : scheme.onSurfaceVariant,
+                  _openBackground,
+                  context.l10n.playerBackgroundSound,
+                ),
+                const SizedBox(width: 5),
+                _playAction(scheme),
+                const SizedBox(width: 5),
+                _actionButton(
+                  Icons.skip_next_rounded,
+                  _audio.hasNextSurah()
+                      ? scheme.onSurface
+                      : scheme.onSurface.withValues(alpha: .38),
+                  _audio.hasNextSurah() ? _audio.playNextSurah : null,
+                  'Berikutnya',
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 0, 12, 10),
+            child: progress,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _playAction(ColorScheme scheme) {
+    return Tooltip(
+      message: _audio.isPlaying ? 'Jeda' : 'Putar',
+      child: Material(
+        color: scheme.primary,
+        borderRadius: BorderRadius.circular(16),
+        child: InkWell(
+          onTap: _togglePlay,
+          borderRadius: BorderRadius.circular(16),
+          child: SizedBox(
+            width: 48,
+            height: 48,
+            child: Center(
+              child: Icon(
+                _audio.isPlaying
+                    ? Icons.pause_rounded
+                    : Icons.play_arrow_rounded,
+                color: scheme.onPrimary,
+                size: 26,
               ),
-              Padding(padding: const EdgeInsets.fromLTRB(12, 0, 12, 0), child: progress),
-            ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _actionButton(IconData icon, Color color, VoidCallback? onTap, String tooltip) {
+  Widget _actionButton(
+    IconData icon,
+    Color color,
+    VoidCallback? onTap,
+    String tooltip,
+  ) {
     return Tooltip(
       message: tooltip,
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(17),
+          borderRadius: BorderRadius.circular(16),
           child: SizedBox(
-            width: 47,
-            height: 47,
+            width: 48,
+            height: 48,
             child: Center(child: Icon(icon, color: color, size: 26)),
           ),
         ),

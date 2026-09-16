@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:quranku/l10n/app_localizations.dart';
 import '../models/surah.dart';
 import '../services/api_service.dart';
 import '../services/audio_service.dart';
 import '../services/murotal_download_service.dart';
+import '../services/equran_service.dart';
 import '../services/settings_service.dart';
 import '../widgets/liquid_glass.dart';
 import 'murotal_download_screen.dart';
+import 'playlist_screen.dart';
 
 class MurotalScreen extends StatefulWidget {
   const MurotalScreen({super.key});
@@ -61,7 +63,9 @@ class _MurotalScreenState extends State<MurotalScreen> {
     final q = value.trim().toLowerCase();
     setState(() {
       if (q == 'offline') {
-        _visible = _all.where((s) => _downloads.isSurahDownloaded(s.number)).toList();
+        _visible = _all
+            .where((s) => _downloads.isSurahDownloaded(s.number))
+            .toList();
         _audio.setCustomSurahSequence(_visible.map((s) => s.number).toList());
         return;
       }
@@ -87,13 +91,62 @@ class _MurotalScreenState extends State<MurotalScreen> {
         initialChildSize: .78,
         minChildSize: .55,
         maxChildSize: .94,
-        builder: (context, controller) => MurotalDownloadScreen(scrollController: controller),
+        builder: (context, controller) =>
+            MurotalDownloadScreen(scrollController: controller),
       ),
     );
   }
 
+  Future<void> _openQariPicker() async {
+    final l10n = AppLocalizations.of(context)!;
+    final selected = await showModalBottomSheet<String>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: LiquidGlassCard(
+            padding: const EdgeInsets.all(8),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: EquranService.qaris
+                    .map(
+                      (q) => RadioListTile<String>(
+                        value: q.id,
+                        groupValue: _settings.qariId,
+                        title: Text(q.name),
+                        subtitle: q.id == EquranService.defaultQariId
+                            ? Text(l10n.murotalHelpOffline)
+                            : null,
+                        onChanged: (v) async {
+                          if (v == null) return;
+                          Navigator.pop(context, v);
+                        },
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    if (selected != null && selected != _settings.qariId) {
+      await _settings.setQariId(selected);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('${l10n.murotalQari}: ${EquranService.qariName(selected)}'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
+  }
+
   Future<void> _openHelp() async {
     final scheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
     await showModalBottomSheet<void>(
       context: context,
       backgroundColor: Colors.transparent,
@@ -110,20 +163,49 @@ class _MurotalScreenState extends State<MurotalScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(child: Container(width: 42, height: 4, decoration: BoxDecoration(color: scheme.outline, borderRadius: BorderRadius.circular(99)))),
+              Center(
+                child: Container(
+                  width: 42,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: scheme.outline,
+                    borderRadius: BorderRadius.circular(99),
+                  ),
+                ),
+              ),
               const SizedBox(height: 22),
-              Text('Tentang Murotal', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800)),
+              Text(
+                l10n.murotalHelpTitle,
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
               const SizedBox(height: 8),
-              Text('Pilih surah untuk mulai mendengarkan. Ketik “offline” untuk menampilkan surah yang sudah tersimpan di perangkat.', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: scheme.onSurface.withValues(alpha: .68), height: 1.45)),
+              Text(
+                l10n.murotalHelpDesc,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  color: scheme.onSurface.withValues(alpha: .72),
+                  height: 1.45,
+                ),
+              ),
               const SizedBox(height: 20),
               LiquidGlassCard(
                 radius: 20,
                 padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
-                    Icon(Icons.touch_app_rounded, color: scheme.primary, size: 26),
+                    Icon(
+                      Icons.touch_app_rounded,
+                      color: scheme.primary,
+                      size: 26,
+                    ),
                     const SizedBox(width: 14),
-                    Expanded(child: Text('Ketuk kartu untuk memilih ayat awal.', style: Theme.of(context).textTheme.bodyMedium)),
+                    Expanded(
+                      child: Text(
+                        l10n.murotalHelpTapHint,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -133,9 +215,18 @@ class _MurotalScreenState extends State<MurotalScreen> {
                 padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
-                    Icon(Icons.download_done_rounded, color: scheme.primary, size: 26),
+                    Icon(
+                      Icons.download_done_rounded,
+                      color: scheme.primary,
+                      size: 26,
+                    ),
                     const SizedBox(width: 14),
-                    Expanded(child: Text('Ikon centang menandakan audio tersedia offline.', style: Theme.of(context).textTheme.bodyMedium)),
+                    Expanded(
+                      child: Text(
+                        l10n.murotalHelpOffline,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -148,6 +239,7 @@ class _MurotalScreenState extends State<MurotalScreen> {
 
   Future<void> _openAyahPicker(Surah surah) async {
     final scheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
     await showModalBottomSheet<void>(
       context: context,
       backgroundColor: Colors.transparent,
@@ -162,20 +254,51 @@ class _MurotalScreenState extends State<MurotalScreen> {
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
           child: Column(
             children: [
-              Center(child: Container(width: 42, height: 4, decoration: BoxDecoration(color: scheme.outline, borderRadius: BorderRadius.circular(99)))),
+              Center(
+                child: Container(
+                  width: 42,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: scheme.outline,
+                    borderRadius: BorderRadius.circular(99),
+                  ),
+                ),
+              ),
               const SizedBox(height: 18),
               Row(
                 children: [
-                  Expanded(child: Text('Mulai dari ayat', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800))),
-                  IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.close_rounded)),
+                  Expanded(
+                    child: Text(
+                      l10n.murotalHelpTapHint,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.close_rounded),
+                  ),
                 ],
               ),
-              Align(alignment: Alignment.centerLeft, child: Text(surah.name, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: scheme.onSurface.withValues(alpha: .60)))),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  surah.name,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: scheme.onSurface.withValues(alpha: .72),
+                  ),
+                ),
+              ),
               const SizedBox(height: 16),
               Expanded(
                 child: GridView.builder(
                   padding: const EdgeInsets.only(top: 4),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 5, crossAxisSpacing: 10, mainAxisSpacing: 10),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 5,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                  ),
                   itemCount: surah.totalAyahs,
                   itemBuilder: (context, index) {
                     final number = index + 1;
@@ -186,7 +309,16 @@ class _MurotalScreenState extends State<MurotalScreen> {
                         _audio.playAyah(surah, number);
                         Navigator.pop(context);
                       },
-                      child: Center(child: Text(_settings.formatNumber(number), style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800, color: scheme.primary))),
+                      child: Center(
+                        child: Text(
+                          _settings.formatNumber(number),
+                          style: Theme.of(context).textTheme.titleSmall
+                              ?.copyWith(
+                                fontWeight: FontWeight.w800,
+                                color: scheme.primary,
+                              ),
+                        ),
+                      ),
                     );
                   },
                 ),
@@ -201,15 +333,18 @@ class _MurotalScreenState extends State<MurotalScreen> {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      backgroundColor: Colors.transparent,
       body: SafeArea(
         bottom: false,
         child: FutureBuilder<List<Surah>>(
           future: _future,
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting && _all.isEmpty) {
-              return Center(child: CircularProgressIndicator(color: scheme.primary));
+            if (snapshot.connectionState == ConnectionState.waiting &&
+                _all.isEmpty) {
+              return Center(
+                child: CircularProgressIndicator(color: scheme.primary),
+              );
             }
 
             return CustomScrollView(
@@ -226,45 +361,115 @@ class _MurotalScreenState extends State<MurotalScreen> {
                   title: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('MUROTAL', style: GoogleFonts.spaceGrotesk(fontSize: 23, fontWeight: FontWeight.w800, letterSpacing: -1)),
-                      Text('Dengarkan Al-Qur’an dengan tenang', style: Theme.of(context).textTheme.labelMedium?.copyWith(color: scheme.onSurface.withValues(alpha: .55))),
+                      Text(
+                        l10n.murotalTitle,
+                        style: TextStyle(
+                          fontSize: 23,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: -0.4,
+                        ),
+                      ),
+                      Text(
+                        l10n.murotalSubtitle,
+                        style: Theme.of(context).textTheme.labelMedium
+                            ?.copyWith(
+                              color: scheme.onSurface.withValues(alpha: .72),
+                            ),
+                      ),
                     ],
                   ),
                   actions: [
-                    Padding(padding: const EdgeInsets.only(right: 6), child: LiquidGlassIconButton(icon: Icons.help_outline_rounded, onPressed: _openHelp, tooltip: 'Bantuan')),
-                    Padding(padding: const EdgeInsets.only(right: 14), child: LiquidGlassIconButton(icon: Icons.download_outlined, onPressed: _openDownloads, tooltip: 'Unduhan')),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 6),
+                      child: LiquidGlassIconButton(
+                        icon: Icons.queue_music_rounded,
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const PlaylistScreen(),
+                          ),
+                        ),
+                        tooltip: l10n.murotalPlaylist,
+                        semanticLabel: l10n.murotalPlaylist,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 6),
+                      child: LiquidGlassIconButton(
+                        icon: Icons.help_outline_rounded,
+                        onPressed: _openHelp,
+                        tooltip: l10n.murotalHelp,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 14),
+                      child: LiquidGlassIconButton(
+                        icon: Icons.download_outlined,
+                        onPressed: _openDownloads,
+                        tooltip: l10n.murotalDownloads,
+                      ),
+                    ),
                   ],
+                ),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                    child: _qariChip(scheme),
+                  ),
                 ),
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(20, 4, 20, 18),
                     child: LiquidGlassCard(
                       radius: 20,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 4,
+                      ),
                       child: TextField(
                         controller: _search,
                         onChanged: _filter,
                         textInputAction: TextInputAction.search,
                         style: Theme.of(context).textTheme.bodyLarge,
                         decoration: InputDecoration(
-                          icon: Icon(Icons.search_rounded, color: scheme.primary),
-                          hintText: 'Cari surah atau ketik “offline”…',
+                          icon: Icon(
+                            Icons.search_rounded,
+                            color: scheme.primary,
+                          ),
+                          hintText: l10n.murotalSearchHint,
                           border: InputBorder.none,
-                          suffixIcon: _search.text.isEmpty ? null : IconButton(onPressed: () { _search.clear(); _filter(''); }, icon: const Icon(Icons.close_rounded)),
+                          suffixIcon: _search.text.isEmpty
+                              ? null
+                              : IconButton(
+                                  onPressed: () {
+                                    _search.clear();
+                                    _filter('');
+                                  },
+                                  icon: const Icon(Icons.close_rounded),
+                                ),
                         ),
                       ),
                     ),
                   ),
                 ),
                 if (_visible.isEmpty)
-                  SliverFillRemaining(hasScrollBody: false, child: Center(child: Text('Surah tidak ditemukan', style: Theme.of(context).textTheme.bodyLarge)))
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Center(
+                      child: Text(
+                        l10n.murotalSearchNoResults,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                    ),
+                  )
                 else
                   SliverPadding(
                     padding: const EdgeInsets.fromLTRB(20, 0, 20, 120),
                     sliver: SliverList.separated(
                       itemCount: _visible.length,
                       separatorBuilder: (_, __) => const SizedBox(height: 10),
-                      itemBuilder: (context, index) => _surahCard(_visible[index]),
+                      itemBuilder: (context, index) =>
+                          _surahCard(_visible[index]),
                     ),
                   ),
               ],
@@ -275,8 +480,45 @@ class _MurotalScreenState extends State<MurotalScreen> {
     );
   }
 
+  Widget _qariChip(ColorScheme scheme) {
+    final l10n = AppLocalizations.of(context)!;
+    return GestureDetector(
+      onTap: _openQariPicker,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        decoration: BoxDecoration(
+          color: scheme.primary.withValues(alpha: .10),
+          borderRadius: BorderRadius.circular(99),
+          border: Border.all(color: scheme.primary.withValues(alpha: .18)),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.record_voice_over_rounded,
+              size: 18,
+              color: scheme.primary,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              '${l10n.murotalQari}: ${EquranService.qariName(_settings.qariId)}',
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 13,
+                color: scheme.primary,
+              ),
+            ),
+            const SizedBox(width: 6),
+            Icon(Icons.expand_more_rounded, size: 18, color: scheme.primary),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _surahCard(Surah surah) {
     final scheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
     final isCurrent = _audio.currentSurah?.number == surah.number;
     final isPlaying = isCurrent && _audio.isPlaying;
     final downloaded = _downloads.isSurahDownloaded(surah.number);
@@ -293,10 +535,18 @@ class _MurotalScreenState extends State<MurotalScreen> {
             height: 54,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              gradient: LinearGradient(colors: [scheme.primary.withValues(alpha: .24), scheme.primary.withValues(alpha: .07)]),
-              border: Border.all(color: scheme.primary.withValues(alpha: .30)),
+              color: scheme.secondaryContainer,
+              border: Border.all(color: scheme.outlineVariant),
             ),
-            child: Center(child: Text(_settings.formatNumber(surah.number), style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800, color: scheme.primary))),
+            child: Center(
+              child: Text(
+                _settings.formatNumber(surah.number),
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w800,
+                  color: scheme.primary,
+                ),
+              ),
+            ),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -305,15 +555,41 @@ class _MurotalScreenState extends State<MurotalScreen> {
               children: [
                 Row(
                   children: [
-                    Expanded(child: Text(surah.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800))),
-                    if (downloaded) ...[const SizedBox(width: 6), Icon(Icons.download_done_rounded, size: 18, color: scheme.primary)],
+                    Expanded(
+                      child: Text(
+                        surah.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w800),
+                      ),
+                    ),
+                    if (downloaded) ...[
+                      const SizedBox(width: 6),
+                      Icon(
+                        Icons.download_done_rounded,
+                        size: 18,
+                        color: scheme.primary,
+                      ),
+                    ],
                   ],
                 ),
                 const SizedBox(height: 3),
-                Text('${surah.nameAr}  •  ${_settings.formatNumber(surah.totalAyahs)} ayat', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: scheme.onSurface.withValues(alpha: .56))),
+                Text(
+                  '${surah.nameAr}  •  ${_settings.formatNumber(surah.totalAyahs)} ayat',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: scheme.onSurface.withValues(alpha: .72),
+                  ),
+                ),
                 if (isCurrent) ...[
                   const SizedBox(height: 7),
-                  Text(isPlaying ? 'Sedang diputar' : 'Siap dilanjutkan', style: Theme.of(context).textTheme.labelMedium?.copyWith(color: scheme.primary, fontWeight: FontWeight.w700)),
+                  Text(
+                    isPlaying ? l10n.murotalNowPlaying : l10n.murotalReady,
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      color: scheme.primary,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
                 ],
               ],
             ),
@@ -333,7 +609,11 @@ class _MurotalScreenState extends State<MurotalScreen> {
                   _audio.playAyah(surah, 1);
                 }
               },
-              child: Icon(isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded, color: scheme.primary, size: 28),
+              child: Icon(
+                isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
+                color: scheme.primary,
+                size: 28,
+              ),
             ),
           ),
         ],

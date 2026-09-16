@@ -22,4 +22,12 @@ class Surah {
       totalAyahs: json['total_ayahs'],
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    'number': number,
+    'name': name,
+    'name_ar': nameAr,
+    'type': type,
+    'total_ayahs': totalAyahs,
+  };
 }

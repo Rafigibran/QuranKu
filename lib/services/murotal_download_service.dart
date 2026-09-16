@@ -7,6 +7,8 @@ import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
 import '../models/surah.dart';
 import 'api_service.dart';
+import 'equran_service.dart';
+import 'settings_service.dart';
 
 enum MurotalDownloadStatus { idle, downloading, paused }
 
@@ -59,21 +61,45 @@ class MurotalDownloadService extends ChangeNotifier {
     );
     debugPrint('Resume State: Surah=$currentSurah, LastAyah=$currentAyah');
 
-    // Init Notifications
+    // Init Notifications — must set Linux settings when targeting Linux (R-35)
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/launcher_icon');
-
+    const LinuxInitializationSettings initializationSettingsLinux =
+        LinuxInitializationSettings(defaultActionName: 'Open notification');
     const InitializationSettings initializationSettings =
-        InitializationSettings(android: initializationSettingsAndroid);
+        InitializationSettings(
+          android: initializationSettingsAndroid,
+          linux: initializationSettingsLinux,
+        );
 
-    await flutterLocalNotificationsPlugin.initialize(
-      settings: initializationSettings,
-    );
+    try {
+      await flutterLocalNotificationsPlugin.initialize(
+        settings: initializationSettings,
+      );
+    } catch (e) {
+      debugPrint('Notifications init failed: $e');
+    }
 
     _isInitialized = true;
     notifyListeners();
     // Scan for existing files in background to update status
     scanDownloadedFiles();
+    // Rescan when qari changes so offline badges switch correctly
+    String lastQari = SettingsService().qariId;
+    SettingsService().addListener(() {
+      final currentQari = SettingsService().qariId;
+      if (currentQari != lastQari) {
+        lastQari = currentQari;
+        scanDownloadedFiles();
+      }
+    });
+  }
+
+  String _qariDir() {
+    // Per-qari folder; downloads and offline checks are scoped to selected qari
+    // so that switching qari correctly reflects offline availability and
+    // playback no longer sticks to Misyari.
+    return '$_localPath/${SettingsService().qariId}';
   }
 
   /// Scans the local directory for compiled surahs
@@ -83,12 +109,21 @@ class MurotalDownloadService extends ChangeNotifier {
       _localPath = '${dir.path}/audio';
     }
 
-    final dir = Directory(_localPath!);
-    if (!await dir.exists()) return;
+    final Map<int, int> surahAyahCounts = {};
+    final qariDirFile = Directory(_qariDir());
+    final legacyDir = Directory(_localPath!);
+    final dirsToScan = <Directory>[];
+    if (await qariDirFile.exists()) dirsToScan.add(qariDirFile);
+    // For default qari, also include legacy root files for backward compat
+    if (SettingsService().qariId == EquranService.defaultQariId &&
+        await legacyDir.exists()) {
+      dirsToScan.add(legacyDir);
+    }
+    if (dirsToScan.isEmpty) return;
 
     try {
-      final List<FileSystemEntity> files = dir.listSync();
-      final Map<int, int> surahAyahCounts = {};
+      for (final dir in dirsToScan) {
+        final List<FileSystemEntity> files = dir.listSync();
 
       for (final file in files) {
         if (file is File) {
@@ -107,6 +142,7 @@ class MurotalDownloadService extends ChangeNotifier {
           }
         }
       }
+      }
 
       // We need total ayahs for each surah to confirm completeness
       // If we don't have them cached in memory elsewhere, we might need to fetch or hardcode.
@@ -119,24 +155,21 @@ class MurotalDownloadService extends ChangeNotifier {
         return;
       }
 
-      bool changed = false;
+      // Rebuild downloaded list for current qari (offline state is per-qari)
+      final newDownloaded = <int>[];
       for (final surah in surahs) {
         final localCount = surahAyahCounts[surah.number] ?? 0;
-        // Check if we have all ayahs
-        // Note: Some surahs count Bismillah as ayah 1, some don't in file naming.
-        // Our naming convention is SSS-AAA.mp3.
-        // Usually file count should equal totalAyahs.
-        // EXCEPT for Surah 1 and 9 logic might differ in AudioService but let's assume standard 1..N
-
         if (localCount >= surah.totalAyahs) {
-          if (!downloadedSurahs.contains(surah.number)) {
-            downloadedSurahs.add(surah.number);
-            changed = true;
-          }
+          newDownloaded.add(surah.number);
         }
       }
-
+      newDownloaded.sort();
+      downloadedSurahs.sort();
+      final changed =
+          newDownloaded.length != downloadedSurahs.length ||
+          !newDownloaded.every((e) => downloadedSurahs.contains(e));
       if (changed) {
+        downloadedSurahs = newDownloaded;
         await _saveDownloadedList();
         notifyListeners();
       }
@@ -155,8 +188,15 @@ class MurotalDownloadService extends ChangeNotifier {
       _localPath = '${dir.path}/audio';
     }
 
-    final dir = Directory(_localPath!);
-    if (!await dir.exists()) return;
+    final qariDir = Directory(_qariDir());
+    final legacyDir = Directory(_localPath!);
+    final hasQariDir = await qariDir.exists();
+    final hasLegacyDir = await legacyDir.exists();
+    if (!hasQariDir &&
+        !(SettingsService().qariId == EquranService.defaultQariId &&
+            hasLegacyDir)) {
+      return;
+    }
 
     try {
       // Get total ayahs for this Surah
@@ -183,16 +223,20 @@ class MurotalDownloadService extends ChangeNotifier {
       if (totalAyahs == 0) return;
 
       // Optimize: Check specific files instead of listing all
-      // We assume standard naming: SSS-AAA.mp3
+      // We assume standard naming: SSS-AAA.mp3. For default qari, legacy root
+      // files count as valid offline cache as well.
       bool allAyahsExist = true;
       for (int i = 1; i <= totalAyahs; i++) {
         final filename =
             '${surahNumber.toString().padLeft(3, '0')}-${i.toString().padLeft(3, '0')}.mp3';
-        final file = File('${_localPath}/$filename');
-        if (!await file.exists()) {
-          allAyahsExist = false;
-          break;
+        final qariFile = File('${qariDir.path}/$filename');
+        if (await qariFile.exists()) continue;
+        if (SettingsService().qariId == EquranService.defaultQariId) {
+          final legacyFile = File('${legacyDir.path}/$filename');
+          if (await legacyFile.exists()) continue;
         }
+        allAyahsExist = false;
+        break;
       }
 
       if (allAyahsExist) {
@@ -333,21 +377,24 @@ class MurotalDownloadService extends ChangeNotifier {
 
     final String fileName =
         '${surahNum.toString().padLeft(3, '0')}-${ayahNum.toString().padLeft(3, '0')}.mp3';
-    final String localFilePath = '$_localPath/$fileName';
+    final qari = SettingsService().qariId;
+    final dirPath = _qariDir();
+    await Directory(dirPath).create(recursive: true);
+    final String localFilePath = '$dirPath/$fileName';
     final File file = File(localFilePath);
 
     // Skip if already exists and valid
     if (await file.exists()) {
       final length = await file.length();
       if (length > 1024) {
-        debugPrint('Audio already exists: $fileName');
+        debugPrint('Audio already exists: $fileName (qari $qari)');
         return;
       } else {
         await file.delete();
       }
     }
 
-    final String url = 'https://damarjati1323.github.io/audio/$fileName';
+    final String url = EquranService.audioAyahUrl(qari, surahNum, ayahNum);
     try {
       await _dio.download(url, localFilePath);
       debugPrint('Downloaded: $fileName');

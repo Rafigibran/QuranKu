@@ -50,3 +50,22 @@ lib.bk/
 *.bak
 *.tmp
 flutter_01.png
+
+# Generated localization code. `generate: true` in pubspec.yaml rebuilds these
+# from lib/l10n/app_id.arb and lib/l10n/app_en.arb on every build.
+lib/l10n/app_localizations*.dart
+
+# Generated ambient audio. The release workflow creates this file with ffmpeg
+# before it builds the APK.
+assets/rain_loop.mp3
+
+# Local agent tooling. Holds per-machine permissions and learned preferences.
+.commandcode/
+
+# Local process artifacts. These files record the work of one session. They are
+# not part of the product, and they go stale.
+changelog.md
+anti-slop/
+
+# Local design-tool files. Project screenshots live in docs/screenshot/.
+.impeccable/

@@ -9,7 +9,23 @@ RAIN_MP3_B64 = '''6/0f+z/9X/X/////+3//oWNjYvuFU//4xTEBgbQNqgACxIARedozDLVydWn79i
 
 rain_path = ASSETS / 'rain_loop.mp3'
 if not rain_path.exists() or rain_path.stat().st_size < 1000:
-    rain_path.write_bytes(base64.b64decode(RAIN_MP3_B64))
+    try:
+        # Handle potential missing padding in embedded base64
+        b64 = RAIN_MP3_B64.strip()
+        b64 += "=" * (-len(b64) % 4)
+        rain_path.write_bytes(base64.b64decode(b64))
+    except Exception as e:
+        print(f"Base64 rain asset decode failed ({e}), trying ffmpeg fallback...")
+        import subprocess, shutil
+        if shutil.which("ffmpeg"):
+            subprocess.run([
+                "ffmpeg", "-hide_banner", "-loglevel", "error", "-y",
+                "-f", "lavfi", "-i", "anoisesrc=color=pink:duration=30:amplitude=0.18",
+                "-af", "highpass=f=120,lowpass=f=8000,volume=0.65",
+                "-c:a", "libmp3lame", "-b:a", "96k", str(rain_path)
+            ], check=False)
+        if not rain_path.exists() or rain_path.stat().st_size < 1000:
+            print("Warning: rain_loop.mp3 not generated; background audio will be disabled at runtime")
 
 pubspec = ROOT / 'pubspec.yaml'
 text = pubspec.read_text(encoding='utf-8')

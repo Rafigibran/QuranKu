@@ -1,0 +1,2662 @@
+{
+  "@@locale": "id",
+  "@@last_modified": "2026-09-16",
+  "appTitle": "QuranKu",
+  "@appTitle": {
+    "description": "Nama aplikasi"
+  },
+  "navHome": "Beranda",
+  "@navHome": {
+    "description": "Tab Beranda (Home), EYD: kapital di awal"
+  },
+  "navJadwalShalat": "Jadwal Shalat",
+  "@navJadwalShalat": {
+    "description": "Tab Jadwal Shalat, Kemenag: Shalat"
+  },
+  "navMurotal": "Murotal",
+  "@navMurotal": {
+    "description": "Tab Murotal"
+  },
+  "navTarget": "Target",
+  "@navTarget": {
+    "description": "Tab Target khatam"
+  },
+  "navKajian": "Kajian",
+  "@navKajian": {
+    "description": "Tab Kajian"
+  },
+  "homeTitle": "QuranKu",
+  "@homeTitle": {
+    "description": "Judul Beranda"
+  },
+  "homeSubtitle": "Baca dengan tenang, kapan saja.",
+  "@homeSubtitle": {
+    "description": "Subjudul Beranda EYD: diakhiri titik"
+  },
+  "homeSearchHint": "Cari surah, ayat, atau tanya",
+  "@homeSearchHint": {
+    "description": "Hint pencarian EYD"
+  },
+  "homeSearchHintExample": "mis. Yasin, 2:255",
+  "@homeSearchHintExample": {
+    "description": "Contoh pencarian"
+  },
+  "homeSearchClear": "Bersihkan pencarian",
+  "@homeSearchClear": {
+    "description": "Tooltip hapus"
+  },
+  "homeRecentEmpty": "Satu kolom: judul • ayat • 2:255 • tanya natural",
+  "@homeRecentEmpty": {
+    "description": "Placeholder recent"
+  },
+  "homeSearchSearching": "Mencari…",
+  "@homeSearchSearching": {
+    "description": "Status mencari"
+  },
+  "homeSearchAiLoading": "Hasil lokal ✓  •  AI menyusul…",
+  "@homeSearchAiLoading": {
+    "description": "AI menyusul"
+  },
+  "homeSearchAiOffline": "Hasil lokal  •  AI offline",
+  "@homeSearchAiOffline": {
+    "description": "AI offline"
+  },
+  "homeSearchLocal": "Hasil lokal + AI semantic",
+  "@homeSearchLocal": {
+    "description": "Hasil lokal + AI"
+  },
+  "homeSearchInstant": "Hasil lokal instan",
+  "@homeSearchInstant": {
+    "description": "Hasil instan"
+  },
+  "homeRecentTitle": "Terakhir dicari",
+  "@homeRecentTitle": {
+    "description": "Terakhir dicari"
+  },
+  "actionClear": "Hapus",
+  "@actionClear": {
+    "description": "Aksi Hapus"
+  },
+  "homeTipJump": "Tips: ketik 2:255 untuk langsung ke ayat",
+  "@homeTipJump": {
+    "description": "Tips jump"
+  },
+  "homeEmptySearchTitle": "Tidak ada hasil untuk \"{query}\"",
+  "@homeEmptySearchTitle": {
+    "description": "Tidak ada hasil",
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "homeEmptySearchSubtitle": "Coba kata lain atau buka surah untuk mengindeks lebih banyak ayat.",
+  "@homeEmptySearchSubtitle": {
+    "description": "Subtitle empty search"
+  },
+  "homeLoadingQuran": "Memuat Al-Qur''an…",
+  "@homeLoadingQuran": {
+    "description": "Loading"
+  },
+  "homeLoadFailedTitle": "Al-Qur''an belum dapat dimuat.",
+  "@homeLoadFailedTitle": {
+    "description": "Load failed"
+  },
+  "homeLoadFailedSubtitle": "Periksa koneksi internet, lalu coba lagi.",
+  "@homeLoadFailedSubtitle": {
+    "description": "Subtitle load failed"
+  },
+  "actionRetry": "Coba Lagi",
+  "@actionRetry": {
+    "description": "Coba Lagi"
+  },
+  "homeSurahCount": "{count} surah",
+  "@homeSurahCount": {
+    "description": "Jumlah surah",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "homePickSurah": "Pilih surah untuk mulai membaca",
+  "@homePickSurah": {
+    "description": "Pilih surah"
+  },
+  "homeOfflineEmpty": "Al-Qur''an belum offline",
+  "@homeOfflineEmpty": {
+    "description": "Belum offline"
+  },
+  "homeOfflineProgress": "Al-Qur''an offline {count}/114",
+  "@homeOfflineProgress": {
+    "description": "Progress offline",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "homeOfflineHint": "Buka tanpa internet setelah unduh",
+  "@homeOfflineHint": {
+    "description": "Hint offline"
+  },
+  "actionDownload": "Unduh",
+  "@actionDownload": {
+    "description": "Unduh"
+  },
+  "actionCompleteDownload": "Lengkapi",
+  "@actionCompleteDownload": {
+    "description": "Lengkapi unduhan"
+  },
+  "homeLastRead": "Terakhir: ayat {ayah}",
+  "@homeLastRead": {
+    "description": "Terakhir dibaca",
+    "placeholders": {
+      "ayah": {
+        "type": "String"
+      }
+    }
+  },
+  "homeLastReadEmpty": "Terakhir dibaca",
+  "@homeLastReadEmpty": {
+    "description": "Terakhir dibaca empty"
+  },
+  "actionContinue": "Lanjutkan",
+  "@actionContinue": {
+    "description": "Lanjutkan"
+  },
+  "khatamTargetTitle": "Target Khatam Al-Qur''an",
+  "@khatamTargetTitle": {
+    "description": "Target khatam"
+  },
+  "khatamStartNext": "Mulai khatam berikutnya",
+  "@khatamStartNext": {
+    "description": "Mulai berikutnya"
+  },
+  "khatamDailyHint": "Target harian / tanggal, reset 00.00",
+  "@khatamDailyHint": {
+    "description": "Hint harian"
+  },
+  "khatamTitle": "Target Khatam",
+  "@khatamTitle": {
+    "description": "Judul layar target khatam"
+  },
+  "khatamSubtitle": "Khatam Quran 604 halaman mushaf Madinah",
+  "@khatamSubtitle": {
+    "description": "Subjudul khatam"
+  },
+  "khatamPickSurahFirst": "Pilih surah mulai dahulu",
+  "@khatamPickSurahFirst": {
+    "description": "Validasi surah mulai"
+  },
+  "khatamStartAyahRange": "Ayat mulai harus 1-{max} untuk {name}",
+  "@khatamStartAyahRange": {
+    "description": "Validasi ayat mulai",
+    "placeholders": {
+      "max": {
+        "type": "int"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "khatamTargetSaved": "Target khatam tersimpan",
+  "@khatamTargetSaved": {
+    "description": "Konfirmasi target tersimpan"
+  },
+  "khatamMarkReading": "Tandai bacaan",
+  "@khatamMarkReading": {
+    "description": "Aksi tandai bacaan"
+  },
+  "khatamMarkRange": "Dari QS {surah}:{ayah} sampai ayat berikut. Selesai di 114:6 berarti khatam.",
+  "@khatamMarkRange": {
+    "description": "Penjelasan penandaan bacaan",
+    "placeholders": {
+      "surah": {
+        "type": "int"
+      },
+      "ayah": {
+        "type": "int"
+      }
+    }
+  },
+  "khatamUntilSurah": "Sampai surah",
+  "@khatamUntilSurah": {
+    "description": "Label sampai surah"
+  },
+  "khatamUntilAyahRange": "Sampai ayat (1-{max})",
+  "@khatamUntilAyahRange": {
+    "description": "Label sampai ayat dengan rentang",
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "khatamUntilAyah": "Sampai ayat",
+  "@khatamUntilAyah": {
+    "description": "Label sampai ayat"
+  },
+  "khatamReadingLogged": "Bacaan tercatat",
+  "@khatamReadingLogged": {
+    "description": "Konfirmasi bacaan tercatat"
+  },
+  "khatamDeleteTargetTitle": "Hapus target?",
+  "@khatamDeleteTargetTitle": {
+    "description": "Judul konfirmasi hapus target"
+  },
+  "khatamDeleteTargetBody": "Target aktif dihapus. Riwayat dan rekap bacaan tetap tersimpan.",
+  "@khatamDeleteTargetBody": {
+    "description": "Isi konfirmasi hapus target"
+  },
+  "khatamDeleteTargetAction": "Hapus target",
+  "@khatamDeleteTargetAction": {
+    "description": "Tooltip hapus target"
+  },
+  "khatamLateDays": "Terlambat {days} hari dari target",
+  "@khatamLateDays": {
+    "description": "Peringatan melewati target",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "khatamLastDay": "Hari terakhir hari ini",
+  "@khatamLastDay": {
+    "description": "Penanda hari terakhir"
+  },
+  "khatamDaysLeft": "{days} hari tersisa",
+  "@khatamDaysLeft": {
+    "description": "Sisa hari",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "khatamEstimate": "Estimasi {days} hari lagi ({pages} hlm/hari)",
+  "@khatamEstimate": {
+    "description": "Estimasi penyelesaian",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      },
+      "pages": {
+        "type": "int"
+      }
+    }
+  },
+  "khatamDailyTarget": "TARGET HARIAN",
+  "@khatamDailyTarget": {
+    "description": "Label target harian"
+  },
+  "khatamDateTarget": "TARGET TANGGAL",
+  "@khatamDateTarget": {
+    "description": "Label target tanggal"
+  },
+  "khatamCompletedCount": "{count}x khatam",
+  "@khatamCompletedCount": {
+    "description": "Jumlah khatam selesai",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "khatamPosition": "Posisi: QS {curSurah}:{curAyah} • Mulai QS {startSurah}:{startAyah}",
+  "@khatamPosition": {
+    "description": "Ringkasan posisi bacaan",
+    "placeholders": {
+      "curSurah": {
+        "type": "int"
+      },
+      "curAyah": {
+        "type": "int"
+      },
+      "startSurah": {
+        "type": "int"
+      },
+      "startAyah": {
+        "type": "int"
+      }
+    }
+  },
+  "khatamPositionTarget": " • Target {date}",
+  "@khatamPositionTarget": {
+    "description": "Akhiran target tanggal",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "khatamTodayTarget": "Target hari ini",
+  "@khatamTodayTarget": {
+    "description": "Judul target hari ini"
+  },
+  "khatamRemainingToday": "Sisa {left} halaman hari ini • reset 00.00",
+  "@khatamRemainingToday": {
+    "description": "Sisa halaman hari ini",
+    "placeholders": {
+      "left": {
+        "type": "int"
+      }
+    }
+  },
+  "khatamTodayReached": "Target hari ini tercapai • reset 00.00",
+  "@khatamTodayReached": {
+    "description": "Target hari ini tercapai"
+  },
+  "khatamSummary": "Rekap bacaan",
+  "@khatamSummary": {
+    "description": "Judul rekap bacaan"
+  },
+  "khatamSummaryEmpty": "Belum ada bacaan tercatat. Ketuk \"Tandai bacaan\" setelah membaca.",
+  "@khatamSummaryEmpty": {
+    "description": "Rekap bacaan kosong"
+  },
+  "khatamHistoryTitle": "Riwayat khatam ({count}x)",
+  "@khatamHistoryTitle": {
+    "description": "Judul riwayat khatam",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "khatamHistoryEntry": "{date} • {pages} hlm • {days} hari",
+  "@khatamHistoryEntry": {
+    "description": "Entri riwayat khatam",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "pages": {
+        "type": "int"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "khatamAlreadyCompleted": "Sudah khatam {count}x • MasyaAllah",
+  "@khatamAlreadyCompleted": {
+    "description": "Penanda sudah khatam",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "khatamTargetType": "Jenis target",
+  "@khatamTargetType": {
+    "description": "Label jenis target"
+  },
+  "khatamPagesPerDay": "Halaman / hari",
+  "@khatamPagesPerDay": {
+    "description": "Pilihan target halaman harian"
+  },
+  "khatamDateLabel": "Tanggal khatam",
+  "@khatamDateLabel": {
+    "description": "Pilihan target tanggal"
+  },
+  "khatamPagesPerDayLabel": "Target halaman per hari",
+  "@khatamPagesPerDayLabel": {
+    "description": "Label target halaman per hari"
+  },
+  "khatamMustFinishBy": "Tanggal harus khatam",
+  "@khatamMustFinishBy": {
+    "description": "Label tanggal wajib khatam"
+  },
+  "khatamPickDate": "Pilih tanggal",
+  "@khatamPickDate": {
+    "description": "Aksi pilih tanggal"
+  },
+  "khatamDailyNeedNote": "Kebutuhan harian dihitung otomatis dari sisa halaman dan hari tersisa.",
+  "@khatamDailyNeedNote": {
+    "description": "Catatan kebutuhan harian"
+  },
+  "khatamStartFrom": "Mulai dari",
+  "@khatamStartFrom": {
+    "description": "Label mulai dari"
+  },
+  "khatamSurahLabel": "Surah",
+  "@khatamSurahLabel": {
+    "description": "Label surah"
+  },
+  "khatamFromAyahRange": "Dari ayat (1-{max})",
+  "@khatamFromAyahRange": {
+    "description": "Label dari ayat dengan rentang",
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "khatamFromAyah": "Dari ayat",
+  "@khatamFromAyah": {
+    "description": "Label dari ayat"
+  },
+  "khatamStartTarget": "Mulai target khatam",
+  "@khatamStartTarget": {
+    "description": "Tombol mulai target"
+  },
+  "khatamStoredNote": "Progress, rekap, dan hitungan khatam tersimpan di perangkat ini.",
+  "@khatamStoredNote": {
+    "description": "Catatan penyimpanan khatam"
+  },
+  "khatamDeleteHistoryTitle": "Hapus riwayat?",
+  "@khatamDeleteHistoryTitle": {
+    "description": "Judul konfirmasi hapus riwayat"
+  },
+  "khatamDeleteHistoryBody": "Rekap bacaan dan riwayat khatam dihapus permanen.",
+  "@khatamDeleteHistoryBody": {
+    "description": "Isi konfirmasi hapus riwayat"
+  },
+  "khatamDeleteHistoryAction": "Hapus riwayat & rekap",
+  "@khatamDeleteHistoryAction": {
+    "description": "Tombol hapus riwayat"
+  },
+  "settingsTitle": "Pengaturan",
+  "@settingsTitle": {
+    "description": "Judul Pengaturan"
+  },
+  "settingsSubtitle": "Sesuaikan QuranKu agar nyaman digunakan.",
+  "@settingsSubtitle": {
+    "description": "Subtitle pengaturan"
+  },
+  "settingsAppearance": "Tampilan & Bacaan",
+  "@settingsAppearance": {
+    "description": "Section tampilan"
+  },
+  "settingsAppearanceSubtitle": "Atur bagaimana ayat ditampilkan.",
+  "@settingsAppearanceSubtitle": {
+    "description": "Subjudul section tampilan"
+  },
+  "settingsTheme": "Tema aplikasi",
+  "@settingsTheme": {
+    "description": "Tema"
+  },
+  "settingsThemeLight": "Terang",
+  "@settingsThemeLight": {
+    "description": "Terang"
+  },
+  "settingsThemeDark": "Gelap",
+  "@settingsThemeDark": {
+    "description": "Gelap"
+  },
+  "settingsTranslation": "Terjemahan default",
+  "@settingsTranslation": {
+    "description": "Terjemahan"
+  },
+  "settingsLatinType": "Jenis Latin",
+  "@settingsLatinType": {
+    "description": "Jenis Latin"
+  },
+  "settingsQari": "Qari Murotal",
+  "@settingsQari": {
+    "description": "Qari"
+  },
+  "settingsQariAlsoInMurotal": "{name} • juga di Murotal",
+  "@settingsQariAlsoInMurotal": {
+    "description": "Juga di Murotal",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsShowArabic": "Tampilkan Arab",
+  "@settingsShowArabic": {
+    "description": "Tampilkan Arab"
+  },
+  "settingsShowArabicSubtitle": "Tulisan Arab Uthmani",
+  "@settingsShowArabicSubtitle": {
+    "description": "Subtitle Arab"
+  },
+  "settingsShowLatin": "Tampilkan Latin",
+  "@settingsShowLatin": {
+    "description": "Tampilkan Latin"
+  },
+  "settingsShowLatinSubtitle": "Transliterasi untuk belajar baca",
+  "@settingsShowLatinSubtitle": {
+    "description": "Subtitle Latin"
+  },
+  "settingsShowTranslation": "Tampilkan Terjemahan",
+  "@settingsShowTranslation": {
+    "description": "Tampilkan terjemahan"
+  },
+  "settingsShowTranslationSubtitle": "Terjemahan sesuai pilihan bahasa",
+  "@settingsShowTranslationSubtitle": {
+    "description": "Subtitle terjemahan"
+  },
+  "settingsArabicNumerals": "Angka Arab",
+  "@settingsArabicNumerals": {
+    "description": "Angka Arab"
+  },
+  "settingsArabicNumeralsSubtitle": "١٢٣ menggantikan 123",
+  "@settingsArabicNumeralsSubtitle": {
+    "description": "Subtitle angka Arab"
+  },
+  "settingsTajwid": "Tajwid Berwarna",
+  "@settingsTajwid": {
+    "description": "Tajwid"
+  },
+  "settingsTajwidSubtitle": "Warna internasional ghunnah/qalqalah",
+  "@settingsTajwidSubtitle": {
+    "description": "Subtitle tajwid"
+  },
+  "settingsFontSize": "Ukuran huruf",
+  "@settingsFontSize": {
+    "description": "Ukuran huruf"
+  },
+  "settingsContinueReading": "Lanjut membaca & bookmark",
+  "@settingsContinueReading": {
+    "description": "Lanjut membaca"
+  },
+  "settingsStorage": "Penyimpanan",
+  "@settingsStorage": {
+    "description": "Penyimpanan"
+  },
+  "settingsAbout": "Tentang",
+  "@settingsAbout": {
+    "description": "Tentang section"
+  },
+  "settingsAboutQuranKu": "Tentang QuranKu",
+  "@settingsAboutQuranKu": {
+    "description": "Tentang QuranKu"
+  },
+  "settingsPrivacy": "Privasi dan Kebijakan",
+  "@settingsPrivacy": {
+    "description": "Privasi"
+  },
+  "settingsPrivacySubtitle": "Cara QuranKu mengelola data",
+  "@settingsPrivacySubtitle": {
+    "description": "Subtitle privasi"
+  },
+  "settingsContinueReadingSubtitle": "Akses cepat ke ayat terakhir.",
+  "@settingsContinueReadingSubtitle": {
+    "description": "Subjudul section lanjut membaca"
+  },
+  "settingsLastReadSubtitle": "QS {surah}:{ayah} • Ketuk untuk melanjutkan",
+  "@settingsLastReadSubtitle": {
+    "description": "Subtitle baris terakhir dibaca",
+    "placeholders": {
+      "surah": {
+        "type": "int"
+      },
+      "ayah": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsNoReading": "Belum ada bacaan",
+  "@settingsNoReading": {
+    "description": "Belum ada riwayat bacaan"
+  },
+  "settingsNoReadingHint": "Mulai baca untuk melihat riwayat",
+  "@settingsNoReadingHint": {
+    "description": "Petunjuk riwayat bacaan kosong"
+  },
+  "settingsBookmarkCount": "{count, plural, =0{Belum ada ayat disimpan} other{{count} ayat disimpan}}",
+  "@settingsBookmarkCount": {
+    "description": "Jumlah ayat disimpan",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsNoBookmarks": "Belum ada bookmark",
+  "@settingsNoBookmarks": {
+    "description": "Belum ada bookmark"
+  },
+  "settingsStorageSubtitle": "Kelola cache dan file Al-Qur''an yang tersimpan.",
+  "@settingsStorageSubtitle": {
+    "description": "Subjudul section penyimpanan"
+  },
+  "settingsClearCache": "Bersihkan cache",
+  "@settingsClearCache": {
+    "description": "Baris bersihkan cache"
+  },
+  "settingsCalculating": "Menghitung…",
+  "@settingsCalculating": {
+    "description": "Status menghitung ukuran cache"
+  },
+  "settingsCacheCleanable": "{size} dapat dibersihkan",
+  "@settingsCacheCleanable": {
+    "description": "Ukuran cache yang dapat dibersihkan",
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsQuranDownloads": "Unduhan Al-Qur''an",
+  "@settingsQuranDownloads": {
+    "description": "Baris unduhan Al-Quran"
+  },
+  "settingsQuranDownloadsSubtitle": "Kelola teks offline per terjemahan",
+  "@settingsQuranDownloadsSubtitle": {
+    "description": "Subtitle unduhan Al-Quran"
+  },
+  "settingsManageStorage": "Kelola penyimpanan",
+  "@settingsManageStorage": {
+    "description": "Baris kelola penyimpanan"
+  },
+  "settingsStorageUsed": "{size} digunakan",
+  "@settingsStorageUsed": {
+    "description": "Ukuran penyimpanan terpakai",
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsAboutSubtitle": "Informasi aplikasi dan developer.",
+  "@settingsAboutSubtitle": {
+    "description": "Subjudul section tentang"
+  },
+  "settingsClearCacheConfirmTitle": "Bersihkan cache?",
+  "@settingsClearCacheConfirmTitle": {
+    "description": "Judul konfirmasi bersihkan cache"
+  },
+  "settingsClearCacheConfirmBody": "Teks Arab, transliterasi, terjemahan, jadwal salat, dan audio akan dihapus.",
+  "@settingsClearCacheConfirmBody": {
+    "description": "Isi konfirmasi bersihkan cache"
+  },
+  "settingsCacheCleared": "Cache dibersihkan",
+  "@settingsCacheCleared": {
+    "description": "Konfirmasi cache dibersihkan"
+  },
+  "settingsSearchLanguage": "Cari bahasa…",
+  "@settingsSearchLanguage": {
+    "description": "Hint pencarian bahasa"
+  },
+  "settingsFollowSystem": "Ikuti bahasa perangkat",
+  "@settingsFollowSystem": {
+    "description": "Opsi bahasa mengikuti sistem"
+  },
+  "settingsLanguageIndonesianSubtitle": "Bahasa Indonesia",
+  "@settingsLanguageIndonesianSubtitle": {
+    "description": "Subtitle opsi bahasa Indonesia"
+  },
+  "settingsLanguageEnglishSubtitle": "Bahasa Inggris US",
+  "@settingsLanguageEnglishSubtitle": {
+    "description": "Subtitle opsi bahasa Inggris"
+  },
+  "settingsQariOfflineVoice": "Suara file offline",
+  "@settingsQariOfflineVoice": {
+    "description": "Subtitle qari default"
+  },
+  "settingsTapToOpen": "Ketuk untuk buka",
+  "@settingsTapToOpen": {
+    "description": "Petunjuk buka daftar bookmark"
+  },
+  "settingsMadeWithHeart": "Dibuat dengan hati untuk umat.",
+  "@settingsMadeWithHeart": {
+    "description": "Made with heart"
+  },
+  "settingsTagline": "Baca • Renungkan • Amalkan",
+  "@settingsTagline": {
+    "description": "Tagline"
+  },
+  "settingsLanguage": "Bahasa",
+  "@settingsLanguage": {
+    "description": "Bahasa"
+  },
+  "settingsLanguageSubtitle": "Pilih bahasa antarmuka",
+  "@settingsLanguageSubtitle": {
+    "description": "Subtitle bahasa"
+  },
+  "settingsLanguageIndonesian": "Indonesia",
+  "@settingsLanguageIndonesian": {
+    "description": "Indonesia"
+  },
+  "settingsLanguageEnglish": "English",
+  "@settingsLanguageEnglish": {
+    "description": "English"
+  },
+  "settingsTafsir": "Tafsir",
+  "@settingsTafsir": {
+    "description": "Judul baris pengaturan tafsir"
+  },
+  "settingsTafsirSearchHint": "Cari tafsir…",
+  "@settingsTafsirSearchHint": {
+    "description": "Hint pencarian edisi tafsir"
+  },
+  "settingsTafsirRecommended": "Disarankan",
+  "@settingsTafsirRecommended": {
+    "description": "Kelompok edisi tafsir pilihan"
+  },
+  "settingsTafsirAllEditions": "Semua edisi",
+  "@settingsTafsirAllEditions": {
+    "description": "Kelompok edisi tafsir lainnya"
+  },
+  "settingsTafsirLoading": "Memuat katalog tafsir…",
+  "@settingsTafsirLoading": {
+    "description": "Status memuat katalog tafsir"
+  },
+  "settingsTafsirUnavailable": "Katalog tafsir tidak dapat dimuat. Periksa koneksi lalu buka lagi.",
+  "@settingsTafsirUnavailable": {
+    "description": "Katalog tafsir gagal dimuat"
+  },
+  "tafsirLanguageIndonesian": "Indonesia",
+  "@tafsirLanguageIndonesian": {
+    "description": "Label bahasa edisi tafsir"
+  },
+  "tafsirLanguageEnglish": "Inggris",
+  "@tafsirLanguageEnglish": {
+    "description": "Label bahasa edisi tafsir"
+  },
+  "tafsirLanguageArabic": "Arab",
+  "@tafsirLanguageArabic": {
+    "description": "Label bahasa edisi tafsir"
+  },
+  "tafsirLanguageOther": "Bahasa lain",
+  "@tafsirLanguageOther": {
+    "description": "Label bahasa edisi tafsir yang tidak dikenal"
+  },
+  "readerTafsir": "Tafsir",
+  "@readerTafsir": {
+    "description": "Tooltip ikon tafsir per ayat"
+  },
+  "readerTafsirTitle": "Tafsir QS {surah}:{ayah}",
+  "@readerTafsirTitle": {
+    "description": "Judul lembar tafsir",
+    "placeholders": {
+      "surah": {
+        "type": "int"
+      },
+      "ayah": {
+        "type": "int"
+      }
+    }
+  },
+  "readerTafsirUnavailable": "Tafsir untuk ayat ini belum tersedia pada edisi ini.",
+  "@readerTafsirUnavailable": {
+    "description": "Edisi tafsir tidak memuat ayat ini"
+  },
+  "readerTafsirOffline": "Tafsir belum dapat dimuat. Periksa koneksi internet lalu coba lagi.",
+  "@readerTafsirOffline": {
+    "description": "Tafsir gagal dimuat karena jaringan"
+  },
+  "readerTafsirRetry": "Coba lagi",
+  "@readerTafsirRetry": {
+    "description": "Aksi muat ulang tafsir"
+  },
+  "readerAyahRange": "Masukkan 1 - {max}",
+  "@readerAyahRange": {
+    "description": "Kesalahan nomor ayat di luar rentang",
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "readerDescriptionOffline": "Deskripsi belum tersedia offline.",
+  "@readerDescriptionOffline": {
+    "description": "Deskripsi surah tidak tersedia offline"
+  },
+  "readerAyahCopied": "Ayat disalin",
+  "@readerAyahCopied": {
+    "description": "Konfirmasi ayat disalin"
+  },
+  "readerShowArabic": "Teks Arab",
+  "@readerShowArabic": {
+    "description": "Label tampilkan teks Arab"
+  },
+  "readerShowArabicSubtitle": "Tampilkan tulisan Arab",
+  "@readerShowArabicSubtitle": {
+    "description": "Subjudul tampilkan teks Arab"
+  },
+  "readerShowLatin": "Transliterasi Latin",
+  "@readerShowLatin": {
+    "description": "Label tampilkan transliterasi"
+  },
+  "readerShowTranslation": "Terjemahan",
+  "@readerShowTranslation": {
+    "description": "Label tampilkan terjemahan"
+  },
+  "readerShowTranslationSubtitle": "Tampilkan terjemahan",
+  "@readerShowTranslationSubtitle": {
+    "description": "Subjudul tampilkan terjemahan"
+  },
+  "readerReadingDisplay": "Tampilan bacaan",
+  "@readerReadingDisplay": {
+    "description": "Judul panel tampilan bacaan"
+  },
+  "readerFontArabic": "Arab",
+  "@readerFontArabic": {
+    "description": "Label pengatur ukuran huruf Arab"
+  },
+  "readerJumpToAyah": "Loncat ke ayat",
+  "@readerJumpToAyah": {
+    "description": "Label loncat ke ayat"
+  },
+  "readerShown": "Yang ditampilkan",
+  "@readerShown": {
+    "description": "Judul kelompok pilihan tampilan"
+  },
+  "readerTajwidVerified": "Terverifikasi quran.com, fallback polos",
+  "@readerTajwidVerified": {
+    "description": "Catatan sumber data tajwid"
+  },
+  "readerTajwidLegend": "Legenda Tajwid",
+  "@readerTajwidLegend": {
+    "description": "Judul legenda warna tajwid"
+  },
+  "readerTajwidLoading": "Memuat warna tajwid…",
+  "@readerTajwidLoading": {
+    "description": "Status memuat tajwid"
+  },
+  "readerTajwidFailed": "Gagal memuat tajwid • ketuk untuk coba lagi",
+  "@readerTajwidFailed": {
+    "description": "Tajwid gagal dimuat, bisa diketuk untuk ulang"
+  },
+  "readerTajwidPreparing": "Menyiapkan warna tajwid…",
+  "@readerTajwidPreparing": {
+    "description": "Status menyiapkan tajwid"
+  },
+  "readerTajwidOffHint": "Coba matikan Tajwid jika ayat tidak muncul",
+  "@readerTajwidOffHint": {
+    "description": "Saran mematikan tajwid"
+  },
+  "readerBasmalahHint": "Dianjurkan membaca taawudz lalu langsung ke Ayat 1 tanpa basmalah",
+  "@readerBasmalahHint": {
+    "description": "Catatan adab membaca surah"
+  },
+  "readerNoAyahMatch": "Tidak ada ayat cocok dengan \"{query}\"",
+  "@readerNoAyahMatch": {
+    "description": "Hasil pencarian ayat kosong",
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "readerSurahFinished": "Selesai {name}",
+  "@readerSurahFinished": {
+    "description": "Penanda surah selesai dibaca",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "readerContinueTo": "Lanjut ke",
+  "@readerContinueTo": {
+    "description": "Awalan ajakan lanjut ke surah berikutnya"
+  },
+  "readerOpenSurah": "Buka {name}",
+  "@readerOpenSurah": {
+    "description": "Tombol buka surah",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "readerSwipeHint": "Geser atau ketuk untuk melanjutkan",
+  "@readerSwipeHint": {
+    "description": "Petunjuk navigasi antar surah"
+  },
+  "readerJuz": "Juz {juz}",
+  "@readerJuz": {
+    "description": "Label juz",
+    "placeholders": {
+      "juz": {
+        "type": "String"
+      }
+    }
+  },
+  "readerRemoveBookmark": "Hapus bookmark",
+  "@readerRemoveBookmark": {
+    "description": "Tooltip hapus bookmark ayat"
+  },
+  "readerBookmark": "Bookmark",
+  "@readerBookmark": {
+    "description": "Tooltip tambah bookmark ayat"
+  },
+  "readerPrevSurah": "Surah sebelumnya",
+  "@readerPrevSurah": {
+    "description": "Tooltip surah sebelumnya"
+  },
+  "readerNextSurah": "Surah selanjutnya",
+  "@readerNextSurah": {
+    "description": "Tooltip surah selanjutnya"
+  },
+  "readerReadingSettings": "Pengaturan bacaan",
+  "@readerReadingSettings": {
+    "description": "Tooltip pengaturan bacaan"
+  },
+  "readerSearchHint": "Cari dalam ayat, Latin, atau terjemahan",
+  "@readerSearchHint": {
+    "description": "Hint pencarian di dalam surah"
+  },
+  "readerCopyAyah": "Salin ayat",
+  "@readerCopyAyah": {
+    "description": "Tooltip salin ayat"
+  },
+  "readerAboutSurah": "Tentang surah ini",
+  "@readerAboutSurah": {
+    "description": "Judul deskripsi surah"
+  },
+  "readerFollowMurotal": "Ikuti murotal",
+  "@readerFollowMurotal": {
+    "description": "Tooltip aktifkan ikuti murotal"
+  },
+  "readerUnfollowMurotal": "Matikan ikuti murotal",
+  "@readerUnfollowMurotal": {
+    "description": "Tooltip matikan ikuti murotal"
+  },
+  "readerKhatamComplete": "MasyaAllah, khatam selesai! Tercatat di riwayat.",
+  "@readerKhatamComplete": {
+    "description": "Konfirmasi khatam selesai"
+  },
+  "readerMarkedReadKhatam": "QS {surah}:{ayah} ditandai dibaca • masuk progress khatam",
+  "@readerMarkedReadKhatam": {
+    "description": "Konfirmasi ayat ditandai masuk progres khatam",
+    "placeholders": {
+      "surah": {
+        "type": "int"
+      },
+      "ayah": {
+        "type": "int"
+      }
+    }
+  },
+  "readerMarkedRead": "QS {surah}:{ayah} ditandai sudah dibaca",
+  "@readerMarkedRead": {
+    "description": "Konfirmasi ayat ditandai sudah dibaca",
+    "placeholders": {
+      "surah": {
+        "type": "int"
+      },
+      "ayah": {
+        "type": "int"
+      }
+    }
+  },
+  "readerMarkRead": "Tandai sudah dibaca",
+  "@readerMarkRead": {
+    "description": "Tooltip tandai ayat sudah dibaca"
+  },
+  "readerUnmarkRead": "Batalkan tanda dibaca",
+  "@readerUnmarkRead": {
+    "description": "Tooltip batalkan tanda dibaca"
+  },
+  "readerLoadFailed": "Ayat belum dapat dimuat",
+  "@readerLoadFailed": {
+    "description": "Judul kegagalan memuat ayat"
+  },
+  "readerLoadFailedHint": "Periksa koneksi internet lalu coba lagi.",
+  "@readerLoadFailedHint": {
+    "description": "Saran saat ayat gagal dimuat"
+  },
+  "readerContinueReading": "Lanjutkan QS {surah}:{ayah}",
+  "@readerContinueReading": {
+    "description": "Ajak lanjut membaca dari ayat terakhir",
+    "placeholders": {
+      "surah": {
+        "type": "int"
+      },
+      "ayah": {
+        "type": "int"
+      }
+    }
+  },
+  "commonLoading": "Memuat…",
+  "@commonLoading": {
+    "description": "Memuat"
+  },
+  "commonNoResults": "Tidak ada hasil.",
+  "@commonNoResults": {
+    "description": "Tidak ada hasil"
+  },
+  "commonOfflineNeedInternet": "Buka tanpa internet setelah unduh",
+  "@commonOfflineNeedInternet": {
+    "description": "Offline"
+  },
+  "murotalTitle": "Murotal",
+  "@murotalTitle": {
+    "description": "murotalTitle"
+  },
+  "murotalSubtitle": "Dengarkan Al-Qur''an dengan tenang",
+  "@murotalSubtitle": {
+    "description": "murotalSubtitle"
+  },
+  "murotalSearchHint": "Cari surah atau ketik offline…",
+  "@murotalSearchHint": {
+    "description": "murotalSearchHint"
+  },
+  "murotalSearchNoResults": "Surah tidak ditemukan",
+  "@murotalSearchNoResults": {
+    "description": "murotalSearchNoResults"
+  },
+  "murotalHelpTitle": "Tentang Murotal",
+  "@murotalHelpTitle": {
+    "description": "murotalHelpTitle"
+  },
+  "murotalHelpDesc": "Pilih surah untuk mulai mendengarkan. Ketik offline untuk menampilkan surah yang sudah tersimpan di perangkat.",
+  "@murotalHelpDesc": {
+    "description": "murotalHelpDesc"
+  },
+  "murotalHelpTapHint": "Ketuk kartu untuk memilih ayat awal.",
+  "@murotalHelpTapHint": {
+    "description": "murotalHelpTapHint"
+  },
+  "murotalHelpOffline": "Ikon centang menandakan audio tersedia offline.",
+  "@murotalHelpOffline": {
+    "description": "murotalHelpOffline"
+  },
+  "murotalPlaylist": "Playlist",
+  "@murotalPlaylist": {
+    "description": "murotalPlaylist"
+  },
+  "murotalDownloads": "Unduhan",
+  "@murotalDownloads": {
+    "description": "murotalDownloads"
+  },
+  "murotalHelp": "Bantuan",
+  "@murotalHelp": {
+    "description": "murotalHelp"
+  },
+  "murotalNowPlaying": "Sedang diputar",
+  "@murotalNowPlaying": {
+    "description": "murotalNowPlaying"
+  },
+  "murotalReady": "Siap dilanjutkan",
+  "@murotalReady": {
+    "description": "murotalReady"
+  },
+  "murotalQari": "Qari",
+  "@murotalQari": {
+    "description": "murotalQari"
+  },
+  "playlistTitle": "Playlist",
+  "@playlistTitle": {
+    "description": "playlistTitle"
+  },
+  "playlistEmpty": "Belum ada playlist",
+  "@playlistEmpty": {
+    "description": "playlistEmpty"
+  },
+  "helpTitle": "Bantuan",
+  "@helpTitle": {
+    "description": "helpTitle"
+  },
+  "searchNoResults": "Tidak ada hasil",
+  "@searchNoResults": {
+    "description": "searchNoResults"
+  },
+  "searchNoResultsHint": "Coba kata lain",
+  "@searchNoResultsHint": {
+    "description": "searchNoResultsHint"
+  },
+  "commonCancel": "Batal",
+  "@commonCancel": {
+    "description": "commonCancel"
+  },
+  "commonSave": "Simpan",
+  "@commonSave": {
+    "description": "commonSave"
+  },
+  "commonDelete": "Hapus",
+  "@commonDelete": {
+    "description": "commonDelete"
+  },
+  "commonEdit": "Ubah",
+  "@commonEdit": {
+    "description": "commonEdit"
+  },
+  "commonShare": "Bagikan",
+  "@commonShare": {
+    "description": "commonShare"
+  },
+  "commonCopy": "Salin",
+  "@commonCopy": {
+    "description": "commonCopy"
+  },
+  "commonCopied": "Disalin",
+  "@commonCopied": {
+    "description": "commonCopied"
+  },
+  "commonUndo": "Urungkan",
+  "@commonUndo": {
+    "description": "Aksi urungkan"
+  },
+  "settingsBookmarkRemoved": "Bookmark QS {surah}:{ayah} dihapus",
+  "@settingsBookmarkRemoved": {
+    "description": "Konfirmasi bookmark ayat dihapus",
+    "placeholders": {
+      "surah": {
+        "type": "int"
+      },
+      "ayah": {
+        "type": "int"
+      }
+    }
+  },
+  "commonClose": "Tutup",
+  "@commonClose": {
+    "description": "commonClose"
+  },
+  "commonOk": "OK",
+  "@commonOk": {
+    "description": "commonOk"
+  },
+  "commonYes": "Ya",
+  "@commonYes": {
+    "description": "commonYes"
+  },
+  "commonNo": "Tidak",
+  "@commonNo": {
+    "description": "commonNo"
+  },
+  "commonAyahCount": "{count, plural, =0{Tidak ada ayat} other{{count} ayat}}",
+  "@commonAyahCount": {
+    "description": "Jumlah ayat (plural)",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "commonSurahCount": "{count, plural, =0{Tidak ada surah} other{{count} surah}}",
+  "@commonSurahCount": {
+    "description": "Jumlah surah (plural)",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "commonPageCount": "{count, plural, =0{Tidak ada halaman} other{{count} halaman}}",
+  "@commonPageCount": {
+    "description": "Jumlah halaman (plural)",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "commonDayCount": "{count, plural, =0{Tidak ada hari} other{{count} hari}}",
+  "@commonDayCount": {
+    "description": "Jumlah hari (plural)",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "commonMinuteCount": "{count, plural, =0{Kurang dari 1 menit} other{{count} menit}}",
+  "@commonMinuteCount": {
+    "description": "Jumlah menit (plural)",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeReloadFailed": "Gagal memuat ulang: {error}",
+  "@homeReloadFailed": {
+    "description": "Kegagalan memuat ulang beranda",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "homeAiSemanticResults": "Hasil AI semantic",
+  "@homeAiSemanticResults": {
+    "description": "Judul hasil pencarian AI"
+  },
+  "homeAiUnderstanding": "AI sedang memahami maksud…",
+  "@homeAiUnderstanding": {
+    "description": "Status AI sedang memproses"
+  },
+  "homeAiNeedsInternet": "AI butuh internet. Hasil lokal di atas tetap lengkap.",
+  "@homeAiNeedsInternet": {
+    "description": "Catatan AI tanpa internet"
+  },
+  "homeNoBookmarks": "Belum ada bookmark. Ketuk untuk melihat koleksi",
+  "@homeNoBookmarks": {
+    "description": "Keadaan bookmark kosong di beranda"
+  },
+  "homeOpenSettings": "Buka pengaturan",
+  "@homeOpenSettings": {
+    "description": "Label aksesibilitas tombol pengaturan"
+  },
+  "homeSearchOtherSurah": "Coba gunakan nama atau nomor surah yang lain.",
+  "@homeSearchOtherSurah": {
+    "description": "Saran saat surah tidak ditemukan"
+  },
+  "homeJuzRange": "Juz 1–30",
+  "@homeJuzRange": {
+    "description": "Label rentang juz"
+  },
+  "homeMushafOrder": "urut mushaf",
+  "@homeMushafOrder": {
+    "description": "Label urutan mushaf"
+  },
+  "homeJumpToJuz": "Lompat ke Juz",
+  "@homeJumpToJuz": {
+    "description": "Judul dialog lompat ke juz"
+  },
+  "homeCurrentJuz": "Posisi saya: Juz {juz}",
+  "@homeCurrentJuz": {
+    "description": "Posisi juz saat ini",
+    "placeholders": {
+      "juz": {
+        "type": "String"
+      }
+    }
+  },
+  "homeJuzSummary": "Juz {juz}, {range}, {percent}% dibaca",
+  "@homeJuzSummary": {
+    "description": "Ringkasan progres juz",
+    "placeholders": {
+      "juz": {
+        "type": "String"
+      },
+      "range": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "homeJuzSummaryCurrent": "Juz {juz}, {range}, {percent}% dibaca, posisi saat ini",
+  "@homeJuzSummaryCurrent": {
+    "description": "Ringkasan juz yang sedang dibaca",
+    "placeholders": {
+      "juz": {
+        "type": "String"
+      },
+      "range": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "homeCurrentPosition": "Saat ini",
+  "@homeCurrentPosition": {
+    "description": "Penanda posisi juz saat ini"
+  },
+  "prayerNext": "Shalat Berikutnya",
+  "@prayerNext": {
+    "description": "prayerNext"
+  },
+  "prayerTimePassed": "Telah lewat",
+  "@prayerTimePassed": {
+    "description": "prayerTimePassed"
+  },
+  "prayerTimeUpcoming": "Waktu masuk {time}",
+  "@prayerTimeUpcoming": {
+    "description": "prayerTimeUpcoming"
+  },
+  "prayerAllPassed": "Hari ini selesai",
+  "@prayerAllPassed": {
+    "description": "prayerAllPassed"
+  },
+  "prayerAllPassedDesc": "Semua shalat telah lewat. Subuh besok {time}",
+  "@prayerAllPassedDesc": {
+    "description": "prayerAllPassedDesc"
+  },
+  "prayerProgress": "Progres hari",
+  "@prayerProgress": {
+    "description": "prayerProgress"
+  },
+  "prayerSetLocation": "Atur Lokasi",
+  "@prayerSetLocation": {
+    "description": "prayerSetLocation"
+  },
+  "prayerChangeLocation": "Ganti lokasi",
+  "@prayerChangeLocation": {
+    "description": "prayerChangeLocation"
+  },
+  "prayerLoadFailed": "Gagal memuat jadwal",
+  "@prayerLoadFailed": {
+    "description": "prayerLoadFailed"
+  },
+  "prayerScheduleTitle": "JADWAL SHALAT",
+  "@prayerScheduleTitle": {
+    "description": "Judul jadwal shalat"
+  },
+  "prayerTodaySchedule": "Jadwal hari ini",
+  "@prayerTodaySchedule": {
+    "description": "Judul jadwal hari ini"
+  },
+  "prayerAdhanSettings": "Pengaturan Adzan",
+  "@prayerAdhanSettings": {
+    "description": "Judul pengaturan adzan"
+  },
+  "prayerAdhanSubtitle": "Atur tiap waktu: adzan penuh, nada, getar, atau mati.",
+  "@prayerAdhanSubtitle": {
+    "description": "Subjudul pengaturan adzan"
+  },
+  "prayerAdhanEnable": "Aktifkan pengingat",
+  "@prayerAdhanEnable": {
+    "description": "Label aktifkan pengingat"
+  },
+  "prayerAdhanMuezzin": "Muadzin",
+  "@prayerAdhanMuezzin": {
+    "description": "Label pilihan muadzin"
+  },
+  "prayerAdhanMakkah": "Makkah",
+  "@prayerAdhanMakkah": {
+    "description": "Pilihan muadzin Makkah"
+  },
+  "prayerAdhanMadinah": "Madinah",
+  "@prayerAdhanMadinah": {
+    "description": "Pilihan muadzin Madinah"
+  },
+  "prayerAdhanVolume": "Volume adzan",
+  "@prayerAdhanVolume": {
+    "description": "Label volume adzan"
+  },
+  "prayerAdhanTest": "Tes",
+  "@prayerAdhanTest": {
+    "description": "Tombol tes adzan"
+  },
+  "prayerAdhanTestFajr": "Tes (versi Subuh)",
+  "@prayerAdhanTestFajr": {
+    "description": "Tombol tes adzan versi Subuh"
+  },
+  "prayerSelectLocation": "Pilih Lokasi",
+  "@prayerSelectLocation": {
+    "description": "Judul dialog pilih lokasi"
+  },
+  "prayerProvince": "Provinsi",
+  "@prayerProvince": {
+    "description": "Label provinsi"
+  },
+  "prayerCity": "Kota / Kabupaten",
+  "@prayerCity": {
+    "description": "Label kota"
+  },
+  "prayerWorldSearchHint": "Cari kota di seluruh dunia",
+  "@prayerWorldSearchHint": {
+    "description": "Hint pencarian kota dunia"
+  },
+  "prayerOrPickIndonesia": "atau pilih wilayah Indonesia",
+  "@prayerOrPickIndonesia": {
+    "description": "Pemisah pilihan wilayah"
+  },
+  "prayerWorldNotFound": "Tidak ditemukan. Coba ejaan Inggris (mis. Mecca, Cairo).",
+  "@prayerWorldNotFound": {
+    "description": "Kota dunia tidak ditemukan"
+  },
+  "prayerWorldOffline": "Butuh internet untuk cari kota. {error}",
+  "@prayerWorldOffline": {
+    "description": "Pencarian kota butuh internet",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "prayerGpsFailed": "GPS gagal",
+  "@prayerGpsFailed": {
+    "description": "Pesan GPS gagal"
+  },
+  "prayerGpsStale": "GPS gagal diperbarui, memakai posisi tersimpan.",
+  "@prayerGpsStale": {
+    "description": "Pesan GPS memakai posisi tersimpan"
+  },
+  "prayerWorldCity": "Kota dunia",
+  "@prayerWorldCity": {
+    "description": "Label kota dunia"
+  },
+  "prayerOfflineGps": "Offline dari GPS",
+  "@prayerOfflineGps": {
+    "description": "Sumber jadwal GPS offline"
+  },
+  "prayerOfflineCity": "Offline untuk kota ini",
+  "@prayerOfflineCity": {
+    "description": "Sumber jadwal kota offline"
+  },
+  "prayerScheduleKemenag": "Jadwal Kemenag",
+  "@prayerScheduleKemenag": {
+    "description": "Sumber jadwal Kemenag"
+  },
+  "prayerEidFitr": "Idul Fitri",
+  "@prayerEidFitr": {
+    "description": "Penanda Idul Fitri"
+  },
+  "prayerEidAdha": "Idul Adha",
+  "@prayerEidAdha": {
+    "description": "Penanda Idul Adha"
+  },
+  "prayerArafah": "Hari Arafah",
+  "@prayerArafah": {
+    "description": "Penanda hari Arafah"
+  },
+  "prayerRamadan": "Ramadan",
+  "@prayerRamadan": {
+    "description": "Penanda bulan Ramadan"
+  },
+  "prayerDate": "Tanggal",
+  "@prayerDate": {
+    "description": "Label tanggal"
+  },
+  "prayerLocation": "Lokasi",
+  "@prayerLocation": {
+    "description": "Label lokasi"
+  },
+  "prayerMonthly": "Bulanan",
+  "@prayerMonthly": {
+    "description": "Tombol jadwal bulanan"
+  },
+  "prayerCountdown": "{hours}j {minutes}m lagi",
+  "@prayerCountdown": {
+    "description": "Hitung mundur shalat berikutnya",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "prayerCountdownMinutes": "{minutes}m lagi",
+  "@prayerCountdownMinutes": {
+    "description": "Hitung mundur kurang dari satu jam",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "commonError": "Terjadi kesalahan.",
+  "@commonError": {
+    "description": "Pesan galat umum"
+  },
+  "commonReload": "Muat ulang",
+  "@commonReload": {
+    "description": "Aksi muat ulang"
+  },
+  "prayerImsak": "Imsak",
+  "@prayerImsak": {
+    "description": "Nama waktu imsak"
+  },
+  "prayerFajr": "Subuh",
+  "@prayerFajr": {
+    "description": "Nama waktu Subuh"
+  },
+  "prayerDhuha": "Dhuha",
+  "@prayerDhuha": {
+    "description": "Nama waktu Dhuha"
+  },
+  "prayerDhuhr": "Dzuhur",
+  "@prayerDhuhr": {
+    "description": "Nama waktu Dzuhur"
+  },
+  "prayerAsr": "Ashar",
+  "@prayerAsr": {
+    "description": "Nama waktu Ashar"
+  },
+  "prayerMaghrib": "Maghrib",
+  "@prayerMaghrib": {
+    "description": "Nama waktu Maghrib"
+  },
+  "prayerIsha": "Isya",
+  "@prayerIsha": {
+    "description": "Nama waktu Isya"
+  },
+  "prayerRetry": "Coba lagi",
+  "@prayerRetry": {
+    "description": "prayerRetry"
+  },
+  "kajianTitle": "Kajian",
+  "@kajianTitle": {
+    "description": "kajianTitle"
+  },
+  "kajianSubtitle": "Jadwal kajian sunnah terdekat",
+  "@kajianSubtitle": {
+    "description": "kajianSubtitle"
+  },
+  "kajianFilter": "Filter kajian",
+  "@kajianFilter": {
+    "description": "kajianFilter"
+  },
+  "kajianAllTime": "Semua waktu",
+  "@kajianAllTime": {
+    "description": "kajianAllTime"
+  },
+  "kajianToday": "Hari ini",
+  "@kajianToday": {
+    "description": "kajianToday"
+  },
+  "kajianNext7Days": "7 hari ke depan",
+  "@kajianNext7Days": {
+    "description": "kajianNext7Days"
+  },
+  "kajianNext30Days": "30 hari ke depan",
+  "@kajianNext30Days": {
+    "description": "kajianNext30Days"
+  },
+  "kajianSortNearest": "Paling dekat",
+  "@kajianSortNearest": {
+    "description": "kajianSortNearest"
+  },
+  "kajianSortNewest": "Baru diunggah",
+  "@kajianSortNewest": {
+    "description": "kajianSortNewest"
+  },
+  "kajianCity": "Kota",
+  "@kajianCity": {
+    "description": "kajianCity"
+  },
+  "kajianSearchCity": "Cari kota…",
+  "@kajianSearchCity": {
+    "description": "kajianSearchCity"
+  },
+  "kajianApply": "Terapkan",
+  "@kajianApply": {
+    "description": "kajianApply"
+  },
+  "kajianReset": "Atur ulang",
+  "@kajianReset": {
+    "description": "kajianReset"
+  },
+  "kajianNoResults": "Tidak ada kajian yang cocok.",
+  "@kajianNoResults": {
+    "description": "kajianNoResults"
+  },
+  "kajianOpenTelegram": "Buka di Telegram",
+  "@kajianOpenTelegram": {
+    "description": "kajianOpenTelegram"
+  },
+  "tasbihTitle": "Tasbih",
+  "@tasbihTitle": {
+    "description": "tasbihTitle"
+  },
+  "tasbihSubtitle": "Hitung dzikir & shalawat harian",
+  "@tasbihSubtitle": {
+    "description": "tasbihSubtitle"
+  },
+  "tasbihTapHint": "Ketuk untuk menghitung",
+  "@tasbihTapHint": {
+    "description": "tasbihTapHint"
+  },
+  "tasbihCompleted": "Selesai",
+  "@tasbihCompleted": {
+    "description": "tasbihCompleted"
+  },
+  "tasbihTarget": "Target",
+  "@tasbihTarget": {
+    "description": "tasbihTarget"
+  },
+  "tasbihCompletedNext": "Alhamdulillah • Selesai {target}x, lanjut ke {next}",
+  "@tasbihCompletedNext": {
+    "description": "Konfirmasi dzikir selesai lalu lanjut",
+    "placeholders": {
+      "target": {
+        "type": "int"
+      },
+      "next": {
+        "type": "String"
+      }
+    }
+  },
+  "tasbihCompletedOne": "Alhamdulillah • Selesai {target}x {dzikr}",
+  "@tasbihCompletedOne": {
+    "description": "Konfirmasi dzikir selesai",
+    "placeholders": {
+      "target": {
+        "type": "int"
+      },
+      "dzikr": {
+        "type": "String"
+      }
+    }
+  },
+  "tasbihAddTitle": "Tambah Dzikir / Shalawat",
+  "@tasbihAddTitle": {
+    "description": "Judul sheet tambah dzikir"
+  },
+  "tasbihEditTitle": "Edit Dzikir",
+  "@tasbihEditTitle": {
+    "description": "Judul sheet edit dzikir"
+  },
+  "tasbihAddHint": "Tulis sesuai yang biasa kamu baca: bebas Arab, Latin, atau terjemahan",
+  "@tasbihAddHint": {
+    "description": "Petunjuk pengisian dzikir"
+  },
+  "tasbihFieldArabic": "Arab (wajib)",
+  "@tasbihFieldArabic": {
+    "description": "Label isian Arab"
+  },
+  "tasbihFieldLatin": "Latin (opsional)",
+  "@tasbihFieldLatin": {
+    "description": "Label isian Latin"
+  },
+  "tasbihFieldTranslation": "Terjemahan (opsional)",
+  "@tasbihFieldTranslation": {
+    "description": "Label isian terjemahan"
+  },
+  "tasbihTranslationHint": "Ya Allah limpahkan shalawat…",
+  "@tasbihTranslationHint": {
+    "description": "Contoh isian terjemahan"
+  },
+  "tasbihArabicRequired": "Tulisan Arab wajib diisi",
+  "@tasbihArabicRequired": {
+    "description": "Validasi tulisan Arab"
+  },
+  "tasbihTargetHint": "Target default 33, bisa diganti 99/100 sesuai kebiasaan",
+  "@tasbihTargetHint": {
+    "description": "Petunjuk target dzikir"
+  },
+  "tasbihReset": "Reset",
+  "@tasbihReset": {
+    "description": "Aksi reset hitungan"
+  },
+  "tasbihAddTooltip": "Tambah dzikir",
+  "@tasbihAddTooltip": {
+    "description": "Tooltip tambah dzikir"
+  },
+  "tasbihEmpty": "Belum ada dzikir",
+  "@tasbihEmpty": {
+    "description": "Keadaan daftar dzikir kosong"
+  },
+  "tasbihListTitle": "Daftar Dzikir",
+  "@tasbihListTitle": {
+    "description": "Judul daftar dzikir"
+  },
+  "tasbihListSubtitle": "Ketuk untuk beralih bacaan",
+  "@tasbihListSubtitle": {
+    "description": "Subjudul daftar dzikir"
+  },
+  "tasbihAdd": "Tambah",
+  "@tasbihAdd": {
+    "description": "Tombol tambah dzikir"
+  },
+  "tasbihVibration": "Getar",
+  "@tasbihVibration": {
+    "description": "Label opsi getar"
+  },
+  "tasbihVibrationHint": "Getar tiap hitung, lebih kuat tiap 33",
+  "@tasbihVibrationHint": {
+    "description": "Petunjuk getar"
+  },
+  "tasbihAutoAdvanceHint": "Pindah ke dzikir berikut saat target tercapai",
+  "@tasbihAutoAdvanceHint": {
+    "description": "Petunjuk lanjut otomatis"
+  },
+  "tasbihResetTitle": "Reset hitungan?",
+  "@tasbihResetTitle": {
+    "description": "Judul konfirmasi reset"
+  },
+  "tasbihResetBody": "Hitungan {dzikr} akan direset ke 0",
+  "@tasbihResetBody": {
+    "description": "Isi konfirmasi reset",
+    "placeholders": {
+      "dzikr": {
+        "type": "String"
+      }
+    }
+  },
+  "tasbihDeleteTitle": "Hapus dzikir?",
+  "@tasbihDeleteTitle": {
+    "description": "Judul konfirmasi hapus dzikir"
+  },
+  "tasbihCounter": "{count} dari {target}",
+  "@tasbihCounter": {
+    "description": "Nilai hitungan saat ini",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "tasbihTotalKhatam": "{count} khatam",
+  "@tasbihTotalKhatam": {
+    "description": "Jumlah putaran selesai",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tasbihGoTo": "Hitung {dzikr}",
+  "@tasbihGoTo": {
+    "description": "Label aksesibilitas tombol hitung",
+    "placeholders": {
+      "dzikr": {
+        "type": "String"
+      }
+    }
+  },
+  "tasbihCategoryDzikir": "Dzikir",
+  "@tasbihCategoryDzikir": {
+    "description": "Label kategori dzikir"
+  },
+  "tasbihCategoryShalawat": "Shalawat",
+  "@tasbihCategoryShalawat": {
+    "description": "Label kategori shalawat"
+  },
+  "tasbihCategoryDoa": "Doa",
+  "@tasbihCategoryDoa": {
+    "description": "Label kategori doa"
+  },
+  "tasbihCategoryCustom": "Kustom",
+  "@tasbihCategoryCustom": {
+    "description": "Label kategori dzikir buatan pengguna"
+  },
+  "zakatTitle": "Kalkulator Zakat",
+  "@zakatTitle": {
+    "description": "zakatTitle"
+  },
+  "zakatSubtitle": "Hitung zakat maal Anda",
+  "@zakatSubtitle": {
+    "description": "zakatSubtitle"
+  },
+  "zakatTypeMal": "Mal 2,5%",
+  "@zakatTypeMal": {
+    "description": "Label jenis zakat mal"
+  },
+  "zakatTypeFitrah": "Fitrah",
+  "@zakatTypeFitrah": {
+    "description": "Label jenis zakat fitrah"
+  },
+  "zakatTypePertanian": "Pertanian",
+  "@zakatTypePertanian": {
+    "description": "Label jenis zakat pertanian"
+  },
+  "zakatTypeGold": "Emas",
+  "@zakatTypeGold": {
+    "description": "Label jenis zakat emas"
+  },
+  "zakatResult": "Hasil",
+  "@zakatResult": {
+    "description": "Judul hasil perhitungan"
+  },
+  "zakatGoldRateNote": "Harga emas real-time XAU/IDR per gram. Bisa diubah manual.",
+  "@zakatGoldRateNote": {
+    "description": "Catatan harga emas"
+  },
+  "zakatGoldRateFailed": "Harga real-time gagal dimuat. Isi manual harga emas per gram.",
+  "@zakatGoldRateFailed": {
+    "description": "Harga emas gagal dimuat"
+  },
+  "zakatInvalidMal": "Isi total harta dan harga emas dengan benar",
+  "@zakatInvalidMal": {
+    "description": "Validasi zakat mal"
+  },
+  "zakatBelowNisab": "Belum wajib zakat. Nisab 85g = {nisab}. Harta {wealth}.",
+  "@zakatBelowNisab": {
+    "description": "Harta di bawah nisab",
+    "placeholders": {
+      "nisab": {
+        "type": "String"
+      },
+      "wealth": {
+        "type": "String"
+      }
+    }
+  },
+  "zakatMalResult": "Zakat mal 2,5% dari {wealth}. Nisab {nisab} terpenuhi.",
+  "@zakatMalResult": {
+    "description": "Hasil zakat mal",
+    "placeholders": {
+      "wealth": {
+        "type": "String"
+      },
+      "nisab": {
+        "type": "String"
+      }
+    }
+  },
+  "zakatInvalidFitrah": "Isi jumlah jiwa dan harga beras dengan benar",
+  "@zakatInvalidFitrah": {
+    "description": "Validasi zakat fitrah"
+  },
+  "zakatFitrahResult": "Zakat fitrah {souls} jiwa x 2,5 kg x {rice}.",
+  "@zakatFitrahResult": {
+    "description": "Hasil zakat fitrah",
+    "placeholders": {
+      "souls": {
+        "type": "String"
+      },
+      "rice": {
+        "type": "String"
+      }
+    }
+  },
+  "zakatInvalidHarvest": "Isi nilai panen dengan benar",
+  "@zakatInvalidHarvest": {
+    "description": "Validasi zakat pertanian"
+  },
+  "zakatHarvestResult": "Tadah hujan 10% = {rain}. Irigasi 5% = {irrigation}.",
+  "@zakatHarvestResult": {
+    "description": "Hasil zakat pertanian",
+    "placeholders": {
+      "rain": {
+        "type": "String"
+      },
+      "irrigation": {
+        "type": "String"
+      }
+    }
+  },
+  "zakatGoldBelowNisab": "Emas {gram} g belum nisab 85 g.",
+  "@zakatGoldBelowNisab": {
+    "description": "Emas di bawah nisab",
+    "placeholders": {
+      "gram": {
+        "type": "String"
+      }
+    }
+  },
+  "zakatGoldResult": "Zakat emas {gram} g x 2,5% dinilai {price}/g.",
+  "@zakatGoldResult": {
+    "description": "Hasil zakat emas",
+    "placeholders": {
+      "gram": {
+        "type": "String"
+      },
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "zakatFieldWealth": "Total harta 1 haul (Rp)",
+  "@zakatFieldWealth": {
+    "description": "Label isian total harta"
+  },
+  "zakatFieldGoldPrice": "Harga emas per gram (Rp)",
+  "@zakatFieldGoldPrice": {
+    "description": "Label isian harga emas"
+  },
+  "zakatFieldSouls": "Jumlah jiwa",
+  "@zakatFieldSouls": {
+    "description": "Label isian jumlah jiwa"
+  },
+  "zakatFieldRicePrice": "Harga beras per kg (Rp)",
+  "@zakatFieldRicePrice": {
+    "description": "Label isian harga beras"
+  },
+  "zakatFieldHarvest": "Nilai panen (Rp)",
+  "@zakatFieldHarvest": {
+    "description": "Label isian nilai panen"
+  },
+  "zakatHarvestNote": "Nisab 653 kg gabah. Hasil di bawah nisab tidak wajib.",
+  "@zakatHarvestNote": {
+    "description": "Catatan nisab pertanian"
+  },
+  "zakatFieldGoldWeight": "Berat emas (gram)",
+  "@zakatFieldGoldWeight": {
+    "description": "Label isian berat emas"
+  },
+  "zakatCalculate": "Hitung zakat",
+  "@zakatCalculate": {
+    "description": "Tombol hitung zakat"
+  },
+  "zakatReference": "Rujukan: nisab emas 85 g, perak 595 g, mal 2,5%, fitrah 2,5 kg, pertanian 5/10%. Harga bisa berubah, cek toko emas setempat.",
+  "@zakatReference": {
+    "description": "Catatan rujukan zakat"
+  },
+  "qiblaTitle": "Arah Kiblat",
+  "@qiblaTitle": {
+    "description": "qiblaTitle"
+  },
+  "qiblaSubtitle": "Arah Kakbah dari lokasi Anda",
+  "@qiblaSubtitle": {
+    "description": "qiblaSubtitle"
+  },
+  "asmaulTitle": "Asmaul Husna",
+  "@asmaulTitle": {
+    "description": "asmaulTitle"
+  },
+  "asmaulSubtitle": "99 Nama Allah beserta arti",
+  "@asmaulSubtitle": {
+    "description": "asmaulSubtitle"
+  },
+  "asmaulSearchHint": "Cari nama atau arti…",
+  "@asmaulSearchHint": {
+    "description": "asmaulSearchHint"
+  },
+  "duasTitle": "Doa Harian",
+  "@duasTitle": {
+    "description": "duasTitle"
+  },
+  "duasSubtitle": "Kumpulan doa harian",
+  "@duasSubtitle": {
+    "description": "duasSubtitle"
+  },
+  "duasSearchHint": "Cari doa…",
+  "@duasSearchHint": {
+    "description": "duasSearchHint"
+  },
+  "commonFilterAll": "Semua",
+  "@commonFilterAll": {
+    "description": "Filter menampilkan semua item"
+  },
+  "commonFilterSaved": "Bookmark",
+  "@commonFilterSaved": {
+    "description": "Filter hanya item tersimpan"
+  },
+  "duasLoading": "Memuat doa…",
+  "@duasLoading": {
+    "description": "Status memuat daftar doa"
+  },
+  "asmaulSavedCount": "Bookmark ({count})",
+  "@asmaulSavedCount": {
+    "description": "Chip jumlah Asmaul Husna tersimpan",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "asmaulSaveName": "Simpan nama ini",
+  "@asmaulSaveName": {
+    "description": "Label aksesibilitas tombol simpan nama"
+  },
+  "asmaulUnsaveName": "Hapus dari simpanan",
+  "@asmaulUnsaveName": {
+    "description": "Label aksesibilitas tombol hapus nama"
+  },
+  "hajjTitle": "Haji & Umrah",
+  "@hajjTitle": {
+    "description": "Judul layar panduan Haji & Umrah"
+  },
+  "hajjSubtitle": "Panduan ringkas manasik",
+  "@hajjSubtitle": {
+    "description": "Subjudul layar panduan Haji & Umrah"
+  },
+  "hajjFootnote": "Ringkasan manasik menurut arus utama Indonesia. Untuk praktik, ikuti bimbingan KBIHU / Kemenag.",
+  "@hajjFootnote": {
+    "description": "Catatan kaki panduan manasik"
+  },
+  "hajjSunnah": "Sunah",
+  "@hajjSunnah": {
+    "description": "Label daftar sunah pada langkah manasik"
+  },
+  "hajjNote": "Catatan",
+  "@hajjNote": {
+    "description": "Label catatan pada langkah manasik"
+  },
+  "hajjDua": "Doa",
+  "@hajjDua": {
+    "description": "Label doa pada langkah manasik"
+  },
+  "hajjArabicNotice": "Teks Arab doa tidak disertakan. Bacalah dari buku manasik atau panduan Kemenag.",
+  "@hajjArabicNotice": {
+    "description": "Pemberitahuan bahwa teks Arab tidak disertakan"
+  },
+  "hajjOrderTitle": "Urutan manasik",
+  "@hajjOrderTitle": {
+    "description": "Judul bagian urutan langkah manasik"
+  },
+  "hajjOrderSubtitle": "Langkah demi langkah, berurutan.",
+  "@hajjOrderSubtitle": {
+    "description": "Subjudul bagian urutan langkah manasik"
+  },
+  "imsakiyahMonthly": "JADWAL BULANAN",
+  "@imsakiyahMonthly": {
+    "description": "Judul jadwal imsakiyah bulanan"
+  },
+  "murotalDownloadsTitle": "UNDUHAN MUROTAL",
+  "@murotalDownloadsTitle": {
+    "description": "Judul pengelola unduhan murotal"
+  },
+  "murotalDownloadsSubtitle": "Unduh audio murotal untuk didengarkan offline.",
+  "@murotalDownloadsSubtitle": {
+    "description": "Subjudul pengelola unduhan murotal"
+  },
+  "murotalDownloadsSelect": "Pilih surah untuk ditambahkan",
+  "@murotalDownloadsSelect": {
+    "description": "Petunjuk pilih surah untuk diunduh"
+  },
+  "downloadsTitle": "UNDUHAN AL-QUR''AN",
+  "@downloadsTitle": {
+    "description": "Judul pengelola unduhan terjemahan"
+  },
+  "downloadsSubtitle": "Unduh terjemahan dan tafsir untuk dibaca offline.",
+  "@downloadsSubtitle": {
+    "description": "Subjudul pengelola unduhan terjemahan"
+  },
+  "downloadsSelect": "Pilih edisi untuk ditambahkan",
+  "@downloadsSelect": {
+    "description": "Petunjuk pilih edisi terjemahan"
+  },
+  "playerBackgroundSound": "Suara latar",
+  "@playerBackgroundSound": {
+    "description": "Judul suara latar"
+  },
+  "playerBackgroundSoundSubtitle": "Berjalan bersama audio Al-Qur''an.",
+  "@playerBackgroundSoundSubtitle": {
+    "description": "Subjudul suara latar"
+  },
+  "playerVolumeQuran": "Volume Al-Qur''an",
+  "@playerVolumeQuran": {
+    "description": "Label volume bacaan"
+  },
+  "playerVolumeRain": "Volume hujan",
+  "@playerVolumeRain": {
+    "description": "Label volume suara hujan"
+  },
+  "featureAsmaulHusna": "Asmaul\nHusna",
+  "@featureAsmaulHusna": {
+    "description": "Label pintasan Asmaul Husna"
+  },
+  "featureDailyDuas": "Doa\nHarian",
+  "@featureDailyDuas": {
+    "description": "Label pintasan doa harian"
+  },
+  "featureHajjUmrah": "Haji &\nUmrah",
+  "@featureHajjUmrah": {
+    "description": "Label pintasan haji dan umrah"
+  },
+  "featureQibla": "Arah\nKiblat",
+  "@featureQibla": {
+    "description": "Label pintasan arah kiblat"
+  },
+  "featureTasbih": "Tasbih",
+  "@featureTasbih": {
+    "description": "Label pintasan tasbih"
+  },
+  "featureZakat": "Kalkulator\nZakat",
+  "@featureZakat": {
+    "description": "Label pintasan kalkulator zakat"
+  },
+  "aboutUpdateFailed": "Pemeriksaan pembaruan gagal.",
+  "@aboutUpdateFailed": {
+    "description": "Pembaruan gagal diperiksa"
+  },
+  "aboutNoUpdate": "Tidak ada pembaruan.",
+  "@aboutNoUpdate": {
+    "description": "Tidak ada pembaruan tersedia"
+  },
+  "aboutLatestVersion": "QuranKu v{version} adalah versi terbaru.",
+  "@aboutLatestVersion": {
+    "description": "Sudah memakai versi terbaru",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "aboutPrayerSource": "Sumber Jadwal Shalat",
+  "@aboutPrayerSource": {
+    "description": "Label sumber jadwal shalat"
+  },
+  "aboutDownloading": "Mengunduh {percent}%. Biarkan aplikasi tetap terbuka.",
+  "@aboutDownloading": {
+    "description": "Progres unduh pembaruan",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "aboutDownloadInstall": "Unduh dan Pasang",
+  "@aboutDownloadInstall": {
+    "description": "Tombol unduh dan pasang pembaruan"
+  },
+  "qiblaPermissionDenied": "Izin lokasi ditolak. Aktifkan lokasi untuk kiblat akurat.",
+  "@qiblaPermissionDenied": {
+    "description": "Izin lokasi ditolak"
+  },
+  "qiblaGpsOff": "GPS mati. Nyalakan lokasi untuk kiblat real-time.",
+  "@qiblaGpsOff": {
+    "description": "GPS tidak aktif"
+  },
+  "qiblaGpsFailed": "Gagal mendapat lokasi",
+  "@qiblaGpsFailed": {
+    "description": "Gagal mendapat lokasi (diikuti detail)"
+  },
+  "qiblaSearching": "Mencari lokasi real-time…",
+  "@qiblaSearching": {
+    "description": "Status mencari lokasi"
+  },
+  "qiblaFromNorth": "{degrees}° dari utara",
+  "@qiblaFromNorth": {
+    "description": "Arah kiblat dari utara",
+    "placeholders": {
+      "degrees": {
+        "type": "String"
+      }
+    }
+  },
+  "qiblaDistanceToKaaba": "{km} km ke Kakbah",
+  "@qiblaDistanceToKaaba": {
+    "description": "Jarak ke Kakbah",
+    "placeholders": {
+      "km": {
+        "type": "String"
+      }
+    }
+  },
+  "qiblaCompassUnavailable": "Kompas tidak tersedia di perangkat ini",
+  "@qiblaCompassUnavailable": {
+    "description": "Kompas tidak tersedia"
+  },
+  "qiblaAlignHint": "Putar HP hingga jarum hijau ke atas. Kalibrasi dengan gerakan angka 8 bila melompat.",
+  "@qiblaAlignHint": {
+    "description": "Petunjuk menyelaraskan kompas"
+  },
+  "qiblaSourceNote": "Arah dihitung real-time dari GPS ke 21.4225, 39.8262. Tanpa internet setelah GPS lock.",
+  "@qiblaSourceNote": {
+    "description": "Catatan sumber arah kiblat"
+  },
+  "kajianSearchHint": "Cari tema, ustadz, atau kota…",
+  "@kajianSearchHint": {
+    "description": "Hint pencarian kajian"
+  },
+  "kajianNoConnection": "Tidak ada koneksi",
+  "@kajianNoConnection": {
+    "description": "Status tanpa koneksi"
+  },
+  "kajianOfflineHint": "Sambungkan internet untuk memuat jadwal kajian.",
+  "@kajianOfflineHint": {
+    "description": "Petunjuk saat kajian offline"
+  },
+  "kajianFallbackTopic": "Kajian Islam",
+  "@kajianFallbackTopic": {
+    "description": "Judul kajian cadangan"
+  },
+  "kajianTime": "Waktu",
+  "@kajianTime": {
+    "description": "Judul bagian waktu pada filter kajian"
+  },
+  "playlistNew": "Playlist Baru",
+  "@playlistNew": {
+    "description": "Judul dialog playlist baru"
+  },
+  "playlistNameLabel": "Nama playlist",
+  "@playlistNameLabel": {
+    "description": "Label isian nama playlist"
+  },
+  "playlistCreate": "Buat",
+  "@playlistCreate": {
+    "description": "Tombol buat playlist"
+  },
+  "playlistRenameTitle": "Ganti Nama Playlist",
+  "@playlistRenameTitle": {
+    "description": "Judul dialog ganti nama playlist"
+  },
+  "playlistDeleteTitle": "Hapus Playlist?",
+  "@playlistDeleteTitle": {
+    "description": "Judul konfirmasi hapus playlist"
+  },
+  "playlistDeleteBody": "Playlist ini dan Surah yang tersimpan di dalamnya akan dihapus.",
+  "@playlistDeleteBody": {
+    "description": "Isi konfirmasi hapus playlist"
+  },
+  "playlistNewTooltip": "Playlist baru",
+  "@playlistNewTooltip": {
+    "description": "Tooltip buat playlist"
+  },
+  "playlistEmptyTitle": "Buat playlist pertamamu",
+  "@playlistEmptyTitle": {
+    "description": "Judul playlist kosong"
+  },
+  "playlistEmptyHint": "Pisahkan surah ke dalam banyak playlist.",
+  "@playlistEmptyHint": {
+    "description": "Petunjuk playlist kosong"
+  },
+  "playlistCreateAction": "Buat Playlist",
+  "@playlistCreateAction": {
+    "description": "Tombol buat playlist"
+  },
+  "playlistRename": "Ganti Nama",
+  "@playlistRename": {
+    "description": "Menu ganti nama playlist"
+  },
+  "playlistPlay": "Putar playlist",
+  "@playlistPlay": {
+    "description": "Tooltip putar playlist"
+  },
+  "playlistAddSurahHint": "Tambah surah ke playlist…",
+  "@playlistAddSurahHint": {
+    "description": "Hint tambah surah ke playlist"
+  },
+  "storageTitle": "KELOLA PENYIMPANAN",
+  "@storageTitle": {
+    "description": "Judul layar penyimpanan"
+  },
+  "storageNoAudio": "Belum ada audio yang diunduh",
+  "@storageNoAudio": {
+    "description": "Audio kosong"
+  },
+  "storageTotalAudio": "Total Penyimpanan Audio",
+  "@storageTotalAudio": {
+    "description": "Judul total audio"
+  },
+  "storageAyahsDownloaded": "{done} / {total} ayat terunduh",
+  "@storageAyahsDownloaded": {
+    "description": "Progres unduhan ayat",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storageDeleteAudioTitle": "Hapus Audio?",
+  "@storageDeleteAudioTitle": {
+    "description": "Judul konfirmasi hapus audio"
+  },
+  "storageDeleteAudioBody": "Hapus berkas audio untuk {name}?",
+  "@storageDeleteAudioBody": {
+    "description": "Isi konfirmasi hapus audio",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storageTotalData": "Total Data Tersimpan",
+  "@storageTotalData": {
+    "description": "Judul total data cache"
+  },
+  "storageBySurah": "Per Surah",
+  "@storageBySurah": {
+    "description": "Tab per surah"
+  },
+  "storageByTranslation": "Per Terjemahan",
+  "@storageByTranslation": {
+    "description": "Tab per terjemahan"
+  },
+  "storageNoCachedSurahs": "Belum ada surah tersimpan",
+  "@storageNoCachedSurahs": {
+    "description": "Cache surah kosong"
+  },
+  "storageDeleteCacheTitle": "Hapus Cache?",
+  "@storageDeleteCacheTitle": {
+    "description": "Judul konfirmasi hapus cache"
+  },
+  "storageDeleteCacheBody": "Hapus data tersimpan untuk {name}? Anda perlu mengunduhnya lagi untuk membaca offline.",
+  "@storageDeleteCacheBody": {
+    "description": "Isi konfirmasi hapus cache",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storageNoCachedTranslations": "Belum ada terjemahan tersimpan",
+  "@storageNoCachedTranslations": {
+    "description": "Cache terjemahan kosong"
+  },
+  "storageSurahsCached": "{count} surah tersimpan",
+  "@storageSurahsCached": {
+    "description": "Jumlah surah tersimpan",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "storageDeleteTranslationTitle": "Hapus Terjemahan?",
+  "@storageDeleteTranslationTitle": {
+    "description": "Judul konfirmasi hapus terjemahan"
+  },
+  "storageDeleteTranslationBody": "Hapus semua data tersimpan untuk edisi {name}?",
+  "@storageDeleteTranslationBody": {
+    "description": "Isi konfirmasi hapus terjemahan",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storageSurahLabel": "Surah {number}",
+  "@storageSurahLabel": {
+    "description": "Nama surah cadangan",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "bookmarksTitle": "Bookmark",
+  "@bookmarksTitle": {
+    "description": "bookmarksTitle"
+  },
+  "bookmarksSubtitle": "{count} ayat • {doa} doa • {asmaul} asmaul",
+  "@bookmarksSubtitle": {
+    "description": "bookmarksSubtitle"
+  },
+  "bookmarksTabAyah": "Ayat ({count})",
+  "@bookmarksTabAyah": {
+    "description": "bookmarksTabAyah"
+  },
+  "bookmarksTabDoa": "Doa ({count})",
+  "@bookmarksTabDoa": {
+    "description": "bookmarksTabDoa"
+  },
+  "bookmarksTabAsmaul": "Asmaul ({count})",
+  "@bookmarksTabAsmaul": {
+    "description": "bookmarksTabAsmaul"
+  },
+  "bookmarksEmptyAyah": "Belum ada ayat favorit",
+  "@bookmarksEmptyAyah": {
+    "description": "bookmarksEmptyAyah"
+  },
+  "bookmarksEmptyDoa": "Belum ada doa favorit",
+  "@bookmarksEmptyDoa": {
+    "description": "bookmarksEmptyDoa"
+  },
+  "bookmarksEmptyAsmaul": "Belum ada Asmaul Husna favorit",
+  "@bookmarksEmptyAsmaul": {
+    "description": "bookmarksEmptyAsmaul"
+  },
+  "bookmarksEmptyAyahHint": "Tandai ayat di halaman baca dengan ikon bookmark",
+  "@bookmarksEmptyAyahHint": {
+    "description": "Petunjuk cara menyimpan ayat"
+  },
+  "bookmarksEmptyDoaHint": "Simpan doa dari halaman Doa Harian dengan ikon bookmark",
+  "@bookmarksEmptyDoaHint": {
+    "description": "Petunjuk cara menyimpan doa"
+  },
+  "bookmarksEmptyAsmaulHint": "Simpan nama dari halaman Asmaul Husna",
+  "@bookmarksEmptyAsmaulHint": {
+    "description": "Petunjuk cara menyimpan Asmaul Husna"
+  },
+  "bookmarksDuaMissing": "Doa tidak lagi tersedia",
+  "@bookmarksDuaMissing": {
+    "description": "Doa tersimpan yang tidak dapat ditemukan"
+  },
+  "privacyTitle": "Privasi dan Kebijakan",
+  "@privacyTitle": {
+    "description": "privacyTitle"
+  },
+  "privacySubtitle": "Cara QuranKu mengelola data",
+  "@privacySubtitle": {
+    "description": "privacySubtitle"
+  },
+  "privacyEffectiveDate": "Tanggal berlaku: 15 Sep 2026",
+  "@privacyEffectiveDate": {
+    "description": "Tanggal berlaku kebijakan privasi"
+  },
+  "privacyPurposeTitle": "1  Tujuan",
+  "@privacyPurposeTitle": {
+    "description": "Judul bagian 1"
+  },
+  "privacyPurposeBody": "QuranKu membantu Anda membaca Al-Qur''an, mendengarkan murotal, dan mengikuti jadwal shalat. Kebijakan ini menjelaskan data apa yang QuranKu kumpulkan dan bagaimana data itu digunakan.",
+  "@privacyPurposeBody": {
+    "description": "Isi bagian 1"
+  },
+  "privacyCollectedTitle": "2  Data yang QuranKu kumpulkan",
+  "@privacyCollectedTitle": {
+    "description": "Judul bagian 2"
+  },
+  "privacyCollectedLocation": "Lokasi shalat. Anda memilih provinsi dan kota, atau mengizinkan GPS. QuranKu memakai lokasi hanya untuk menampilkan jadwal shalat dan arah kiblat.",
+  "@privacyCollectedLocation": {
+    "description": "Butir lokasi shalat"
+  },
+  "privacyCollectedPreferences": "Preferensi aplikasi. QuranKu menyimpan pilihan Anda, misalnya tema, ukuran teks, posisi terakhir dibaca, bookmark, asmaul, dan doa tersimpan. Pilihan ini disimpan di perangkat.",
+  "@privacyCollectedPreferences": {
+    "description": "Butir preferensi"
+  },
+  "privacyCollectedAudio": "Audio dan status unduhan. QuranKu mencatat surah mana yang Anda unduh agar dapat diputar offline.",
+  "@privacyCollectedAudio": {
+    "description": "Butir audio dan unduhan"
+  },
+  "privacyCollectedUpdate": "Versi aplikasi dan pemeriksaan pembaruan. Saat Anda memeriksa pembaruan, QuranKu mengirim permintaan ke GitHub untuk membaca tag rilis terbaru.",
+  "@privacyCollectedUpdate": {
+    "description": "Butir pemeriksaan pembaruan"
+  },
+  "privacyNotCollectedTitle": "3  Data yang tidak dikumpulkan",
+  "@privacyNotCollectedTitle": {
+    "description": "Judul bagian 3"
+  },
+  "privacyNotCollectedIdentity": "QuranKu tidak mengumpulkan nama, surel, atau nomor telepon Anda.",
+  "@privacyNotCollectedIdentity": {
+    "description": "Butir identitas"
+  },
+  "privacyNotCollectedGps": "QuranKu tidak mengumpulkan riwayat GPS secara rinci. QuranKu hanya menyimpan kota terakhir yang Anda pilih.",
+  "@privacyNotCollectedGps": {
+    "description": "Butir riwayat GPS"
+  },
+  "privacyNotCollectedSell": "QuranKu tidak menjual data kepada pihak lain.",
+  "@privacyNotCollectedSell": {
+    "description": "Butir penjualan data"
+  },
+  "privacyNotCollectedAds": "QuranKu tidak menampilkan iklan pihak ketiga.",
+  "@privacyNotCollectedAds": {
+    "description": "Butir iklan"
+  },
+  "privacyPermissionsTitle": "4  Izin",
+  "@privacyPermissionsTitle": {
+    "description": "Judul bagian 4"
+  },
+  "privacyPermissionInternet": "Internet. QuranKu memerlukan internet untuk mengambil teks Al-Qur''an, terjemahan, jadwal shalat, dan info pembaruan.",
+  "@privacyPermissionInternet": {
+    "description": "Butir izin internet"
+  },
+  "privacyPermissionLocation": "Lokasi. QuranKu memerlukan lokasi hanya saat Anda memakai GPS untuk jadwal shalat atau kiblat. Anda dapat memilih kota secara manual.",
+  "@privacyPermissionLocation": {
+    "description": "Butir izin lokasi"
+  },
+  "privacyPermissionNotifications": "Notifikasi. QuranKu memerlukan izin notifikasi hanya saat Anda mengaktifkan pengingat adzan.",
+  "@privacyPermissionNotifications": {
+    "description": "Butir izin notifikasi"
+  },
+  "privacyPermissionInstall": "Pemasangan paket (khusus Android). QuranKu memerlukan izin ini hanya saat Anda mengunduh dan memasang pembaruan dari rilis GitHub.",
+  "@privacyPermissionInstall": {
+    "description": "Butir izin pemasangan paket"
+  },
+  "privacyThirdPartyTitle": "5  Layanan pihak ketiga",
+  "@privacyThirdPartyTitle": {
+    "description": "Judul bagian 5"
+  },
+  "privacyThirdPartyEquran": "Equran.id menyediakan teks Al-Qur''an, terjemahan, dan jadwal shalat.",
+  "@privacyThirdPartyEquran": {
+    "description": "Butir equran.id"
+  },
+  "privacyThirdPartyGithub": "GitHub menjadi tempat rilis aplikasi. Saat Anda memeriksa pembaruan, aplikasi menghubungi api.github.com.",
+  "@privacyThirdPartyGithub": {
+    "description": "Butir GitHub"
+  },
+  "privacyThirdPartyQuranCom": "Quran.com menyediakan data warna tajwid saat Anda mengaktifkan tajwid berwarna.",
+  "@privacyThirdPartyQuranCom": {
+    "description": "Butir quran.com"
+  },
+  "privacyStorageTitle": "6  Penyimpanan dan retensi data",
+  "@privacyStorageTitle": {
+    "description": "Judul bagian 6"
+  },
+  "privacyStorageBody": "QuranKu menyimpan preferensi dan status unduhan di perangkat melalui shared preferences dan penyimpanan aplikasi. Data disimpan sampai Anda membersihkan data aplikasi atau mencopot pemasangan. Mencopot pemasangan menghapus data yang tersimpan secara lokal.",
+  "@privacyStorageBody": {
+    "description": "Isi bagian 6"
+  },
+  "privacyChoicesTitle": "7  Pilihan Anda",
+  "@privacyChoicesTitle": {
+    "description": "Judul bagian 7"
+  },
+  "privacyChoiceLocation": "Anda dapat menolak izin lokasi dan memilih kota secara manual.",
+  "@privacyChoiceLocation": {
+    "description": "Butir pilihan lokasi"
+  },
+  "privacyChoiceNotifications": "Anda dapat mematikan notifikasi adzan di layar Jadwal Shalat.",
+  "@privacyChoiceNotifications": {
+    "description": "Butir pilihan notifikasi"
+  },
+  "privacyChoiceDownloads": "Anda dapat membersihkan unduhan di layar Penyimpanan.",
+  "@privacyChoiceDownloads": {
+    "description": "Butir pilihan unduhan"
+  },
+  "privacyChoiceSaved": "Anda dapat menghapus asmaul dan doa tersimpan dari layarnya masing-masing.",
+  "@privacyChoiceSaved": {
+    "description": "Butir pilihan simpanan"
+  },
+  "privacyChildrenTitle": "8  Anak-anak",
+  "@privacyChildrenTitle": {
+    "description": "Judul bagian 8"
+  },
+  "privacyChildrenBody": "QuranKu tidak menyasar anak-anak untuk pengumpulan data. QuranKu tidak dengan sengaja mengumpulkan data dari anak-anak.",
+  "@privacyChildrenBody": {
+    "description": "Isi bagian 8"
+  },
+  "privacyChangesTitle": "9  Perubahan kebijakan ini",
+  "@privacyChangesTitle": {
+    "description": "Judul bagian 9"
+  },
+  "privacyChangesBody": "QuranKu dapat memperbarui kebijakan ini saat aplikasi berubah. Tanggal berlaku di bagian atas layar ini akan diperbarui ketika ada perubahan.",
+  "@privacyChangesBody": {
+    "description": "Isi bagian 9"
+  },
+  "privacyContactTitle": "10  Kontak",
+  "@privacyContactTitle": {
+    "description": "Judul bagian 10"
+  },
+  "privacyContactBody": "Untuk pertanyaan tentang kebijakan ini, buka issue di github.com/Rafigibran/QuranKu/issues.",
+  "@privacyContactBody": {
+    "description": "Isi bagian 10"
+  },
+  "aboutTitle": "Tentang QuranKu",
+  "@aboutTitle": {
+    "description": "aboutTitle"
+  },
+  "aboutDeveloper": "Developer",
+  "@aboutDeveloper": {
+    "description": "aboutDeveloper"
+  },
+  "aboutVersion": "Versi Aplikasi",
+  "@aboutVersion": {
+    "description": "aboutVersion"
+  },
+  "aboutGithub": "GitHub",
+  "@aboutGithub": {
+    "description": "aboutGithub"
+  },
+  "aboutRepository": "Repositori",
+  "@aboutRepository": {
+    "description": "aboutRepository"
+  },
+  "aboutSupport": "Dukungan",
+  "@aboutSupport": {
+    "description": "aboutSupport"
+  },
+  "aboutReportIssue": "Laporkan Masalah",
+  "@aboutReportIssue": {
+    "description": "aboutReportIssue"
+  },
+  "aboutCheckUpdate": "Periksa Pembaruan",
+  "@aboutCheckUpdate": {
+    "description": "aboutCheckUpdate"
+  },
+  "playerTitle": "Pemutar Murotal",
+  "@playerTitle": {
+    "description": "playerTitle"
+  },
+  "playerLyrics": "Lirik",
+  "@playerLyrics": {
+    "description": "playerLyrics"
+  },
+  "playerHideLyrics": "Sembunyikan lirik",
+  "@playerHideLyrics": {
+    "description": "playerHideLyrics"
+  },
+  "playerShowLyrics": "Tampilkan lirik",
+  "@playerShowLyrics": {
+    "description": "playerShowLyrics"
+  },
+  "playerQueue": "Daftar Surah",
+  "@playerQueue": {
+    "description": "playerQueue"
+  },
+  "playerRepeatAuto": "Lanjut otomatis",
+  "@playerRepeatAuto": {
+    "description": "playerRepeatAuto"
+  },
+  "playerRepeatOne": "Ulang 1 Surah",
+  "@playerRepeatOne": {
+    "description": "playerRepeatOne"
+  },
+  "playerRepeatOff": "Berhenti setelah selesai",
+  "@playerRepeatOff": {
+    "description": "playerRepeatOff"
+  },
+  "playerRainSound": "Suara hujan",
+  "@playerRainSound": {
+    "description": "Judul suara hujan"
+  },
+  "playerLyricsUnavailable": "Ayat belum tersedia.",
+  "@playerLyricsUnavailable": {
+    "description": "Lirik belum tersedia"
+  },
+  "playerRepeatNone": "Tidak mengulang",
+  "@playerRepeatNone": {
+    "description": "Label mode tanpa ulangan"
+  },
+  "playerRepeatMode": "Mode Putar",
+  "@playerRepeatMode": {
+    "description": "Judul sheet mode putar"
+  },
+  "playerRepeatAutoSubtitle": "Otomatis ke surah berikutnya saat selesai",
+  "@playerRepeatAutoSubtitle": {
+    "description": "Subjudul lanjut otomatis"
+  },
+  "playerRepeatOneSubtitle": "Ulang surah yang sama terus menerus",
+  "@playerRepeatOneSubtitle": {
+    "description": "Subjudul ulang satu surah"
+  },
+  "playerRepeatOffSubtitle": "Berhenti setelah satu surah selesai",
+  "@playerRepeatOffSubtitle": {
+    "description": "Subjudul berhenti setelah selesai"
+  },
+  "playerShowAll": "Tampilkan semua",
+  "@playerShowAll": {
+    "description": "Tombol tampilkan semua surah"
+  },
+  "playerQueueUnavailable": "Daftar surah belum tersedia.",
+  "@playerQueueUnavailable": {
+    "description": "Daftar surah kosong"
+  },
+  "playerQueueFiltered": "Antrian filter aktif: {count} surah",
+  "@playerQueueFiltered": {
+    "description": "Penanda antrian terfilter",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "playerNowPlayingAyah": "Ayat {ayah} • Murotal QuranKu",
+  "@playerNowPlayingAyah": {
+    "description": "Info ayat yang sedang diputar",
+    "placeholders": {
+      "ayah": {
+        "type": "String"
+      }
+    }
+  },
+  "playerLyricsEmpty": "Lirik belum tersedia.",
+  "@playerLyricsEmpty": {
+    "description": "Lirik kosong"
+  },
+  "playerNext": "Berikutnya",
+  "@playerNext": {
+    "description": "playerNext"
+  },
+  "playerPrevious": "Sebelumnya",
+  "@playerPrevious": {
+    "description": "playerPrevious"
+  },
+  "playerPause": "Jeda",
+  "@playerPause": {
+    "description": "playerPause"
+  },
+  "playerPlay": "Putar",
+  "@playerPlay": {
+    "description": "playerPlay"
+  }
+}

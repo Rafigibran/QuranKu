@@ -1,10 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
+import 'package:quranku/l10n/app_localizations.dart';
+import 'package:quranku/l10n/l10n.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../services/audio_service.dart';
+import '../services/update_service.dart';
 
 class AboutScreen extends StatefulWidget {
   const AboutScreen({super.key});
@@ -15,27 +14,25 @@ class AboutScreen extends StatefulWidget {
 
 class _AboutScreenState extends State<AboutScreen> {
   final AudioService _audioService = AudioService();
-  final String _appVersion = "1.0.0";
+  final UpdateService _updates = UpdateService();
 
-  static const String _developerName = 'Rafi Gibran';
+  static const String _developerName = 'QuranKu Community';
   static const String _githubProfile = 'https://github.com/Rafigibran';
   static const String _repository = 'https://github.com/Rafigibran/QuranKu';
   static const String _issues = 'https://github.com/Rafigibran/QuranKu/issues';
-  static const String _donationUrl = 'https://saweria.co/rafdev';
-  static const String _latestReleaseApi =
-      'https://api.github.com/repos/Rafigibran/QuranKu/releases/latest';
-
-  bool _checkingUpdate = false;
 
   @override
   void initState() {
     super.initState();
     _audioService.addListener(_onAudioChanged);
+    _updates.addListener(_onAudioChanged);
+    _updates.loadInstalled();
   }
 
   @override
   void dispose() {
     _audioService.removeListener(_onAudioChanged);
+    _updates.removeListener(_onAudioChanged);
     super.dispose();
   }
 
@@ -54,123 +51,41 @@ class _AboutScreenState extends State<AboutScreen> {
     }
   }
 
-  int _versionPart(String version, int index) {
-    final cleaned = version.replaceFirst(RegExp(r'^[vV]'), '');
-    final parts = cleaned.split(RegExp(r'[-+.]'));
-    if (index >= parts.length) return 0;
-    return int.tryParse(parts[index]) ?? 0;
-  }
-
-  bool _isNewerVersion(String latest, String current) {
-    for (var i = 0; i < 3; i++) {
-      final latestPart = _versionPart(latest, i);
-      final currentPart = _versionPart(current, i);
-      if (latestPart != currentPart) return latestPart > currentPart;
-    }
-    return false;
-  }
-
   Future<void> _checkForUpdates() async {
-    if (_checkingUpdate) return;
-    setState(() => _checkingUpdate = true);
-
-    try {
-      final response = await http.get(
-        Uri.parse(_latestReleaseApi),
-        headers: const {
-          'Accept': 'application/vnd.github+json',
-        },
-      ).timeout(const Duration(seconds: 10));
-
-      if (!mounted) return;
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body) as Map<String, dynamic>;
-        final latestTag = (data['tag_name'] ?? '').toString();
-        final releaseName = (data['name'] ?? latestTag).toString();
-        final releaseUrl = (data['html_url'] ?? _repository).toString();
-
-        if (latestTag.isNotEmpty && _isNewerVersion(latestTag, _appVersion)) {
-          await _showUpdateDialog(releaseName, latestTag, releaseUrl);
-        } else {
-          _showMessage('QuranKu sudah menggunakan versi terbaru (v$_appVersion).');
-        }
-      } else if (response.statusCode == 404) {
-        _showMessage('Belum ada release terbaru di GitHub.');
-      } else {
-        _showMessage('Tidak dapat memeriksa update saat ini.');
-      }
-    } catch (e) {
-      if (mounted) {
-        _showMessage('Gagal memeriksa update. Periksa koneksi internet.');
-      }
-      debugPrint('Update check error: $e');
-    } finally {
-      if (mounted) setState(() => _checkingUpdate = false);
+    final ok = await _updates.checkLatest();
+    if (!mounted) return;
+    if (!ok) {
+      _showMessage(_updates.error ?? context.l10n.aboutUpdateFailed);
+      return;
+    }
+    if (!_updates.updateAvailable) {
+      final v = _updates.installedVersion;
+      _showMessage(
+        v.isEmpty
+            ? context.l10n.aboutNoUpdate
+            : context.l10n.aboutLatestVersion(v),
+      );
     }
   }
 
-  Future<void> _showUpdateDialog(
-    String releaseName,
-    String latestTag,
-    String releaseUrl,
-  ) async {
-    await showDialog<void>(
-      context: context,
-      builder: (dialogContext) {
-        final colors = Theme.of(dialogContext).colorScheme;
-        return AlertDialog(
-          backgroundColor: Theme.of(dialogContext).cardColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-            side: BorderSide(color: colors.outline),
-          ),
-          title: Text(
-            'Update tersedia',
-            style: GoogleFonts.spaceGrotesk(
-              color: colors.onSurface,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          content: Text(
-            '$releaseName ($latestTag) tersedia di GitHub.',
-            style: GoogleFonts.spaceGrotesk(
-              color: colors.onSurface.withValues(alpha: 0.7),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext),
-              child: Text(
-                'Nanti',
-                style: GoogleFonts.spaceGrotesk(color: colors.onSurface),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                Navigator.pop(dialogContext);
-                await _launchUrl(releaseUrl);
-              },
-              child: Text(
-                'Update',
-                style: GoogleFonts.spaceGrotesk(fontWeight: FontWeight.bold),
-              ),
-            ),
-          ],
-        );
-      },
-    );
+  Future<void> _downloadAndInstall() async {
+    final ok = await _updates.downloadAndInstall();
+    if (!mounted) return;
+    if (!ok && _updates.error != null) {
+      _showMessage(_updates.error!);
+    }
   }
 
   void _showMessage(String message) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
@@ -180,17 +95,17 @@ class _AboutScreenState extends State<AboutScreen> {
           text: TextSpan(
             children: [
               TextSpan(
-                text: 'ABOUT',
-                style: GoogleFonts.spaceGrotesk(
+                text: l.aboutTitle,
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 24,
                   color: colorScheme.onSurface,
-                  letterSpacing: -1,
+                  letterSpacing: -0.4,
                 ),
               ),
               TextSpan(
                 text: '.',
-                style: GoogleFonts.spaceGrotesk(
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 24,
                   color: colorScheme.primary,
@@ -222,8 +137,8 @@ class _AboutScreenState extends State<AboutScreen> {
               ),
             ),
             Text(
-              'About Developer',
-              style: GoogleFonts.spaceGrotesk(
+              l.aboutTitle,
+              style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 color: colorScheme.onSurface,
@@ -232,19 +147,21 @@ class _AboutScreenState extends State<AboutScreen> {
             const SizedBox(height: 24),
             _buildAboutInfoItem(
               context,
-              'Developer',
+              l.aboutDeveloper,
               _developerName,
-              Icons.person_outline,
+              Icons.groups_outlined,
             ),
             _buildAboutInfoItem(
               context,
-              'App Version',
-              'v$_appVersion',
+              l.aboutVersion,
+              _updates.installedVersion.isEmpty
+                  ? '…'
+                  : 'v${_updates.installedVersion}',
               Icons.info_outline,
             ),
             _buildAboutInfoItem(
               context,
-              'GitHub',
+              l.aboutGithub,
               'github.com/Rafigibran',
               Icons.code,
               isLink: true,
@@ -252,7 +169,7 @@ class _AboutScreenState extends State<AboutScreen> {
             ),
             _buildAboutInfoItem(
               context,
-              'Repository',
+              l.aboutRepository,
               _repository,
               Icons.source_outlined,
               isLink: true,
@@ -260,8 +177,8 @@ class _AboutScreenState extends State<AboutScreen> {
 
             const SizedBox(height: 24),
             Text(
-              'Attribution',
-              style: GoogleFonts.spaceGrotesk(
+              l.aboutSupport,
+              style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: colorScheme.onSurface,
@@ -270,7 +187,7 @@ class _AboutScreenState extends State<AboutScreen> {
             const SizedBox(height: 12),
             _buildAboutInfoItem(
               context,
-              'Prayer Times Source',
+              context.l10n.aboutPrayerSource,
               'Equran.id',
               Icons.api,
               isLink: true,
@@ -279,41 +196,21 @@ class _AboutScreenState extends State<AboutScreen> {
 
             const SizedBox(height: 24),
             Text(
-              'Support',
-              style: GoogleFonts.spaceGrotesk(
+              l.aboutCheckUpdate,
+              style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: () => _launchUrl(_donationUrl),
-                icon: const Icon(Icons.favorite, color: Colors.black),
-                label: Text(
-                  'Donate to Developer',
-                  style: GoogleFonts.spaceGrotesk(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: colorScheme.primary,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
+            if (_updates.updateAvailable && _updates.latest != null)
+              _buildUpdateCard(context, colorScheme),
             SizedBox(
               width: double.infinity,
               child: OutlinedButton.icon(
-                onPressed: _checkingUpdate ? null : _checkForUpdates,
-                icon: _checkingUpdate
+                onPressed: _updates.busy ? null : _checkForUpdates,
+                icon: _updates.busy
                     ? const SizedBox(
                         width: 18,
                         height: 18,
@@ -324,8 +221,10 @@ class _AboutScreenState extends State<AboutScreen> {
                         color: colorScheme.onSurface,
                       ),
                 label: Text(
-                  _checkingUpdate ? 'Checking for Updates...' : 'Check for Updates',
-                  style: GoogleFonts.spaceGrotesk(
+                  _updates.busy
+                      ? 'Working…'
+                      : l.aboutCheckUpdate,
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: colorScheme.onSurface,
                   ),
@@ -349,8 +248,8 @@ class _AboutScreenState extends State<AboutScreen> {
                   color: colorScheme.onSurface,
                 ),
                 label: Text(
-                  'Report Issue',
-                  style: GoogleFonts.spaceGrotesk(
+                  l.aboutReportIssue,
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: colorScheme.onSurface,
                   ),
@@ -365,10 +264,82 @@ class _AboutScreenState extends State<AboutScreen> {
               ),
             ),
             const SizedBox(height: 24),
-            if (_audioService.currentSurah != null)
-              const SizedBox(height: 80),
+            if (_audioService.currentSurah != null) const SizedBox(height: 80),
           ],
         ),
+      ),
+    );
+  }
+
+  /// Update card with release notes, download progress, and install.
+  Widget _buildUpdateCard(BuildContext context, ColorScheme colorScheme) {
+    final release = _updates.latest!;
+    final downloading =
+        _updates.busy && _updates.downloadProgress > 0;
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: colorScheme.primary.withValues(alpha: .08),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: colorScheme.primary.withValues(alpha: .30),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.system_update_rounded,
+                color: colorScheme.primary,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  'Update ${release.tag} ready',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 15,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          if (release.body.trim().isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Text(
+              release.body.trim().split('\n').take(6).join('\n'),
+              maxLines: 6,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ],
+          const SizedBox(height: 12),
+          if (downloading) ...[
+            LinearProgressIndicator(
+              value: _updates.downloadProgress,
+              color: colorScheme.primary,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              context.l10n.aboutDownloading((_updates.downloadProgress * 100).round()),
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ] else
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                onPressed: _updates.busy ? null : _downloadAndInstall,
+                icon: const Icon(Icons.download_rounded, size: 18),
+                label: Text(context.l10n.aboutDownloadInstall),
+                style: FilledButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
@@ -407,9 +378,7 @@ class _AboutScreenState extends State<AboutScreen> {
                   ),
                   child: Icon(
                     icon,
-                    color: isLink
-                        ? colorScheme.primary
-                        : colorScheme.onSurface,
+                    color: isLink ? colorScheme.primary : colorScheme.onSurface,
                     size: 20,
                   ),
                 ),
@@ -420,15 +389,15 @@ class _AboutScreenState extends State<AboutScreen> {
                     children: [
                       Text(
                         label,
-                        style: GoogleFonts.spaceGrotesk(
-                          color: colorScheme.onSurface.withValues(alpha: 0.5),
+                        style: TextStyle(
+                          color: colorScheme.onSurface.withValues(alpha: 0.72),
                           fontSize: 12,
                         ),
                       ),
                       const SizedBox(height: 2),
                       Text(
                         value,
-                        style: GoogleFonts.spaceGrotesk(
+                        style: TextStyle(
                           color: isLink
                               ? colorScheme.primary
                               : colorScheme.onSurface,
