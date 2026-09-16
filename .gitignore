@@ -62,6 +62,10 @@ assets/rain_loop.mp3
 # Local agent tooling. Holds per-machine permissions and learned preferences.
 .commandcode/
 
-# Design review captures. These are scratch files from the review tool.
-# The screenshots that belong to the project live in docs/screenshot/.
-.impeccable/review/
+# Local process artifacts. These files record the work of one session. They are
+# not part of the product, and they go stale.
+changelog.md
+anti-slop/
+
+# Local design-tool files. Project screenshots live in docs/screenshot/.
+.impeccable/
