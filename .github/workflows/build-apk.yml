@@ -152,8 +152,9 @@ jobs:
           grep -n "_appVersion" lib/screens/about_screen.dart
           grep -n "v3.0" lib/screens/settings_screen.dart
 
-      - name: Build signed release APK
+      - name: Build release APK for explicit signing
         env:
+          MANUAL_APK_SIGNING: 'true'
           ANDROID_KEYSTORE_PATH: ${{ github.workspace }}/android/app/quranku-release.jks
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
@@ -166,6 +167,103 @@ jobs:
             --release \
             --build-name "3.0.${{ github.run_number }}" \
             --build-number "${{ github.run_number }}"
+
+      - name: Explicitly sign APK with v1/v2/v3
+        env:
+          ANDROID_KEYSTORE_PATH: ${{ github.workspace }}/android/app/quranku-release.jks
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          APKSIGNER_STORE_PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          APKSIGNER_KEY_PASS: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK="build/app/outputs/flutter-apk/app-release.apk"
+          ALIGNED="build/app/outputs/flutter-apk/app-release-aligned.apk"
+          SIGNED="build/app/outputs/flutter-apk/app-release-signed.apk"
+          BUILD_TOOLS_DIR="$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -n 1)"
+
+          test -s "$APK"
+          test -s "$ANDROID_KEYSTORE_PATH"
+
+          echo "== Re-align APK for Android 16 KB =="
+          "$BUILD_TOOLS_DIR/zipalign" -f -P 16 4 "$APK" "$ALIGNED"
+
+          echo "== Sign with explicit v1/v2/v3 =="
+          "$BUILD_TOOLS_DIR/apksigner" sign \
+            --ks "$ANDROID_KEYSTORE_PATH" \
+            --ks-key-alias "$ANDROID_KEY_ALIAS" \
+            --ks-pass env:APKSIGNER_STORE_PASS \
+            --key-pass env:APKSIGNER_KEY_PASS \
+            --min-sdk-version 21 \
+            --v1-signing-enabled true \
+            --v2-signing-enabled true \
+            --v3-signing-enabled true \
+            --v4-signing-enabled false \
+            --out "$SIGNED" \
+            "$ALIGNED"
+
+          mv "$SIGNED" "$APK"
+          rm -f "$ALIGNED"
+
+          "$BUILD_TOOLS_DIR/apksigner" verify --verbose --print-certs "$APK"
+
+      - name: Verify APK integrity and Android 16 KB packaging
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK="build/app/outputs/flutter-apk/app-release.apk"
+          BUILD_TOOLS_DIR="$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -n 1)"
+          test -s "$APK"
+
+          echo "== ZIP integrity =="
+          unzip -t "$APK" >/dev/null
+
+          echo "== APK signature =="
+          "$BUILD_TOOLS_DIR/apksigner" verify --verbose "$APK"
+
+          echo "== APK 16 KB ZIP alignment =="
+          "$BUILD_TOOLS_DIR/zipalign" -v -c -P 16 4 "$APK"
+
+          echo "== Native library packaging =="
+          python3 - <<'PY'
+          import struct
+          import zipfile
+          from pathlib import Path
+
+          apk = Path("build/app/outputs/flutter-apk/app-release.apk")
+          with zipfile.ZipFile(apk) as zf:
+              names = zf.namelist()
+              bad_datastore = [name for name in names if name.endswith("libdatastore_shared_counter.so")]
+              if bad_datastore:
+                  raise SystemExit("DataStore native counter library found in APK:\n" + "\n".join(bad_datastore))
+
+              libs = [i for i in zf.infolist() if i.filename.endswith(".so")]
+              if not libs:
+                  raise SystemExit("No native .so libraries found in APK")
+
+              stored = [i.filename for i in libs if i.compress_type == zipfile.ZIP_STORED]
+              if stored:
+                  raise SystemExit("Found uncompressed native libraries:\n" + "\n".join(stored))
+
+              resource = zf.getinfo("resources.arsc")
+              if resource.compress_type != zipfile.ZIP_STORED:
+                  raise SystemExit("resources.arsc must be uncompressed (STORED)")
+
+              with apk.open("rb") as f:
+                  f.seek(resource.header_offset)
+                  header = f.read(30)
+                  _, _, _, _, _, _, _, _, _, filename_len, extra_len = struct.unpack("<IHHHHHIIIHH", header)
+                  data_offset = resource.header_offset + 30 + filename_len + extra_len
+
+              if data_offset % 4 != 0:
+                  raise SystemExit(f"resources.arsc data offset {data_offset} is not 4-byte aligned.")
+
+              print(f"resources.arsc: STORED, data offset {data_offset}")
+          PY
+
+          echo "APK verification passed."
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
