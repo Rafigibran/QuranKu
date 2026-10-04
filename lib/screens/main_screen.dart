@@ -4,10 +4,10 @@ import 'prayer_times_screen.dart';
 import 'murotal_screen.dart';
 import 'playlist_screen.dart';
 import 'settings_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../services/audio_service.dart';
 import '../widgets/mini_player.dart';
 import '../widgets/full_player_view.dart';
-import '../widgets/liquid_glass.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -20,7 +20,6 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
   bool _showFullPlayer = false;
   final AudioService _audioService = AudioService();
-
   late final List<Widget?> _screens = List<Widget?>.filled(5, null);
 
   @override
@@ -39,7 +38,6 @@ class _MainScreenState extends State<MainScreen> {
   Widget _screenForIndex(int index) {
     final existing = _screens[index];
     if (existing != null) return existing;
-
     switch (index) {
       case 0:
         _screens[index] = const SurahListScreen();
@@ -66,6 +64,64 @@ class _MainScreenState extends State<MainScreen> {
     if (mounted) setState(() {});
   }
 
+  Widget _bottomItem(int index, IconData icon, String label) {
+    final selected = _selectedIndex == index;
+    return Semantics(
+      button: true,
+      selected: selected,
+      label: label,
+      child: InkWell(
+        onTap: () => _onItemTapped(index),
+        borderRadius: BorderRadius.circular(18),
+        child: Center(
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 160),
+            curve: Curves.easeOut,
+            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 7),
+            decoration: BoxDecoration(
+              color: selected
+                  ? Colors.white.withValues(alpha: .14)
+                  : Colors.transparent,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  icon,
+                  color: selected
+                      ? Colors.white
+                      : Colors.white.withValues(alpha: .62),
+                  size: selected ? 23 : 21,
+                ),
+                const SizedBox(height: 3),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 3),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      label,
+                      maxLines: 1,
+                      softWrap: false,
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.spaceGrotesk(
+                        color: selected
+                            ? Colors.white
+                            : Colors.white.withValues(alpha: .62),
+                        fontSize: 10.5,
+                        fontWeight: selected ? FontWeight.w700 : FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   void _onItemTapped(int index) {
     _screenForIndex(index);
     setState(() {
@@ -81,19 +137,12 @@ class _MainScreenState extends State<MainScreen> {
       setState(() => _showFullPlayer = false);
       return false;
     }
-
     final now = DateTime.now();
     if (_currentBackPressTime == null ||
         now.difference(_currentBackPressTime!) > const Duration(seconds: 2)) {
       _currentBackPressTime = now;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Ketuk sekali lagi untuk keluar'),
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0.92),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-          elevation: 8,
-        ),
+        const SnackBar(content: Text('Ketuk sekali lagi untuk keluar')),
       );
       return false;
     }
@@ -112,8 +161,7 @@ class _MainScreenState extends State<MainScreen> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        backgroundColor: Colors.transparent,
-        extendBody: true,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Stack(
           children: [
             IndexedStack(index: _selectedIndex, children: children),
@@ -121,7 +169,7 @@ class _MainScreenState extends State<MainScreen> {
               Positioned(
                 left: 16,
                 right: 16,
-                bottom: 154,
+                bottom: 12,
                 child: SafeArea(
                   top: false,
                   bottom: false,
@@ -140,112 +188,38 @@ class _MainScreenState extends State<MainScreen> {
         ),
         bottomNavigationBar: _showFullPlayer
             ? null
-            : _buildReferenceNavigation(context),
-      ),
-    );
-  }
-
-  Widget _buildReferenceNavigation(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final selected = scheme.primary;
-    final unselected = isDark
-        ? Colors.white.withValues(alpha: 0.78)
-        : scheme.onSurface.withValues(alpha: 0.70);
-    final navigationTint = isDark
-        ? scheme.surface.withValues(alpha: 0.32)
-        : Colors.white.withValues(alpha: 0.84);
-    final navigationBorder = isDark
-        ? Colors.white.withValues(alpha: 0.12)
-        : scheme.outline.withValues(alpha: 0.60);
-
-    return SafeArea(
-      top: false,
-      minimum: const EdgeInsets.fromLTRB(18, 6, 18, 12),
-      child: LiquidGlassCard(
-        radius: 34,
-        blur: 28,
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-        tint: navigationTint,
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(28),
-            border: Border.all(color: navigationBorder),
-          ),
-          child: SizedBox(
-            height: 86,
-            child: Row(
-              children: [
-                _navItem(context, 0, Icons.home_rounded, 'Al-Quran', selected, unselected),
-                _navItem(context, 1, Icons.mosque_rounded, 'Jadwal', selected, unselected),
-                _navItem(context, 2, Icons.person_rounded, 'Murotal', selected, unselected),
-                _navItem(context, 3, Icons.queue_music_rounded, 'Playlist', selected, unselected),
-                _navItem(context, 4, Icons.settings_rounded, 'Pengaturan', selected, unselected),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _navItem(
-    BuildContext context,
-    int index,
-    IconData icon,
-    String label,
-    Color selected,
-    Color unselected,
-  ) {
-    final isSelected = _selectedIndex == index;
-
-    return Expanded(
-      child: Semantics(
-        button: true,
-        selected: isSelected,
-        label: label,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(28),
-          onTap: () => _onItemTapped(index),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 180),
-            curve: Curves.easeOutCubic,
-            margin: const EdgeInsets.symmetric(horizontal: 2),
-            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-            decoration: BoxDecoration(
-              color: isSelected ? selected.withValues(alpha: 0.18) : Colors.transparent,
-              borderRadius: BorderRadius.circular(28),
-              border: isSelected ? Border.all(color: selected.withValues(alpha: 0.20)) : null,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                AnimatedScale(
-                  duration: const Duration(milliseconds: 180),
-                  scale: isSelected ? 1.06 : 1.0,
-                  child: Icon(
-                    icon,
-                    size: isSelected ? 31 : 28,
-                    color: isSelected ? selected : unselected,
+            : BottomAppBar(
+                color: const Color(0xFF25364B),
+                surfaceTintColor: Colors.transparent,
+                elevation: 14,
+                shape: const CircularNotchedRectangle(),
+                notchMargin: 8,
+                padding: EdgeInsets.zero,
+                child: SizedBox(
+                  height: 72,
+                  child: Row(
+                    children: [
+                      Expanded(child: _bottomItem(0, Icons.home_rounded, 'Beranda')),
+                      Expanded(child: _bottomItem(1, Icons.access_time_rounded, 'Jadwal')),
+                      const SizedBox(width: 72),
+                      Expanded(child: _bottomItem(3, Icons.queue_music_rounded, 'Playlist')),
+                      Expanded(child: _bottomItem(4, Icons.tune_rounded, 'Pengaturan')),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 5),
-                Text(
-                  label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    fontSize: 10.5,
-                    height: 1,
-                    fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                    color: isSelected ? selected : unselected,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+              ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: _showFullPlayer
+            ? null
+            : FloatingActionButton(
+                heroTag: 'quran-nav',
+                onPressed: () => _onItemTapped(2),
+                backgroundColor: const Color(0xFFD4BE82),
+                foregroundColor: const Color(0xFF25364B),
+                elevation: 8,
+                shape: const CircleBorder(),
+                child: const Icon(Icons.menu_book_rounded, size: 29),
+              ),
       ),
     );
   }

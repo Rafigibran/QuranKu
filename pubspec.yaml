@@ -1,7 +1,7 @@
 name: quranku
 description: "QuranKu - Al-Quran, terjemahan, murotal, dan jadwal sholat."
 publish_to: 'none'
-version: 3.0.0+1
+version: 3.0.107+107
 
 environment:
   sdk: ^3.10.1
@@ -13,6 +13,9 @@ dependencies:
   cupertino_icons: ^1.0.8
   google_fonts: ^8.0.0
   http: ^1.6.0
+  # Keep the legacy SharedPreferences API and pre-DataStore Android backend.
+  # shared_preferences_android 2.3.0 introduced SharedPreferencesAsync;
+  # DataStore support arrived later in 2.4.0 and adds libdatastore_shared_counter.so.
   shared_preferences: 2.2.3
   shared_preferences_android: 2.2.4
   scrollable_positioned_list: ^0.3.8
@@ -25,6 +28,9 @@ dependencies:
   dio: ^5.9.1
   path_provider: ^2.1.5
   home_widget: ^0.9.4
+  file_picker: ^13.0.0
+  geolocator: ^14.0.2
+  sensors_plus: ^6.1.2
 
 dev_dependencies:
   flutter_test:
@@ -47,3 +53,4 @@ flutter:
     - assets/loc_indonesian.json
     - assets/surah_list.json
     - assets/splash.png
+    - assets/rain_loop.mp3

@@ -1,22 +1,21 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
-/// Shared Liquid Glass primitives for QuranKu.
+/// Shared content surfaces for QuranKu.
 ///
-/// The effect is deliberately restrained: blur + a translucent surface + a
-/// subtle border. This keeps controls readable for older users while still
-/// giving the app a modern glass aesthetic.
+/// The widget keeps the existing API name for compatibility, but intentionally
+/// uses a quiet content-layer surface rather than blur-heavy glass. This keeps
+/// hierarchy clear and follows HIG guidance to reserve glass-like treatment
+/// for functional layers such as controls and navigation.
 class LiquidGlassCard extends StatelessWidget {
   const LiquidGlassCard({
     super.key,
     required this.child,
     this.padding,
     this.margin,
-    this.radius = 24,
+    this.radius = 20,
     this.onTap,
     this.tint,
-    this.blur = 16,
+    this.blur = 0,
   });
 
   final Widget child;
@@ -30,51 +29,35 @@ class LiquidGlassCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final base = tint ?? (isDark ? Colors.white : Colors.white);
-    final fill = base.withValues(alpha: isDark ? 0.07 : 0.60);
-    final border = Colors.white.withValues(alpha: isDark ? 0.12 : 0.72);
-    final shadow = Colors.black.withValues(alpha: isDark ? 0.20 : 0.06);
+    final surface = tint ?? scheme.surface;
+    final border = scheme.outline.withValues(alpha: .72);
 
-    Widget surface = ClipRRect(
-      borderRadius: BorderRadius.circular(radius),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: fill,
-            borderRadius: BorderRadius.circular(radius),
-            border: Border.all(color: border),
-            boxShadow: [
-              BoxShadow(
-                color: shadow,
-                blurRadius: 24,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
-          child: Padding(
-            padding: padding ?? EdgeInsets.zero,
-            child: child,
-          ),
-        ),
+    Widget surfaceWidget = DecoratedBox(
+      decoration: BoxDecoration(
+        color: surface,
+        borderRadius: BorderRadius.circular(radius),
+        border: Border.all(color: border),
+      ),
+      child: Padding(
+        padding: padding ?? EdgeInsets.zero,
+        child: child,
       ),
     );
 
     if (onTap != null) {
-      surface = Material(
+      surfaceWidget = Material(
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(radius),
           onTap: onTap,
-          splashColor: scheme.primary.withValues(alpha: 0.10),
-          highlightColor: scheme.primary.withValues(alpha: 0.05),
-          child: surface,
+          splashColor: scheme.primary.withValues(alpha: .08),
+          highlightColor: scheme.primary.withValues(alpha: .04),
+          child: surfaceWidget,
         ),
       );
     }
 
-    return Container(margin: margin, child: surface);
+    return Container(margin: margin, child: surfaceWidget);
   }
 }
 
@@ -90,11 +73,13 @@ class LiquidGlassPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LiquidGlassCard(
-      radius: 999,
-      padding: padding,
-      blur: 12,
-      child: child,
+    final scheme = Theme.of(context).colorScheme;
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: scheme.surfaceContainerHighest.withValues(alpha: .72),
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Padding(padding: padding, child: child),
     );
   }
 }
@@ -121,18 +106,24 @@ class LiquidGlassIconButton extends StatelessWidget {
       button: true,
       label: semanticLabel ?? tooltip,
       child: SizedBox(
-        width: 52,
-        height: 52,
-        child: LiquidGlassCard(
-          radius: 18,
-          padding: EdgeInsets.zero,
-          onTap: onPressed,
-          child: Icon(
-            icon,
-            size: 23,
-            color: enabled
-                ? scheme.onSurface
-                : scheme.onSurface.withValues(alpha: 0.35),
+        width: 48,
+        height: 48,
+        child: Material(
+          color: scheme.surfaceContainerHighest,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: BorderSide(color: scheme.outline.withValues(alpha: .72)),
+          ),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(16),
+            onTap: onPressed,
+            child: Icon(
+              icon,
+              size: 22,
+              color: enabled
+                  ? scheme.onSurface
+                  : scheme.onSurface.withValues(alpha: .35),
+            ),
           ),
         ),
       ),
@@ -154,7 +145,7 @@ class LiquidGlassSectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(4, 4, 4, 14),
+      padding: const EdgeInsets.fromLTRB(4, 4, 4, 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -162,15 +153,15 @@ class LiquidGlassSectionTitle extends StatelessWidget {
             title,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.w700,
-                  letterSpacing: -0.3,
+                  letterSpacing: -0.2,
                 ),
           ),
           if (subtitle != null) ...[
-            const SizedBox(height: 3),
+            const SizedBox(height: 4),
             Text(
               subtitle!,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: scheme.onSurface.withValues(alpha: 0.62),
+                    color: scheme.onSurfaceVariant,
                   ),
             ),
           ],

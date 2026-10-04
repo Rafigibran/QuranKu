@@ -9,6 +9,7 @@ import '../models/surah.dart';
 import '../services/api_service.dart';
 import '../services/murotal_download_service.dart';
 import '../services/widget_service.dart';
+import '../services/settings_service.dart';
 
 enum RepeatMode { none, autoNext, repeatOne }
 
@@ -31,6 +32,7 @@ class AudioService extends ChangeNotifier {
   int _lastAddedAyah = 0;
   bool _isPlaying = false;
   bool _isBuffering = false;
+  double _volume = 1.0;
 
   RepeatMode _repeatMode = RepeatMode.autoNext;
   SurahOrder _surahOrder = SurahOrder.ascending;
@@ -45,11 +47,36 @@ class AudioService extends ChangeNotifier {
   List<int> _customSurahSequence = [];
 
   ConcatenatingAudioSource? _playlist;
+  String get _reciterId => SettingsService().reciterId;
+
+  String _remoteAudioUrl(int surahNum, int ayahNum) {
+    final file = '${surahNum.toString().padLeft(3, '0')}${ayahNum.toString().padLeft(3, '0')}.mp3';
+    const everyAyahFolders = <String, String>{
+      'alafasy': 'Alafasy_128kbps',
+      'abdulbaset': 'Abdul_Basit_Murattal_192kbps',
+      'ghamdi': 'Ghamadi_40kbps',
+      'husary': 'Husary_128kbps',
+      'sudais': 'Abdurrahmaan_As-Sudais_192kbps',
+      'maher': 'MaherAlMuaiqly128kbps',
+      'minshawi': 'Minshawy_Murattal_128kbps',
+      'shuraim': 'Saood_ash-Shuraym_128kbps',
+    };
+
+    if (_reciterId == 'alafasy') {
+      final legacy = '${surahNum.toString().padLeft(3, '0')}-${ayahNum.toString().padLeft(3, '0')}.mp3';
+      return 'https://damarjati1323.github.io/audio/$legacy';
+    }
+
+    final folder = everyAyahFolders[_reciterId] ?? everyAyahFolders['alafasy']!;
+    return 'https://everyayah.com/data/$folder/$file';
+  }
+
 
   Surah? get currentSurah => _currentSurah;
   int get currentAyah => _currentAyah;
   bool get isPlaying => _isPlaying;
   bool get isBuffering => _isBuffering;
+  double get volume => _volume;
 
   RepeatMode get repeatMode => _repeatMode;
   SurahOrder get surahOrder => _surahOrder;
@@ -206,6 +233,7 @@ class AudioService extends ChangeNotifier {
     final dir = await getApplicationDocumentsDirectory();
     _localPath = '${dir.path}/audio';
     await Directory(_localPath!).create(recursive: true);
+    await _player.setVolume(_volume);
 
     _player.playerStateStream.listen((state) {
       _isPlaying = state.playing;
@@ -240,6 +268,12 @@ class AudioService extends ChangeNotifier {
     });
   }
 
+  Future<void> setVolume(double value) async {
+    _volume = value.clamp(0.0, 1.0).toDouble();
+    await _player.setVolume(_volume);
+    notifyListeners();
+  }
+
   Future<void> playAyah(Surah surah, int ayahNumber) async {
     final int opId = ++_loadingOperationId;
     _currentSurah = surah;
@@ -259,7 +293,7 @@ class AudioService extends ChangeNotifier {
         if (opId != _loadingOperationId) return;
         final uri = bismillahPath != null
             ? Uri.parse(bismillahPath)
-            : Uri.parse('https://damarjati1323.github.io/audio/001-001.mp3');
+            : Uri.parse(_remoteAudioUrl(1, 1));
         initialSources.add(AudioSource.uri(uri, tag: 0));
       }
 
@@ -267,7 +301,7 @@ class AudioService extends ChangeNotifier {
       if (opId != _loadingOperationId) return;
       final targetUri = targetPath != null
           ? Uri.parse(targetPath)
-          : Uri.parse('https://damarjati1323.github.io/audio/${surah.number.toString().padLeft(3, '0')}-${ayahNumber.toString().padLeft(3, '0')}.mp3');
+          : Uri.parse(_remoteAudioUrl(surah.number, ayahNumber));
       initialSources.add(AudioSource.uri(targetUri, tag: ayahNumber));
 
       _playlist = ConcatenatingAudioSource(children: initialSources);
@@ -450,7 +484,7 @@ class AudioService extends ChangeNotifier {
       if (opId != _loadingOperationId) return;
       final ayah1Uri = ayah1Path != null
           ? Uri.parse(ayah1Path)
-          : Uri.parse('https://damarjati1323.github.io/audio/${surah.number.toString().padLeft(3, '0')}-001.mp3');
+          : Uri.parse(_remoteAudioUrl(surah.number, 1));
       initialSources.add(AudioSource.uri(ayah1Uri, tag: 1));
 
       _playlist = ConcatenatingAudioSource(children: initialSources);
@@ -474,7 +508,7 @@ class AudioService extends ChangeNotifier {
     final path = await _getFileWithLock(surah.number, ayahNum, onlyCheck: true);
     if (path != null) return AudioSource.uri(Uri.parse(path), tag: ayahNum);
     final fileName = '${surah.number.toString().padLeft(3, '0')}-${ayahNum.toString().padLeft(3, '0')}.mp3';
-    return AudioSource.uri(Uri.parse('https://damarjati1323.github.io/audio/$fileName'), tag: ayahNum);
+    return AudioSource.uri(Uri.parse(_remoteAudioUrl(surah.number, ayahNum)), tag: ayahNum);
   }
 
   Future<void> pause() async => _player.pause();
@@ -514,6 +548,7 @@ class AudioService extends ChangeNotifier {
 
   Future<String?> _getFileWithLock(int surahNum, int ayahNum, {bool onlyCheck = false}) async {
     if (_localPath == null) await init();
+    if (_reciterId != 'alafasy') return null;
     final fileName = '${surahNum.toString().padLeft(3, '0')}-${ayahNum.toString().padLeft(3, '0')}.mp3';
     final lock = _downloadLocks.putIfAbsent(fileName, () => Lock());
     return lock.synchronized(() async {
@@ -525,7 +560,7 @@ class AudioService extends ChangeNotifier {
         await file.delete();
       }
       if (onlyCheck) return null;
-      final url = 'https://damarjati1323.github.io/audio/$fileName';
+      final url = _remoteAudioUrl(surahNum, ayahNum);
       final tempFile = '$localFilePath.tmp';
       try {
         await _dio.download(url, tempFile, options: Options(responseType: ResponseType.bytes));

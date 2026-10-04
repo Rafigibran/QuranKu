@@ -219,7 +219,8 @@ class _MurotalScreenState extends State<MurotalScreen> {
                   pinned: true,
                   elevation: 0,
                   scrolledUnderElevation: 0,
-                  backgroundColor: Colors.transparent,
+                  backgroundColor: scheme.surface,
+                  surfaceTintColor: Colors.transparent,
                   automaticallyImplyLeading: false,
                   toolbarHeight: 74,
                   titleSpacing: 20,
@@ -234,6 +235,10 @@ class _MurotalScreenState extends State<MurotalScreen> {
                     Padding(padding: const EdgeInsets.only(right: 6), child: LiquidGlassIconButton(icon: Icons.help_outline_rounded, onPressed: _openHelp, tooltip: 'Bantuan')),
                     Padding(padding: const EdgeInsets.only(right: 14), child: LiquidGlassIconButton(icon: Icons.download_outlined, onPressed: _openDownloads, tooltip: 'Unduhan')),
                   ],
+                  bottom: PreferredSize(
+                    preferredSize: const Size.fromHeight(1),
+                    child: Divider(height: 1, thickness: .7, color: scheme.outline.withValues(alpha: .65)),
+                  ),
                 ),
                 SliverToBoxAdapter(
                   child: Padding(

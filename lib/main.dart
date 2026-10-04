@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'screens/splash_screen.dart';
 import 'screens/main_screen.dart';
 import 'services/settings_service.dart';
+import 'services/surah_naming_service.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('id_ID', null);
   await SettingsService().init();
+  await SurahNamingService().init();
   runApp(const MyApp());
 }
 
@@ -19,16 +23,19 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final SettingsService _settings = SettingsService();
+  final SurahNamingService _naming = SurahNamingService();
 
   @override
   void initState() {
     super.initState();
     _settings.addListener(_onChanged);
+    _naming.addListener(_onChanged);
   }
 
   @override
   void dispose() {
     _settings.removeListener(_onChanged);
+    _naming.removeListener(_onChanged);
     super.dispose();
   }
 
@@ -37,137 +44,159 @@ class _MyAppState extends State<MyApp> {
   }
 
   ThemeData _buildTheme(Brightness brightness) {
-    final isDark = brightness == Brightness.dark;
-    const accent = Color(0xFF2E9D6B);
-    final surface = isDark ? const Color(0xFF121C18) : const Color(0xFFFFFFFF);
-    final onSurface = isDark ? Colors.white : const Color(0xFF18201C);
-    final outline = isDark ? const Color(0xFF293A33) : const Color(0xFFD8E4DF);
+    final dark = brightness == Brightness.dark;
+
+    // Terang: warm paper-like reading surface.
+    // Gelap: dark blue-grey that avoids pure black and pure white.
+    // Reference-inspired visual system: clean white reading surfaces,
+    // deep navy navigation/chrome, and restrained gold accents.
+    const lightBackground = Color(0xFFF5F6F8);
+    const lightSurface = Color(0xFFFFFFFF);
+    const lightText = Color(0xFF25364B);
+    const lightMuted = Color(0xFF6E7886);
+    const lightOutline = Color(0xFFDDE2E8);
+    const lightAccent = Color(0xFF25364B);
+
+    const darkBackground = Color(0xFF10161D);
+    const darkSurface = Color(0xFF182330);
+    const darkText = Color(0xFFE9EEF3);
+    const darkMuted = Color(0xFFABB5C0);
+    const darkOutline = Color(0xFF2C3948);
+    const darkAccent = Color(0xFFD2B66D);
+
+    final background = dark ? darkBackground : lightBackground;
+    final surface = dark ? darkSurface : lightSurface;
+    final onSurface = dark ? darkText : lightText;
+    final muted = dark ? darkMuted : lightMuted;
+    final outline = dark ? darkOutline : lightOutline;
+    final primary = dark ? darkAccent : lightAccent;
 
     final base = ThemeData(
       brightness: brightness,
       useMaterial3: true,
-      scaffoldBackgroundColor: Colors.transparent,
-      primaryColor: accent,
-      colorScheme: ColorScheme(
+      scaffoldBackgroundColor: background,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: primary,
         brightness: brightness,
-        primary: accent,
-        onPrimary: Colors.white,
-        secondary: const Color(0xFF67C99B),
-        onSecondary: Colors.white,
-        error: const Color(0xFFD85757),
-        onError: Colors.white,
+      ).copyWith(
+        primary: primary,
+        onPrimary: dark ? const Color(0xFF22231A) : Colors.white,
+        secondary: dark ? const Color(0xFFD2B66D) : const Color(0xFFB89A5C),
+        onSecondary: dark ? const Color(0xFF27251F) : Colors.white,
         surface: surface,
         onSurface: onSurface,
+        surfaceContainer: surface,
+        surfaceContainerHighest: dark ? const Color(0xFF292931) : const Color(0xFFF1E8D8),
+        onSurfaceVariant: muted,
         outline: outline,
+        error: const Color(0xFFB24A3E),
       ),
       cardTheme: CardThemeData(
-        color: Colors.white.withValues(alpha: isDark ? 0.05 : 0.58),
+        color: surface,
         elevation: 0,
         margin: EdgeInsets.zero,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(22),
-          side: BorderSide(color: Colors.white.withValues(alpha: isDark ? 0.10 : 0.70)),
-        ),
+        shape: const RoundedRectangleBorder(),
       ),
       appBarTheme: AppBarTheme(
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color(0xFF25364B),
+        foregroundColor: Colors.white,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: false,
         titleTextStyle: GoogleFonts.spaceGrotesk(
-          color: onSurface,
-          fontSize: 25,
-          fontWeight: FontWeight.w700,
-          letterSpacing: -0.6,
+          color: Colors.white,
+          fontSize: 27,
+          fontWeight: FontWeight.w600,
+          letterSpacing: -0.2,
         ),
         iconTheme: IconThemeData(color: onSurface, size: 24),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: Colors.white.withValues(alpha: isDark ? 0.06 : 0.58),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(18),
-          borderSide: BorderSide(color: outline),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(18),
-          borderSide: BorderSide(color: outline),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(color: accent, width: 1.6),
-        ),
-        hintStyle: GoogleFonts.spaceGrotesk(
-          color: onSurface.withValues(alpha: 0.50),
-          fontSize: 15,
+        fillColor: surface,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
+        border: UnderlineInputBorder(borderSide: BorderSide(color: outline)),
+        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: outline)),
+        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: primary, width: 1.6)),
+        hintStyle: GoogleFonts.ebGaramond(
+          color: muted,
+          fontSize: 17,
+          fontWeight: FontWeight.w400,
         ),
       ),
       listTileTheme: ListTileThemeData(
-        minVerticalPadding: 10,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 4),
-        iconColor: accent,
+        minVerticalPadding: 8,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
+        iconColor: primary,
         textColor: onSurface,
       ),
-      dividerTheme: DividerThemeData(
-        color: outline.withValues(alpha: 0.70),
-        thickness: 1,
-        space: 1,
+      dividerTheme: DividerThemeData(color: outline, thickness: 0.7, space: 0.7),
+      dialogTheme: DialogThemeData(
+        backgroundColor: surface,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          minimumSize: const Size(48, 52),
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-          elevation: 0,
-          backgroundColor: accent,
-          foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(17)),
-          textStyle: GoogleFonts.spaceGrotesk(
-            fontSize: 15,
-            fontWeight: FontWeight.w700,
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: surface,
+        surfaceTintColor: Colors.transparent,
+        modalBackgroundColor: surface,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        // Only sheets that explicitly opt in may show a handle.
+        showDragHandle: false,
+        dragHandleColor: outline,
+      ),
+      navigationBarTheme: NavigationBarThemeData(
+        height: 72,
+        backgroundColor: const Color(0xFF25364B),
+        surfaceTintColor: Colors.transparent,
+        indicatorColor: Colors.white.withValues(alpha: .14),
+        labelTextStyle: WidgetStatePropertyAll(
+          GoogleFonts.spaceGrotesk(
+            fontSize: 10.5,
+            fontWeight: FontWeight.w600,
+            letterSpacing: -0.15,
           ),
         ),
+        iconTheme: WidgetStateProperty.resolveWith((states) {
+          final selected = states.contains(WidgetState.selected);
+          return IconThemeData(
+            color: selected ? Colors.white : Colors.white.withValues(alpha: .62),
+            size: selected ? 23 : 21,
+          );
+        }),
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
       ),
-      outlinedButtonTheme: OutlinedButtonThemeData(
-        style: OutlinedButton.styleFrom(
-          minimumSize: const Size(48, 52),
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(17)),
-          side: BorderSide(color: outline),
-          textStyle: GoogleFonts.spaceGrotesk(
-            fontSize: 15,
-            fontWeight: FontWeight.w700,
-          ),
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+          minimumSize: const Size(48, 48),
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 11),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
+          textStyle: GoogleFonts.ebGaramond(fontSize: 17, fontWeight: FontWeight.w600),
         ),
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          minimumSize: const Size(48, 48),
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-          foregroundColor: accent,
+          minimumSize: const Size(48, 46),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          foregroundColor: primary,
+          textStyle: GoogleFonts.ebGaramond(fontSize: 16, fontWeight: FontWeight.w600),
         ),
+      ),
+      snackBarTheme: SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: surface,
+        contentTextStyle: GoogleFonts.ebGaramond(color: onSurface, fontSize: 16),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
       ),
     );
 
     return base.copyWith(
-      textTheme: GoogleFonts.spaceGroteskTextTheme(base.textTheme).apply(
+      textTheme: GoogleFonts.ebGaramondTextTheme(base.textTheme).apply(
         bodyColor: onSurface,
         displayColor: onSurface,
-      ),
-    );
-  }
-
-  BoxDecoration _ambientBackground(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: isDark
-            ? const [Color(0xFF0A1511), Color(0xFF101A16), Color(0xFF0A1110)]
-            : const [Color(0xFFF5FAF7), Color(0xFFEAF5EF), Color(0xFFF7F9F8)],
       ),
     );
   }
@@ -180,12 +209,6 @@ class _MyAppState extends State<MyApp> {
       themeMode: _settings.themeMode,
       theme: _buildTheme(Brightness.light),
       darkTheme: _buildTheme(Brightness.dark),
-      builder: (context, child) {
-        return DecoratedBox(
-          decoration: _ambientBackground(context),
-          child: child ?? const SizedBox.shrink(),
-        );
-      },
       home: const SplashScreen(nextScreen: MainScreen()),
     );
   }

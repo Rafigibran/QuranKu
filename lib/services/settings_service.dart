@@ -21,17 +21,37 @@ class SettingsService extends ChangeNotifier {
   String _defaultTranslation = 'id-indonesian';
   ThemeMode _themeMode = ThemeMode.dark;
   bool _useArabicNumerals = false;
+  String _scriptStyle = 'uthmani';
+  bool _showTransliteration = false;
+  String _reciterId = 'alafasy';
 
   // Getters
   String get defaultTranslation => _defaultTranslation;
   ThemeMode get themeMode => _themeMode;
   bool get useArabicNumerals => _useArabicNumerals;
+  String get scriptStyle => _scriptStyle;
+  bool get showTransliteration => _showTransliteration;
+  String get reciterId => _reciterId;
+
+  static const List<Map<String, String>> reciters = [
+    {'id': 'alafasy', 'name': 'Mishary Rashid Alafasy'},
+    {'id': 'abdulbaset', 'name': 'Abdul Basit Abdul Samad'},
+    {'id': 'ghamdi', 'name': 'Saad Al-Ghamdi'},
+    {'id': 'husary', 'name': 'Mahmoud Khalil Al-Husary'},
+    {'id': 'sudais', 'name': 'Abdul Rahman Al-Sudais'},
+    {'id': 'maher', 'name': 'Maher Al-Muaiqly'},
+    {'id': 'minshawi', 'name': 'Mohamed Siddiq Al-Minshawi'},
+    {'id': 'shuraim', 'name': 'Saud Al-Shuraim'},
+  ];
   bool get isInitialized => _isInitialized;
 
   // SharedPreferences keys
   static const String _keyDefaultTranslation = 'settings_default_translation';
   static const String _keyThemeMode = 'settings_theme_mode';
   static const String _keyUseArabicNumerals = 'settings_use_arabic_numerals';
+  static const String _keyScriptStyle = 'settings_script_style';
+  static const String _keyShowTransliteration = 'settings_show_transliteration';
+  static const String _keyReciterId = 'settings_reciter_id';
 
   /// Initialize and load saved settings
   Future<void> init() async {
@@ -50,6 +70,11 @@ class SettingsService extends ChangeNotifier {
     _themeMode = themeModeString == 'light' ? ThemeMode.light : ThemeMode.dark;
 
     _useArabicNumerals = prefs.getBool(_keyUseArabicNumerals) ?? false;
+    final savedScript = prefs.getString(_keyScriptStyle) ?? 'uthmani';
+    _scriptStyle = savedScript == 'indopak' ? 'indopak' : 'uthmani';
+    _showTransliteration = prefs.getBool(_keyShowTransliteration) ?? false;
+    final savedReciter = prefs.getString(_keyReciterId) ?? 'alafasy';
+    _reciterId = reciters.any((e) => e['id'] == savedReciter) ? savedReciter : 'alafasy';
 
     // Migration fix: English code changed from en-english to en-sahih
     if (_defaultTranslation == 'en-english') {
@@ -199,6 +224,32 @@ class SettingsService extends ChangeNotifier {
     _useArabicNumerals = value;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_keyUseArabicNumerals, value);
+    notifyListeners();
+  }
+
+  Future<void> setScriptStyle(String style) async {
+    final value = style == 'indopak' ? 'indopak' : 'uthmani';
+    if (_scriptStyle == value) return;
+    _scriptStyle = value;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_keyScriptStyle, value);
+    notifyListeners();
+  }
+
+  Future<void> setShowTransliteration(bool value) async {
+    if (_showTransliteration == value) return;
+    _showTransliteration = value;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_keyShowTransliteration, value);
+    notifyListeners();
+  }
+
+  Future<void> setReciter(String id) async {
+    if (!reciters.any((e) => e['id'] == id)) return;
+    if (_reciterId == id) return;
+    _reciterId = id;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_keyReciterId, id);
     notifyListeners();
   }
 

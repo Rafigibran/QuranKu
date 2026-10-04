@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/audio_service.dart' as as_audio;
@@ -7,7 +5,6 @@ import '../services/background_audio_service.dart';
 import '../services/settings_service.dart';
 import '../services/api_service.dart';
 import '../models/ayah.dart';
-import '../widgets/liquid_glass.dart';
 
 class FullPlayerView extends StatefulWidget {
   final VoidCallback onCollapse;
@@ -49,7 +46,12 @@ class _FullPlayerViewState extends State<FullPlayerView> {
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      useSafeArea: true,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      barrierColor: Colors.black.withValues(alpha: .38),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      ),
       builder: (context) => _GlassSheet(
         title: 'Suara latar',
         child: StatefulBuilder(
@@ -70,23 +72,15 @@ class _FullPlayerViewState extends State<FullPlayerView> {
                   activeTrackColor: scheme.primary.withValues(alpha: .45),
                   activeThumbColor: scheme.primary,
                 ),
-                const SizedBox(height: 10),
-                _volumeSlider(
-                  'Volume Al-Qur’an',
-                  _background.mainVolume,
-                  (v) async {
-                    await _background.setMainVolume(v);
-                    setSheetState(() {});
-                  },
-                ),
-                _volumeSlider(
-                  'Volume hujan',
-                  _background.backgroundVolume,
-                  (v) async {
-                    await _background.setBackgroundVolume(v);
-                    setSheetState(() {});
-                  },
-                ),
+                const SizedBox(height: 12),
+                _volumeSlider('Volume Al-Qur’an', _background.mainVolume, (v) async {
+                  await _background.setMainVolume(v);
+                  setSheetState(() {});
+                }),
+                _volumeSlider('Volume hujan', _background.backgroundVolume, (v) async {
+                  await _background.setBackgroundVolume(v);
+                  setSheetState(() {});
+                }),
               ],
             );
           },
@@ -98,7 +92,7 @@ class _FullPlayerViewState extends State<FullPlayerView> {
   Widget _volumeSlider(String label, double value, ValueChanged<double> onChanged) {
     final scheme = Theme.of(context).colorScheme;
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.only(bottom: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -109,7 +103,7 @@ class _FullPlayerViewState extends State<FullPlayerView> {
               Text('${(value * 100).round()}%', style: TextStyle(color: scheme.primary, fontWeight: FontWeight.w700)),
             ],
           ),
-          Slider(value: value, onChanged: onChanged),
+          Slider(value: value.clamp(0.0, 1.0), onChanged: onChanged),
         ],
       ),
     );
@@ -121,8 +115,13 @@ class _FullPlayerViewState extends State<FullPlayerView> {
     final scheme = Theme.of(context).colorScheme;
     await showModalBottomSheet<void>(
       context: context,
-      backgroundColor: Colors.transparent,
+      backgroundColor: scheme.surface,
+      barrierColor: Colors.black.withValues(alpha: .38),
       isScrollControlled: true,
+      useSafeArea: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      ),
       builder: (context) => FutureBuilder<List<Ayah>>(
         future: _api.fetchSurahDetails(surah.number, edition: _settings.defaultTranslation),
         builder: (context, snapshot) {
@@ -139,13 +138,32 @@ class _FullPlayerViewState extends State<FullPlayerView> {
             child: snapshot.connectionState == ConnectionState.waiting
                 ? Center(child: Padding(padding: const EdgeInsets.all(30), child: CircularProgressIndicator(color: scheme.primary)))
                 : current == null
-                    ? const Text('Ayat belum tersedia.')
+                    ? const Padding(padding: EdgeInsets.only(bottom: 8), child: Text('Ayat belum tersedia.'))
                     : Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Text(current.arabic, textAlign: TextAlign.right, style: GoogleFonts.amiri(fontSize: 27, height: 2.0)),
-                          const SizedBox(height: 18),
-                          Text(current.translation, style: Theme.of(context).textTheme.bodyLarge?.copyWith(height: 1.55, color: scheme.onSurface.withValues(alpha: .72))),
+                          Container(
+                            padding: const EdgeInsets.fromLTRB(16, 18, 16, 16),
+                            decoration: BoxDecoration(
+                              color: scheme.primary.withValues(alpha: .055),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(color: scheme.outline.withValues(alpha: .45)),
+                            ),
+                            child: Text(
+                              current.arabic,
+                              textAlign: TextAlign.right,
+                              style: GoogleFonts.amiri(fontSize: 29, height: 2.0, color: scheme.onSurface),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            current.translation,
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                  height: 1.55,
+                                  color: scheme.onSurface.withValues(alpha: .78),
+                                ),
+                          ),
+                          const SizedBox(height: 8),
                         ],
                       ),
           );
@@ -185,22 +203,16 @@ class _FullPlayerViewState extends State<FullPlayerView> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      LiquidGlassIconButton(
-                        icon: Icons.keyboard_arrow_down_rounded,
-                        onPressed: widget.onCollapse,
-                        tooltip: 'Tutup',
-                      ),
-                      LiquidGlassIconButton(
-                        icon: _background.enabled
-                            ? Icons.water_drop_rounded
-                            : Icons.water_drop_outlined,
+                      _PlayerIconButton(icon: Icons.keyboard_arrow_down_rounded, onPressed: widget.onCollapse, tooltip: 'Tutup'),
+                      _PlayerIconButton(
+                        icon: _background.enabled ? Icons.water_drop_rounded : Icons.water_drop_outlined,
                         onPressed: _openBackgroundSound,
                         tooltip: 'Suara latar',
                       ),
                     ],
                   ),
                   const Spacer(flex: 2),
-                  _Artwork(),
+                  const _Artwork(),
                   const SizedBox(height: 26),
                   Row(
                     children: [
@@ -208,13 +220,21 @@ class _FullPlayerViewState extends State<FullPlayerView> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(surah.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800, color: Colors.white)),
+                            Text(
+                              surah.name,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800, color: Colors.white),
+                            ),
                             const SizedBox(height: 5),
-                            Text('Ayat ${_settings.formatNumber(_audio.currentAyah)}  •  Murotal QuranKu', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white.withValues(alpha: .68))),
+                            Text(
+                              'Ayat ${_settings.formatNumber(_audio.currentAyah)}  •  Murotal QuranKu',
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white.withValues(alpha: .68)),
+                            ),
                           ],
                         ),
                       ),
-                      LiquidGlassIconButton(icon: Icons.menu_book_rounded, onPressed: _openCurrentAyah, tooltip: 'Lihat ayat'),
+                      _PlayerIconButton(icon: Icons.menu_book_rounded, onPressed: _openCurrentAyah, tooltip: 'Lihat ayat'),
                     ],
                   ),
                   const SizedBox(height: 18),
@@ -231,7 +251,14 @@ class _FullPlayerViewState extends State<FullPlayerView> {
                           return Column(
                             children: [
                               SliderTheme(
-                                data: SliderTheme.of(context).copyWith(trackHeight: 4, thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6), overlayShape: const RoundSliderOverlayShape(overlayRadius: 16), activeTrackColor: Colors.white, inactiveTrackColor: Colors.white.withValues(alpha: .22), thumbColor: Colors.white),
+                                data: SliderTheme.of(context).copyWith(
+                                  trackHeight: 4,
+                                  thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
+                                  overlayShape: const RoundSliderOverlayShape(overlayRadius: 16),
+                                  activeTrackColor: Colors.white,
+                                  inactiveTrackColor: Colors.white.withValues(alpha: .22),
+                                  thumbColor: Colors.white,
+                                ),
                                 child: Slider(
                                   min: 0,
                                   max: max,
@@ -285,7 +312,6 @@ class _FullPlayerViewState extends State<FullPlayerView> {
   IconData _repeatIcon() {
     switch (_audio.repeatMode) {
       case as_audio.RepeatMode.none:
-        return Icons.repeat_rounded;
       case as_audio.RepeatMode.autoNext:
         return Icons.repeat_rounded;
       case as_audio.RepeatMode.repeatOne:
@@ -345,7 +371,6 @@ class _PlayerBackdrop extends StatelessWidget {
               ),
             ),
           ),
-          BackdropFilter(filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12), child: Container(color: Colors.transparent)),
         ],
       ),
     );
@@ -353,6 +378,8 @@ class _PlayerBackdrop extends StatelessWidget {
 }
 
 class _Artwork extends StatelessWidget {
+  const _Artwork();
+
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
@@ -361,7 +388,11 @@ class _Artwork extends StatelessWidget {
       height: 230,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [scheme.primary.withValues(alpha: .92), const Color(0xFF0D3B35)]),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [scheme.primary.withValues(alpha: .92), const Color(0xFF0D3B35)],
+        ),
         boxShadow: const [BoxShadow(color: Color(0x5534B785), blurRadius: 42, spreadRadius: 4)],
         border: Border.all(color: Colors.white.withValues(alpha: .16), width: 1.4),
       ),
@@ -373,6 +404,39 @@ class _Artwork extends StatelessWidget {
             const SizedBox(height: 10),
             Text('QuranKu', style: GoogleFonts.spaceGrotesk(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 22)),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _PlayerIconButton extends StatelessWidget {
+  const _PlayerIconButton({required this.icon, required this.onPressed, this.tooltip});
+
+  final IconData icon;
+  final VoidCallback? onPressed;
+  final String? tooltip;
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: tooltip ?? '',
+      child: Material(
+        color: Colors.white.withValues(alpha: .62),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18),
+          side: BorderSide(color: Colors.white.withValues(alpha: .18)),
+        ),
+        child: InkWell(
+          onTap: onPressed,
+          borderRadius: BorderRadius.circular(18),
+          child: SizedBox(
+            width: 52,
+            height: 52,
+            child: Center(
+              child: Icon(icon, color: const Color(0xFF27241F), size: 23),
+            ),
+          ),
         ),
       ),
     );
@@ -415,7 +479,11 @@ class _PlayButton extends StatelessWidget {
       child: Container(
         width: 72,
         height: 72,
-        decoration: BoxDecoration(shape: BoxShape.circle, color: scheme.primary, boxShadow: const [BoxShadow(color: Color(0x4434B785), blurRadius: 22, spreadRadius: 2)]),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: scheme.primary,
+          boxShadow: const [BoxShadow(color: Color(0x4434B785), blurRadius: 22, spreadRadius: 2)],
+        ),
         child: Icon(playing ? Icons.pause_rounded : Icons.play_arrow_rounded, color: Colors.white, size: 38),
       ),
     );
@@ -461,22 +529,34 @@ class _GlassSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      child: LiquidGlassCard(
-        radius: 30,
-        margin: const EdgeInsets.fromLTRB(14, 0, 14, 14),
-        padding: const EdgeInsets.fromLTRB(22, 14, 22, 28),
-        blur: 26,
-        tint: Theme.of(context).colorScheme.surface.withValues(alpha: .52),
+    final scheme = Theme.of(context).colorScheme;
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(22, 10, 22, 24),
+      decoration: BoxDecoration(
+        color: scheme.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+        border: Border(top: BorderSide(color: scheme.outline.withValues(alpha: .55))),
+      ),
+      child: SafeArea(
+        top: false,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(child: Container(width: 42, height: 4, decoration: BoxDecoration(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .25), borderRadius: BorderRadius.circular(99)))),
-            const SizedBox(height: 16),
-            Text(title, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800)),
-            const SizedBox(height: 12),
+            Center(
+              child: Container(
+                width: 42,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: scheme.onSurface.withValues(alpha: .22),
+                  borderRadius: BorderRadius.circular(99),
+                ),
+              ),
+            ),
+            const SizedBox(height: 18),
+            Text(title, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
+            const SizedBox(height: 14),
             child,
           ],
         ),

@@ -1,4 +1,4 @@
-package com.damarcreative.quran
+package com.rafdev.quranku
 
 import io.flutter.embedding.android.FlutterFragmentActivity
 

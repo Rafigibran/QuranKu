@@ -46,108 +46,19 @@ class _MiniPlayerState extends State<MiniPlayer> {
   Future<void> _openBackground() async {
     await showModalBottomSheet<void>(
       context: context,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      barrierColor: Colors.black.withValues(alpha: .34),
       isScrollControlled: true,
+      useSafeArea: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      ),
       builder: (context) => SafeArea(
         top: false,
-        child: LiquidGlassCard(
-          radius: 30,
-          margin: const EdgeInsets.fromLTRB(14, 0, 14, 14),
-          padding: const EdgeInsets.fromLTRB(22, 14, 22, 28),
-          blur: 26,
-          tint: Theme.of(context).colorScheme.surface.withValues(alpha: .52),
-          child: StatefulBuilder(
-            builder: (context, setSheetState) {
-              final scheme = Theme.of(context).colorScheme;
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Container(
-                      width: 42,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: scheme.onSurface.withValues(alpha: .25),
-                        borderRadius: BorderRadius.circular(99),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 18),
-                  Row(
-                    children: [
-                      Container(
-                        width: 44,
-                        height: 44,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: scheme.primary.withValues(alpha: .14),
-                        ),
-                        child: Icon(Icons.water_drop_rounded, color: scheme.primary),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Suara latar',
-                              style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
-                            ),
-                            Text(
-                              'Berjalan bersama audio Al-Qur’an.',
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: scheme.onSurface.withValues(alpha: .62),
-                                  ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Switch.adaptive(
-                        value: _background.enabled,
-                        onChanged: (value) async {
-                          await _background.setEnabled(value);
-                          setSheetState(() {});
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 18),
-                  _slider('Volume Al-Qur’an', _background.mainVolume, (value) async {
-                    await _background.setMainVolume(value);
-                    setSheetState(() {});
-                  }),
-                  _slider('Volume hujan', _background.backgroundVolume, (value) async {
-                    await _background.setBackgroundVolume(value);
-                    setSheetState(() {});
-                  }),
-                ],
-              );
-            },
-          ),
+        child: _BackgroundSheet(
+          background: _background,
         ),
       ),
-    );
-  }
-
-  Widget _slider(String title, double value, ValueChanged<double> onChanged) {
-    final scheme = Theme.of(context).colorScheme;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(title, style: const TextStyle(fontWeight: FontWeight.w700)),
-            Text(
-              '${(value * 100).round()}%',
-              style: TextStyle(color: scheme.primary, fontWeight: FontWeight.w800),
-            ),
-          ],
-        ),
-        Slider(value: value.clamp(0.0, 1.0), onChanged: onChanged),
-        const SizedBox(height: 4),
-      ],
     );
   }
 
@@ -304,6 +215,133 @@ class _MiniPlayerState extends State<MiniPlayer> {
             child: Center(child: Icon(icon, color: color, size: 26)),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _BackgroundSheet extends StatefulWidget {
+  const _BackgroundSheet({required this.background});
+
+  final BackgroundAudioService background;
+
+  @override
+  State<_BackgroundSheet> createState() => _BackgroundSheetState();
+}
+
+class _BackgroundSheetState extends State<_BackgroundSheet> {
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(22, 10, 22, 24),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Container(
+              width: 42,
+              height: 4,
+              decoration: BoxDecoration(
+                color: scheme.onSurface.withValues(alpha: .20),
+                borderRadius: BorderRadius.circular(99),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: scheme.primary.withValues(alpha: .12),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(Icons.water_drop_rounded, color: scheme.primary, size: 25),
+              ),
+              const SizedBox(width: 13),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Suara latar',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Berjalan bersama audio Al-Qur’an',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: scheme.onSurfaceVariant,
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+              Switch.adaptive(
+                value: widget.background.enabled,
+                onChanged: (value) async {
+                  await widget.background.setEnabled(value);
+                  if (mounted) setState(() {});
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: 22),
+          _volumeRow(
+            context,
+            'Volume Al-Qur’an',
+            widget.background.mainVolume,
+            (value) async {
+              await widget.background.setMainVolume(value);
+              if (mounted) setState(() {});
+            },
+          ),
+          _volumeRow(
+            context,
+            'Volume hujan',
+            widget.background.backgroundVolume,
+            (value) async {
+              await widget.background.setBackgroundVolume(value);
+              if (mounted) setState(() {});
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _volumeRow(
+    BuildContext context,
+    String title,
+    double value,
+    ValueChanged<double> onChanged,
+  ) {
+    final scheme = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(title, style: const TextStyle(fontWeight: FontWeight.w700)),
+              Text(
+                '${(value * 100).round()}%',
+                style: TextStyle(color: scheme.primary, fontWeight: FontWeight.w800),
+              ),
+            ],
+          ),
+          Slider(
+            value: value.clamp(0.0, 1.0),
+            onChanged: onChanged,
+          ),
+        ],
       ),
     );
   }

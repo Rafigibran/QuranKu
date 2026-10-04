@@ -5,8 +5,7 @@ plugins {
 }
 
 android {
-    // Keep the existing Kotlin source package; the installed application ID is changed below.
-    namespace = "com.damarcreative.quran"
+    namespace = "com.rafdev.quranku"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -24,14 +23,15 @@ android {
         versionName = flutter.versionName
     }
 
-    // Store JNI libraries uncompressed so the APK can be 16 KB page-aligned.
     packagingOptions {
         jniLibs {
             useLegacyPackaging = true
         }
     }
 
-    // CI builds the APK unsigned, then signs the final aligned artifact with apksigner.
+    // GitHub Actions explicitly signs the release APK with apksigner so the
+    // final artifact gets deterministic v1/v2/v3 schemes. Local builds can
+    // still use the normal Gradle release signing configuration.
     val manualApkSigning = System.getenv("MANUAL_APK_SIGNING") == "true"
 
     signingConfigs {
@@ -87,4 +87,13 @@ flutter {
 
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+}
+
+val patchQuranKuUi by tasks.registering(Exec::class) {
+    workingDir(rootProject.projectDir.parentFile)
+    commandLine("python3", "scripts/patch_ui_indonesian.py")
+}
+
+tasks.named("preBuild").configure {
+    dependsOn(patchQuranKuUi)
 }

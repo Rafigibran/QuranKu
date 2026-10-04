@@ -1,16 +1,13 @@
-import 'dart:io';
-import 'dart:typed_data';
+import 'dart:async';
 
-import 'package:flutter/services.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:synchronized/synchronized.dart';
 
 import 'audio_service.dart';
 
-/// Controls an ambient background track that follows Quran playback.
-/// The build workflow installs the bundled rain_loop.mp3 asset before compiling.
+/// Manages optional rain ambience independently from Quran playback.
 class BackgroundAudioService extends ChangeNotifier {
   static final BackgroundAudioService _instance =
       BackgroundAudioService._internal();
@@ -22,124 +19,234 @@ class BackgroundAudioService extends ChangeNotifier {
   static const String _backgroundVolumeKey = 'background_audio_volume';
   static const String _mainVolumeKey = 'main_audio_volume';
 
-  final AudioPlayer _backgroundPlayer = AudioPlayer();
+  final AudioPlayer _backgroundPlayer = AudioPlayer(
+    handleInterruptions: false,
+    handleAudioSessionActivation: false,
+    androidApplyAudioAttributes: false,
+  );
   final AudioService _quranAudio = AudioService();
+  final Lock _transitionLock = Lock();
 
+  Future<void>? _initFuture;
   bool _initialized = false;
   bool _enabled = false;
-  double _backgroundVolume = 0.20;
+  double _backgroundVolume = 0.16;
   double _mainVolume = 1.0;
-  String? _rainPath;
+  bool _disposed = false;
+  int _intentVersion = 0;
+  bool _pendingEnableIntent = false;
+  bool? _lastQuranPlaying;
 
   bool get enabled => _enabled;
   double get backgroundVolume => _backgroundVolume;
   double get mainVolume => _mainVolume;
+  bool get isPlaying => _backgroundPlayer.playing;
 
-  Future<void> init() async {
-    if (_initialized) return;
-    _initialized = true;
+  Future<void> init() => _initFuture ??= _initialize();
+
+  Future<void> _initialize() async {
+    if (_initialized || _disposed) return;
 
     final prefs = await SharedPreferences.getInstance();
-    _enabled = prefs.getBool(_enabledKey) ?? false;
-    _backgroundVolume = prefs.getDouble(_backgroundVolumeKey) ?? 0.20;
-    _mainVolume = prefs.getDouble(_mainVolumeKey) ?? 1.0;
+    if (!_pendingEnableIntent) {
+      _enabled = prefs.getBool(_enabledKey) ?? false;
+    }
+    _backgroundVolume =
+        (prefs.getDouble(_backgroundVolumeKey) ?? 0.16)
+            .clamp(0.0, 1.0)
+            .toDouble();
+    _mainVolume =
+        (prefs.getDouble(_mainVolumeKey) ?? 1.0).clamp(0.0, 1.0).toDouble();
 
     await _backgroundPlayer.setVolume(_backgroundVolume);
     await _quranAudio.init();
     await _quranAudio.setVolume(_mainVolume);
     _quranAudio.addListener(_syncWithQuranPlayback);
+    _lastQuranPlaying = _quranAudio.isPlaying;
+
+    _initialized = true;
+    await _reconcileAmbient();
   }
 
   void _syncWithQuranPlayback() {
-    if (_enabled && _quranAudio.isPlaying) {
-      _startAmbient();
-    } else {
-      _pauseAmbient();
+    if (!_initialized || _disposed) return;
+
+    final playing = _quranAudio.isPlaying;
+    if (_lastQuranPlaying == playing) return;
+    _lastQuranPlaying = playing;
+
+    if (!playing) {
+      unawaited(_stopAmbientImmediately());
+      return;
     }
+
+    unawaited(_reconcileAmbient());
   }
 
-  Future<String?> _ensureRainFile() async {
-    if (_rainPath != null && await File(_rainPath!).exists()) return _rainPath;
-
+  Future<void> _stopAmbientImmediately() async {
+    if (_disposed) return;
     try {
-      final data = await rootBundle.load(_rainAsset);
-      final bytes = data.buffer.asUint8List();
-      final directory = await getApplicationSupportDirectory();
-      final file = File('${directory.path}/quranku_rain_loop.mp3');
-      if (!await file.exists() || await file.length() != bytes.length) {
-        await file.writeAsBytes(bytes, flush: true);
-      }
-      _rainPath = file.path;
-      return _rainPath;
-    } catch (e) {
-      debugPrint('Rain background audio is unavailable: $e');
-      return null;
+      await _backgroundPlayer.stop();
+    } catch (error) {
+      debugPrint('Unable to stop rain background: $error');
     }
   }
 
-  Future<void> _startAmbient() async {
-    if (!_enabled || !_quranAudio.isPlaying) return;
+  Future<void> _reconcileAmbient() async {
+    if (_disposed) return;
+    if (!_initialized) {
+      await init();
+      if (_disposed) return;
+    }
 
-    final path = await _ensureRainFile();
-    if (path == null) return;
+    final version = _intentVersion;
+    await _transitionLock.synchronized(() async {
+      await _reconcileAmbientLocked(version);
+    });
+  }
+
+  Future<void> _reconcileAmbientLocked(int version) async {
+    if (_disposed || version != _intentVersion) return;
+
+    final shouldPlay = _enabled && _quranAudio.isPlaying;
+    if (!shouldPlay) {
+      await _stopAmbientImmediately();
+      return;
+    }
 
     try {
       if (_backgroundPlayer.audioSource == null) {
-        await _backgroundPlayer.setAudioSource(AudioSource.uri(Uri.file(path)));
+        await _backgroundPlayer.setAudioSource(
+          AudioSource.asset(_rainAsset),
+          preload: true,
+        );
         await _backgroundPlayer.setLoopMode(LoopMode.one);
       }
+
       await _backgroundPlayer.setVolume(_backgroundVolume);
+
+      if (_disposed ||
+          version != _intentVersion ||
+          !_enabled ||
+          !_quranAudio.isPlaying) {
+        await _stopAmbientImmediately();
+        return;
+      }
+
       if (!_backgroundPlayer.playing) {
         await _backgroundPlayer.play();
       }
-    } catch (e) {
-      debugPrint('Unable to start rain background: $e');
-    }
-  }
-
-  Future<void> _pauseAmbient() async {
-    if (_backgroundPlayer.playing) {
-      await _backgroundPlayer.pause();
+    } catch (error, stackTrace) {
+      debugPrint('Unable to start rain background: $error');
+      debugPrintStack(stackTrace: stackTrace);
     }
   }
 
   Future<void> setEnabled(bool value) async {
-    _enabled = value;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_enabledKey, value);
+    if (_disposed) return;
 
-    if (value && _quranAudio.isPlaying) {
-      await _startAmbient();
-    } else if (!value) {
-      await _pauseAmbient();
-    }
+    final version = ++_intentVersion;
+    _pendingEnableIntent = true;
+    _enabled = value;
+
+    // Publish the user's intent synchronously. It never waits for the
+    // player, a lock, initialization, or SharedPreferences.
     notifyListeners();
+
+    if (!value) {
+      unawaited(_disableForVersion(version));
+      return;
+    }
+
+    unawaited(_enableForVersion(version));
+  }
+
+  Future<void> _disableForVersion(int version) async {
+    try {
+      await _backgroundPlayer.stop();
+
+      final prefs = await SharedPreferences.getInstance();
+      if (!_disposed && version == _intentVersion) {
+        await prefs.setBool(_enabledKey, false);
+      }
+    } catch (error, stackTrace) {
+      debugPrint('Unable to disable rain background: $error');
+      debugPrintStack(stackTrace: stackTrace);
+    } finally {
+      if (version == _intentVersion) {
+        _pendingEnableIntent = false;
+      }
+      if (!_disposed && version == _intentVersion) notifyListeners();
+    }
+  }
+
+  Future<void> _enableForVersion(int version) async {
+    try {
+      await init();
+      if (_disposed || version != _intentVersion || !_enabled) return;
+
+      await _transitionLock.synchronized(() async {
+        if (_disposed || version != _intentVersion || !_enabled) return;
+        await _reconcileAmbientLocked(version);
+      });
+
+      if (!_disposed && version == _intentVersion) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool(_enabledKey, true);
+      }
+    } catch (error, stackTrace) {
+      debugPrint('Unable to enable rain background: $error');
+      debugPrintStack(stackTrace: stackTrace);
+    } finally {
+      if (version == _intentVersion) {
+        _pendingEnableIntent = false;
+      }
+      if (!_disposed && version == _intentVersion) notifyListeners();
+    }
   }
 
   Future<void> setBackgroundVolume(double value) async {
-    _backgroundVolume = value.clamp(0.0, 1.0);
-    await _backgroundPlayer.setVolume(_backgroundVolume);
+    if (_disposed) return;
+
+    final next = value.clamp(0.0, 1.0).toDouble();
+    _backgroundVolume = next;
+    await _backgroundPlayer.setVolume(next);
+    if (!_disposed) notifyListeners();
+
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setDouble(_backgroundVolumeKey, _backgroundVolume);
-    notifyListeners();
+    if (!_disposed && _backgroundVolume == next) {
+      await prefs.setDouble(_backgroundVolumeKey, next);
+    }
   }
 
   Future<void> setMainVolume(double value) async {
-    _mainVolume = value.clamp(0.0, 1.0);
-    await _quranAudio.setVolume(_mainVolume);
+    if (_disposed) return;
+
+    final next = value.clamp(0.0, 1.0).toDouble();
+    _mainVolume = next;
+    await _quranAudio.setVolume(next);
+    if (!_disposed) notifyListeners();
+
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setDouble(_mainVolumeKey, _mainVolume);
-    notifyListeners();
+    if (!_disposed && _mainVolume == next) {
+      await prefs.setDouble(_mainVolumeKey, next);
+    }
   }
 
   Future<void> disposeService() async {
+    if (_disposed) return;
+    _disposed = true;
+    _intentVersion++;
     _quranAudio.removeListener(_syncWithQuranPlayback);
+    try {
+      await _backgroundPlayer.stop();
+    } catch (_) {}
     await _backgroundPlayer.dispose();
   }
 
   @override
   void dispose() {
-    disposeService();
+    unawaited(disposeService());
     super.dispose();
   }
 }

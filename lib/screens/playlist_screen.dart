@@ -346,7 +346,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Pisahkan Surah ke dalam banyak playlist, seperti Spotify.',
+              'Simpan Surah yang sering anda dengar ke dalam playlist.',
               textAlign: TextAlign.center,
               style: GoogleFonts.spaceGrotesk(
                 fontSize: 12,

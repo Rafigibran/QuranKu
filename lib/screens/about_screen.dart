@@ -15,13 +15,12 @@ class AboutScreen extends StatefulWidget {
 
 class _AboutScreenState extends State<AboutScreen> {
   final AudioService _audioService = AudioService();
-  final String _appVersion = "1.0.0";
+  final String _appVersion = "3.0.0";
 
   static const String _developerName = 'Rafi Gibran';
   static const String _githubProfile = 'https://github.com/Rafigibran';
   static const String _repository = 'https://github.com/Rafigibran/QuranKu';
   static const String _issues = 'https://github.com/Rafigibran/QuranKu/issues';
-  static const String _donationUrl = 'https://saweria.co/rafdev';
   static const String _latestReleaseApi =
       'https://api.github.com/repos/Rafigibran/QuranKu/releases/latest';
 
@@ -277,93 +276,6 @@ class _AboutScreenState extends State<AboutScreen> {
               valueOverride: 'https://equran.id/',
             ),
 
-            const SizedBox(height: 24),
-            Text(
-              'Support',
-              style: GoogleFonts.spaceGrotesk(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: colorScheme.onSurface,
-              ),
-            ),
-            const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: () => _launchUrl(_donationUrl),
-                icon: const Icon(Icons.favorite, color: Colors.black),
-                label: Text(
-                  'Donate to Developer',
-                  style: GoogleFonts.spaceGrotesk(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: colorScheme.primary,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton.icon(
-                onPressed: _checkingUpdate ? null : _checkForUpdates,
-                icon: _checkingUpdate
-                    ? const SizedBox(
-                        width: 18,
-                        height: 18,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : Icon(
-                        Icons.system_update_outlined,
-                        color: colorScheme.onSurface,
-                      ),
-                label: Text(
-                  _checkingUpdate ? 'Checking for Updates...' : 'Check for Updates',
-                  style: GoogleFonts.spaceGrotesk(
-                    fontWeight: FontWeight.bold,
-                    color: colorScheme.onSurface,
-                  ),
-                ),
-                style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: colorScheme.outline),
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton.icon(
-                onPressed: () => _launchUrl(_issues),
-                icon: Icon(
-                  Icons.bug_report_outlined,
-                  color: colorScheme.onSurface,
-                ),
-                label: Text(
-                  'Report Issue',
-                  style: GoogleFonts.spaceGrotesk(
-                    fontWeight: FontWeight.bold,
-                    color: colorScheme.onSurface,
-                  ),
-                ),
-                style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: colorScheme.outline),
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-              ),
-            ),
             const SizedBox(height: 24),
             if (_audioService.currentSurah != null)
               const SizedBox(height: 80),

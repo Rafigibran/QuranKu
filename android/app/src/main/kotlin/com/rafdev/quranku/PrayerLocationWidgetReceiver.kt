@@ -1,6 +1,6 @@
-package com.damarcreative.quran
+package com.rafdev.quranku
 
-import com.damarcreative.quran.R
+import com.rafdev.quranku.R
 
 import android.appwidget.AppWidgetManager
 import android.content.Context

@@ -1,18 +1,16 @@
-name: Build QuranKu APK
+name: QuranKu Testing APK
 
 on:
   workflow_dispatch:
   push:
-    branches:
-      - main
+    branches: [main]
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   build-apk:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -31,84 +29,61 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Prepare valid rain background audio
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y ffmpeg
-          mkdir -p assets
-          ffmpeg -hide_banner -loglevel error -y \
-            -f lavfi -i "anoisesrc=color=pink:duration=30:amplitude=0.18" \
-            -af "highpass=f=120,lowpass=f=8000,volume=0.65" \
-            -c:a libmp3lame -b:a 96k assets/rain_loop.mp3
-          test -s assets/rain_loop.mp3
-          ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 assets/rain_loop.mp3
-
-      - name: Apply background audio patch
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-
-          pubspec = Path('pubspec.yaml')
-          text = pubspec.read_text(encoding='utf-8')
-          asset_line = '    - assets/rain_loop.mp3\n'
-          if asset_line not in text:
-              marker = '    - assets/splash.png\n'
-              if marker not in text:
-                  raise SystemExit('Could not find Flutter asset list marker in pubspec.yaml')
-              text = text.replace(marker, marker + asset_line, 1)
-              pubspec.write_text(text, encoding='utf-8')
-
-          audio_path = Path('lib/services/audio_service.dart')
-          audio = audio_path.read_text(encoding='utf-8')
-
-          if '  double _volume = 1.0;\n' not in audio:
-              audio = audio.replace(
-                  '  bool _isBuffering = false;\n',
-                  '  bool _isBuffering = false;\n  double _volume = 1.0;\n',
-                  1,
-              )
-
-          if '  double get volume => _volume;\n' not in audio:
-              audio = audio.replace(
-                  '  bool get isBuffering => _isBuffering;\n',
-                  '  bool get isBuffering => _isBuffering;\n  double get volume => _volume;\n',
-                  1,
-              )
-
-          if '    await _player.setVolume(_volume);\n' not in audio:
-              marker = "    await Directory(_localPath!).create(recursive: true);\n"
-              if marker not in audio:
-                  raise SystemExit('Could not find AudioService init marker')
-              audio = audio.replace(
-                  marker,
-                  marker + '    await _player.setVolume(_volume);\n',
-                  1,
-              )
-
-          if '  Future<void> setVolume(double value) async' not in audio:
-              marker = '  Future<void> pause() async => _player.pause();\n'
-              if marker not in audio:
-                  raise SystemExit('Could not find AudioService pause marker')
-              replacement = (
-                  '  Future<void> setVolume(double value) async {\n'
-                  '    _volume = value.clamp(0.0, 1.0);\n'
-                  '    await _player.setVolume(_volume);\n'
-                  '    notifyListeners();\n'
-                  '  }\n\n'
-                  + marker
-              )
-              audio = audio.replace(marker, replacement, 1)
-
-          audio_path.write_text(audio, encoding='utf-8')
-          PY
-
-          python3 -m py_compile lib/services/audio_service.dart 2>/dev/null || true
-          test -s assets/rain_loop.mp3
-
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Prepare release keystore
+      - name: Bundle CC0 rain ambience
+        run: python3 scripts/update_rain_asset.py
+
+      - name: Apply UI localization and live player patch
+        run: python3 scripts/patch_ui_indonesian.py
+
+      - name: Apply final UI and translation fixes
+        run: python3 scripts/fix_ui_final.py
+
+      - name: Apply typography and visual polish
+        run: python3 scripts/patch_typography_and_light_ui.py
+
+      - name: Apply HIG design system to all screens
+        run: python3 scripts/apply_hig_all_screens.py
+
+      - name: Apply reader redesign prompt
+        run: python3 scripts/apply_reader_redesign.py
+
+      - name: Normalize theme labels
+        run: python3 scripts/theme_label_override.py
+
+      - name: Sync app version and search spacing
+        run: python3 scripts/app_metadata_and_spacing.py
+
+      - name: Apply mushaf-style reader layout
+        run: python3 scripts/patch_mushaf_reader.py
+
+      - name: Refine Tajweed rendering and Arabic typography
+        run: python3 scripts/refine_tajwid_and_arabic_font.py
+
+      - name: Enable reader view toggle
+        run: python3 scripts/fix_reader_view_toggle.py
+
+      - name: Fix bookmark behavior
+        run: python3 scripts/fix_bookmark_behavior.py
+
+      - name: Apply unified top navbar style
+        run: python3 scripts/top_navbar_style.py
+
+      - name: Balance resume card spacing
+        run: python3 scripts/fix_resume_spacing.py
+
+      - name: Refine background audio controls
+        run: python3 scripts/patch_background_audio_ui.py
+
+      - name: Ensure background audio async import
+        run: python3 scripts/ensure_full_player_async.py
+
+      - name: Analyze Dart source
+        run: dart analyze --no-fatal-warnings
+
+      - name: Prepare signing keystore
         env:
           ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
         run: |
@@ -118,39 +93,6 @@ jobs:
           }
           echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/quranku-release.jks
           test -s android/app/quranku-release.jks
-
-      - name: Align app version with release
-        run: |
-          VERSION="3.0.${{ github.run_number }}"
-          python3 - "$VERSION" <<'PY'
-          import pathlib
-          import sys
-
-          version = sys.argv[1]
-          replacements = {
-              'lib/screens/about_screen.dart': [
-                  ('final String _appVersion = "1.0.0";', f'final String _appVersion = "{version}";'),
-              ],
-              'lib/screens/settings_screen.dart': [
-                  ("'v3.0.0'", f"'v{version}'"),
-              ],
-          }
-
-          for filename, pairs in replacements.items():
-              path = pathlib.Path(filename)
-              text = path.read_text(encoding='utf-8')
-              changed = False
-              for old, new in pairs:
-                  if old in text:
-                      text = text.replace(old, new)
-                      changed = True
-              if not changed:
-                  raise SystemExit(f'Expected version marker not found in {filename}')
-              path.write_text(text, encoding='utf-8')
-          PY
-
-          grep -n "_appVersion" lib/screens/about_screen.dart
-          grep -n "v3.0" lib/screens/settings_screen.dart
 
       - name: Build release APK for explicit signing
         env:
@@ -163,6 +105,8 @@ jobs:
           test -n "$ANDROID_KEYSTORE_PASSWORD" || { echo "ANDROID_KEYSTORE_PASSWORD Secret is missing."; exit 1; }
           test -n "$ANDROID_KEY_ALIAS" || { echo "ANDROID_KEY_ALIAS Secret is missing."; exit 1; }
           test -n "$ANDROID_KEY_PASSWORD" || { echo "ANDROID_KEY_PASSWORD Secret is missing."; exit 1; }
+          flutter clean
+          flutter pub get
           flutter build apk \
             --release \
             --build-name "3.0.${{ github.run_number }}" \
@@ -187,7 +131,9 @@ jobs:
           test -s "$APK"
           test -s "$ANDROID_KEYSTORE_PATH"
 
-          echo "== Re-align APK for Android 16 KB =="
+          echo "== Re-align APK before signing =="
+          # zipalign rejects using -p together with -P. For 16 KB-safe JNI
+          # alignment, use -P 16 with the normal 4-byte entry alignment.
           "$BUILD_TOOLS_DIR/zipalign" -f -P 16 4 "$APK" "$ALIGNED"
 
           echo "== Sign with explicit v1/v2/v3 =="
@@ -207,23 +153,28 @@ jobs:
           mv "$SIGNED" "$APK"
           rm -f "$ALIGNED"
 
-          "$BUILD_TOOLS_DIR/apksigner" verify --verbose --print-certs "$APK"
+          echo "== Final certificate =="
+          "$BUILD_TOOLS_DIR/apksigner" verify \
+            --verbose \
+            --min-sdk-version 21 \
+            --print-certs \
+            "$APK"
 
       - name: Verify APK integrity and Android 16 KB packaging
         shell: bash
         run: |
           set -euo pipefail
           APK="build/app/outputs/flutter-apk/app-release.apk"
-          BUILD_TOOLS_DIR="$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -n 1)"
           test -s "$APK"
 
           echo "== ZIP integrity =="
           unzip -t "$APK" >/dev/null
 
           echo "== APK signature =="
+          BUILD_TOOLS_DIR="$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -n 1)"
           "$BUILD_TOOLS_DIR/apksigner" verify --verbose "$APK"
 
-          echo "== APK 16 KB ZIP alignment =="
+          echo "== APK alignment =="
           "$BUILD_TOOLS_DIR/zipalign" -v -c -P 16 4 "$APK"
 
           echo "== Native library packaging =="
@@ -235,52 +186,68 @@ jobs:
           apk = Path("build/app/outputs/flutter-apk/app-release.apk")
           with zipfile.ZipFile(apk) as zf:
               names = zf.namelist()
-              bad_datastore = [name for name in names if name.endswith("libdatastore_shared_counter.so")]
+              bad_datastore = [
+                  name for name in names
+                  if name.endswith("libdatastore_shared_counter.so")
+              ]
               if bad_datastore:
-                  raise SystemExit("DataStore native counter library found in APK:\n" + "\n".join(bad_datastore))
+                  raise SystemExit(
+                      "Found DataStore native counter library, which is known to be incompatible with "
+                      "16 KB page-size validation in current shared_preferences Android builds:\n"
+                      + "\n".join(bad_datastore)
+                  )
 
               libs = [i for i in zf.infolist() if i.filename.endswith(".so")]
               if not libs:
                   raise SystemExit("No native .so libraries found in APK")
 
               stored = [i.filename for i in libs if i.compress_type == zipfile.ZIP_STORED]
+              for info in libs:
+                  mode = "compressed" if info.compress_type != zipfile.ZIP_STORED else "stored"
+                  print(f"{info.filename}: {mode}")
+
               if stored:
-                  raise SystemExit("Found uncompressed native libraries:\n" + "\n".join(stored))
+                  raise SystemExit(
+                      "Found uncompressed native libraries. "
+                      "16 KB-safe packaging requires JNI libraries to use legacy/compressed packaging.\n"
+                      + "\n".join(stored)
+                  )
 
               resource = zf.getinfo("resources.arsc")
               if resource.compress_type != zipfile.ZIP_STORED:
-                  raise SystemExit("resources.arsc must be uncompressed (STORED)")
+                  raise SystemExit("resources.arsc must be uncompressed (STORED) for Android 11+ package parsing.")
 
               with apk.open("rb") as f:
                   f.seek(resource.header_offset)
                   header = f.read(30)
-                  _, _, _, _, _, _, _, _, _, filename_len, extra_len = struct.unpack("<IHHHHHIIIHH", header)
+                  _, _, _, _, _, _, _, _, _, filename_len, extra_len = struct.unpack(
+                      "<IHHHHHIIIHH", header
+                  )
                   data_offset = resource.header_offset + 30 + filename_len + extra_len
 
               if data_offset % 4 != 0:
-                  raise SystemExit(f"resources.arsc data offset {data_offset} is not 4-byte aligned.")
+                  raise SystemExit(
+                      f"resources.arsc data offset {data_offset} is not 4-byte aligned."
+                  )
 
-              print(f"resources.arsc: STORED, data offset {data_offset}")
+              print(f"resources.arsc: STORED, data offset {data_offset} (4-byte aligned)")
           PY
+
+          echo "== Manifest/package verification =="
+          if command -v aapt2 >/dev/null 2>&1; then
+            aapt2 dump badging "$APK" | grep -E '^package:|^sdkVersion:|^targetSdkVersion:'
+          else
+            echo "aapt2 not available; manifest verification skipped."
+          fi
 
           echo "APK verification passed."
 
-      - name: Upload APK
+      - name: Upload testing APK
         uses: actions/upload-artifact@v4
         with:
-          name: QuranKu-release
+          name: QuranKu-testing-release
           path: build/app/outputs/flutter-apk/app-release.apk
           if-no-files-found: error
-
-      - name: Publish GitHub release
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          TAG="v3.0.${{ github.run_number }}"
-          gh release create "$TAG" \
-            build/app/outputs/flutter-apk/app-release.apk \
-            --title "QuranKu $TAG" \
-            --generate-notes
 
       - name: Remove signing key from runner
         if: always()

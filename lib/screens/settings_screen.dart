@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../services/settings_service.dart';
 import '../widgets/liquid_glass.dart';
 import 'storage_management_screen.dart';
 import 'about_screen.dart';
+import 'tasbih_screen.dart';
+import 'backup_restore_screen.dart';
+import 'bookmark_screen.dart';
+import 'ayah_search_screen.dart';
+import 'juz_screen.dart';
+import 'hijri_screen.dart';
+import 'qibla_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -126,6 +134,75 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SizedBox(height: 30),
           const LiquidGlassSectionTitle(
+            title: 'Bacaan & Alat Quran',
+            subtitle: 'Atur mushaf, transliterasi, qari, dan akses fitur tambahan.',
+          ),
+          LiquidGlassCard(
+            padding: EdgeInsets.zero,
+            child: Column(
+              children: [
+                _settingTile(
+                  icon: Icons.menu_book_rounded,
+                  title: 'Jenis tulisan Arab',
+                  subtitle: _settings.scriptStyle == 'indopak' ? 'IndoPak' : 'Utsmani',
+                  onTap: () => _showScriptDialog(context),
+                ),
+                _divider(),
+                SwitchListTile.adaptive(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 6),
+                  secondary: Icon(Icons.spellcheck_rounded, color: scheme.primary),
+                  title: Text('Transliterasi latin', style: GoogleFonts.spaceGrotesk(fontSize: 16, fontWeight: FontWeight.w700)),
+                  subtitle: Text('Tampilkan pelafalan latin di bawah ayat.', style: GoogleFonts.spaceGrotesk(fontSize: 13, color: scheme.onSurface.withValues(alpha: 0.55))),
+                  value: _settings.showTransliteration,
+                  onChanged: _settings.setShowTransliteration,
+                ),
+                _divider(),
+                _settingTile(
+                  icon: Icons.record_voice_over_outlined,
+                  title: 'Qari murotal',
+                  subtitle: SettingsService.reciters.firstWhere((e) => e['id'] == _settings.reciterId)['name']!,
+                  onTap: () => _showReciterDialog(context),
+                ),
+                _divider(),
+                _settingTile(
+                  icon: Icons.bookmarks_outlined,
+                  title: 'Bookmark & riwayat',
+                  subtitle: 'Kelola bookmark berfolder dan riwayat bacaan.',
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const BookmarkScreen())),
+                ),
+                _divider(),
+                _settingTile(
+                  icon: Icons.manage_search_rounded,
+                  title: 'Cari ayat',
+                  subtitle: 'Cari kata atau frasa di seluruh Al-Qur’an.',
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AyahSearchScreen())),
+                ),
+                _divider(),
+                _settingTile(
+                  icon: Icons.grid_view_rounded,
+                  title: 'Daftar Juz',
+                  subtitle: 'Buka Juz 1 sampai 30.',
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const JuzScreen())),
+                ),
+                _divider(),
+                _settingTile(
+                  icon: Icons.calendar_month_outlined,
+                  title: 'Kalender Hijriah',
+                  subtitle: 'Lihat tanggal Hijriah dan kalender sekitar hari ini.',
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const HijriScreen())),
+                ),
+                _divider(),
+                _settingTile(
+                  icon: Icons.explore_outlined,
+                  title: 'Arah kiblat',
+                  subtitle: 'Gunakan lokasi dan sensor kompas perangkat.',
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const QiblaScreen())),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 30),
+          const LiquidGlassSectionTitle(
             title: 'Penyimpanan',
             subtitle: 'Kelola cache dan file Al-Quran yang tersimpan di perangkat.',
           ),
@@ -167,6 +244,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SizedBox(height: 30),
           const LiquidGlassSectionTitle(
+            title: 'Ibadah & pemulihan',
+            subtitle: 'Atur tasbih dan bawa preferensi QuranKu ke perangkat lain.',
+          ),
+          LiquidGlassCard(
+            padding: EdgeInsets.zero,
+            child: Column(
+              children: [
+                _settingTile(
+                  icon: Icons.fingerprint_rounded,
+                  title: 'Tasbih kustom',
+                  subtitle: 'Buat, edit, hapus, target, dan simpan hitungan dzikir sendiri.',
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const TasbihScreen())),
+                ),
+                _divider(),
+                _settingTile(
+                  icon: Icons.cloud_upload_outlined,
+                  title: 'Backup / pulihkan ke Google Drive',
+                  subtitle: 'Gunakan picker Android; Google Drive dapat dipilih sebagai lokasi cloud.',
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const BackupRestoreScreen())),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 30),
+          const LiquidGlassSectionTitle(
             title: 'Tentang',
             subtitle: 'Informasi aplikasi dan developer.',
           ),
@@ -175,11 +277,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: _settingTile(
               icon: Icons.auto_awesome_outlined,
               title: 'Tentang QuranKu',
-              subtitle: "'v3.0.0' • RAFDEV",
+              subtitle: "Production • v3.0.107 • RAFDEV",
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => const AboutScreen()),
               ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          LiquidGlassCard(
+            padding: EdgeInsets.zero,
+            child: _settingTile(
+              icon: Icons.volunteer_activism_outlined,
+              title: 'Dukung RAFDEV',
+              subtitle: 'Donasi untuk pengembangan QuranKu.',
+              onTap: () async {
+                final uri = Uri.parse('https://saweria.co/rafdev');
+                await launchUrl(uri, mode: LaunchMode.externalApplication);
+              },
             ),
           ),
           const SizedBox(height: 36),
@@ -272,6 +387,71 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 : null),
       ),
     );
+  }
+
+  Future<void> _showScriptDialog(BuildContext context) async {
+    final selected = await showModalBottomSheet<String>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: LiquidGlassCard(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                RadioListTile<String>(
+                  value: 'uthmani',
+                  groupValue: _settings.scriptStyle,
+                  title: const Text('Utsmani'),
+                  subtitle: const Text('Mushaf digital gaya Utsmani'),
+                  onChanged: (value) => Navigator.pop(context, value),
+                ),
+                RadioListTile<String>(
+                  value: 'indopak',
+                  groupValue: _settings.scriptStyle,
+                  title: const Text('IndoPak'),
+                  subtitle: const Text('Gaya tulisan IndoPak'),
+                  onChanged: (value) => Navigator.pop(context, value),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+    if (selected != null) await _settings.setScriptStyle(selected);
+  }
+
+  Future<void> _showReciterDialog(BuildContext context) async {
+    final selected = await showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: LiquidGlassCard(
+            padding: const EdgeInsets.only(top: 8, bottom: 8),
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: SettingsService.reciters.length,
+              itemBuilder: (_, index) {
+                final item = SettingsService.reciters[index];
+                return RadioListTile<String>(
+                  value: item['id']!,
+                  groupValue: _settings.reciterId,
+                  title: Text(item['name']!),
+                  onChanged: (value) => Navigator.pop(context, value),
+                );
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+    if (selected != null) await _settings.setReciter(selected);
   }
 
   Future<void> _showThemeDialog(BuildContext context) async {

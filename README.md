@@ -9,30 +9,34 @@ A minimalist and modern Quran application built with Flutter for Android and iOS
 ![Android](https://img.shields.io/badge/Android-Supported-3DDC84?style=for-the-badge&logo=android&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-2E9D6B?style=for-the-badge)
 
+## Preview
+
+> **Tambahkan screenshot kamu sendiri di folder `docs/screenshots/` dengan nama file seperti di bawah.**
+> Jika file belum ada, gambar hanya akan menjadi placeholder sampai kamu mengunggahnya.
 
 ### Beranda
 
-![QuranKu Home](docs/screenshot/20260915_102208.jpg)
+![QuranKu Home](docs/screenshots/home.png)
 
 ### Murotal
 
-![QuranKu Murotal](docs/screenshot/20260915_102236.jpg)
+![QuranKu Murotal](docs/screenshots/murotal.png)
 
-### Time
+### Full Player
 
-![QuranKu Time](docs/screenshot/20260915_102222.jpg)
+![QuranKu Full Player](docs/screenshots/full-player.png)
 
 ### Detail Surah
 
-![QuranKu Surah Detail](docs/screenshot/20260915_103023.jpg)
+![QuranKu Surah Detail](docs/screenshots/surah-detail.png)
 
 ### Pengaturan
 
-![QuranKu Settings](docs/screenshot/20260915_103813.jpg)
+![QuranKu Settings](docs/screenshots/settings.png)
 
 ### Playlist
 
-![QuranKu Playlist](docs/screenshot/20260915_102257.jpg)
+![QuranKu Playlist](docs/screenshots/playlist.png)
 
 ## ✨ Features
 
