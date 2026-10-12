@@ -42,6 +42,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
   bool _showWordByWord = false;
   bool _restored = false;
   int? _lastReadAyah;
+  int? _bookmarkedAyah;
   List<String> _editions = const ['id-indonesian', 'en-sahih'];
 
   // Bookmark otomatis saat keluar (Option C): posisi baca terakhir
@@ -50,7 +51,6 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
   int? _lastVisibleAyahCandidate;
   List<GlobalKey> _ayahKeys = const [];
   bool _exitBookmarkSaved = false;
-  bool _isPopping = false;
 
   @override
   void initState() {
@@ -139,9 +139,11 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
     var items = _bookmarks.items
         .where((item) => item.surahNumber == widget.surah.number)
         .toList();
-    // Bookmark badges on the ayah cards read BookmarkService directly,
-    // so nothing else is needed here when items already exist.
-    if (items.isNotEmpty) return;
+    if (items.isNotEmpty) {
+      items.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      setState(() => _bookmarkedAyah = items.first.ayahNumber);
+      return;
+    }
 
     // Migrate the old single-bookmark slot when it still exists.
     final prefs = await SharedPreferences.getInstance();
@@ -151,12 +153,14 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
     await _bookmarks.toggle(widget.surah.number, bookmark);
     await prefs.remove('bookmark_surah');
     await prefs.remove('bookmark_ayah');
+    if (mounted) setState(() => _bookmarkedAyah = bookmark);
   }
 
   Future<void> _toggleBookmark(int ayah) async {
     if (ayah < 1 || ayah > widget.surah.totalAyahs) return;
     await _bookmarks.toggle(widget.surah.number, ayah);
-    // UI refreshes through the BookmarkService listener (_onBookmarksChanged).
+    if (!mounted) return;
+    setState(() => _bookmarkedAyah = ayah);
   }
 
   Future<void> _loadEditions() async {
@@ -565,40 +569,29 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
   Widget build(BuildContext context) {
     final cached = _ayahs;
 
-    return PopScope(
-      // Simpan posisi baca otomatis setiap kali pengguna keluar dari ayat,
-      // baik lewat tombol back AppBar, back sistem, maupun gesture.
-      canPop: false,
-      onPopInvokedWithResult: (didPop, result) async {
-        if (didPop || _isPopping) return;
-        _isPopping = true;
-        final navigator = Navigator.of(context);
-        await _saveLastVisibleAyahOnExit();
-        if (mounted) {
-          navigator.pop(result);
-        }
-      },
-      child: Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: SafeArea(
-          bottom: false,
-          child: (cached != null && cached.isNotEmpty)
-              ? _buildReader(cached)
-              : FutureBuilder<List<Ayah>>(
-                  future: _future,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return _buildReaderSkeleton();
-                    }
-                    if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
-                      return _errorState();
-                    }
-                    _ayahs = snapshot.data!;
-                    _restoreReadingWhenReady();
-                    return _buildReader(snapshot.data!);
-                  },
-                ),
-        ),
+    // NOTE: jangan bungkus Scaffold di sini. Workflow CI
+    // (scripts/fix_bookmark_behavior.py) menambahkan WillPopScope
+    // penyimpan posisi-baca-otomatis saat build berjalan.
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: SafeArea(
+        bottom: false,
+        child: (cached != null && cached.isNotEmpty)
+            ? _buildReader(cached)
+            : FutureBuilder<List<Ayah>>(
+                future: _future,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return _buildReaderSkeleton();
+                  }
+                  if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
+                    return _errorState();
+                  }
+                  _ayahs = snapshot.data!;
+                  _restoreReadingWhenReady();
+                  return _buildReader(snapshot.data!);
+                },
+              ),
       ),
     );
   }
