@@ -21,14 +21,14 @@ class PrayerTimes {
 
   factory PrayerTimes.fromJson(Map<String, dynamic> json) {
     return PrayerTimes(
-      date: json['tanggal_lengkap'],
-      subuh: json['subuh'],
-      dzuhur: json['dzuhur'],
-      ashar: json['ashar'],
-      maghrib: json['maghrib'],
-      isya: json['isya'],
-      imsak: json['imsak'] ?? '', // Imsak might not be in all responses
-      dhuha: json['dhuha'] ?? '',
+      date: json['tanggal_lengkap']?.toString() ?? '',
+      subuh: json['subuh']?.toString() ?? '',
+      dzuhur: json['dzuhur']?.toString() ?? '',
+      ashar: json['ashar']?.toString() ?? '',
+      maghrib: json['maghrib']?.toString() ?? '',
+      isya: json['isya']?.toString() ?? '',
+      imsak: json['imsak']?.toString() ?? '', // Imsak might not be in all responses
+      dhuha: json['dhuha']?.toString() ?? '',
     );
   }
 }

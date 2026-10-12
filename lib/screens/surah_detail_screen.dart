@@ -42,9 +42,15 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
   bool _showWordByWord = false;
   bool _restored = false;
   int? _lastReadAyah;
-  int? _bookmarkedAyah;
-  Future<void> _bookmarkWriteQueue = Future<void>.value();
   List<String> _editions = const ['id-indonesian', 'en-sahih'];
+
+  // Bookmark otomatis saat keluar (Option C): posisi baca terakhir
+  // (ayat yang cukup terlihat) disimpan sebagai last-read HANYA ketika
+  // layar ini ditutup. Bookmark manual tidak pernah diubah di sini.
+  int? _lastVisibleAyahCandidate;
+  List<GlobalKey> _ayahKeys = const [];
+  bool _exitBookmarkSaved = false;
+  bool _isPopping = false;
 
   @override
   void initState() {
@@ -133,11 +139,9 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
     var items = _bookmarks.items
         .where((item) => item.surahNumber == widget.surah.number)
         .toList();
-    if (items.isNotEmpty) {
-      items.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-      setState(() => _bookmarkedAyah = items.first.ayahNumber);
-      return;
-    }
+    // Bookmark badges on the ayah cards read BookmarkService directly,
+    // so nothing else is needed here when items already exist.
+    if (items.isNotEmpty) return;
 
     // Migrate the old single-bookmark slot when it still exists.
     final prefs = await SharedPreferences.getInstance();
@@ -147,14 +151,12 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
     await _bookmarks.toggle(widget.surah.number, bookmark);
     await prefs.remove('bookmark_surah');
     await prefs.remove('bookmark_ayah');
-    if (mounted) setState(() => _bookmarkedAyah = bookmark);
   }
 
   Future<void> _toggleBookmark(int ayah) async {
     if (ayah < 1 || ayah > widget.surah.totalAyahs) return;
     await _bookmarks.toggle(widget.surah.number, ayah);
-    if (!mounted) return;
-    setState(() => _bookmarkedAyah = ayah);
+    // UI refreshes through the BookmarkService listener (_onBookmarksChanged).
   }
 
   Future<void> _loadEditions() async {
@@ -178,6 +180,56 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
         .where((e) => e.isNotEmpty)
         .map((e) => '${e[0].toUpperCase()}${e.substring(1)}')
         .join(' ');
+  }
+
+  void _ensureAyahKeys(int length) {
+    if (length <= 0 || _ayahKeys.length == length) return;
+    _ayahKeys = List<GlobalKey>.generate(length, (_) => GlobalKey());
+  }
+
+  /// Mencari kartu ayat terakhir yang terlihat minimal 40% di viewport.
+  void _captureVisibleAyah() {
+    if (!_scroll.hasClients) return;
+    final ayahs = _ayahs;
+    if (ayahs == null || ayahs.isEmpty) return;
+    _ensureAyahKeys(ayahs.length);
+
+    final viewport =
+        _scroll.position.context.storageContext.findRenderObject();
+    if (viewport is! RenderBox || !viewport.hasSize) return;
+    final viewportTop = viewport.localToGlobal(Offset.zero).dy;
+    final viewportBottom = viewportTop + viewport.size.height;
+
+    int? candidateIndex;
+    for (var index = 0; index < ayahs.length; index++) {
+      if (index >= _ayahKeys.length) break;
+      final renderObject =
+          _ayahKeys[index].currentContext?.findRenderObject();
+      if (renderObject is! RenderBox || !renderObject.hasSize) continue;
+      final top = renderObject.localToGlobal(Offset.zero).dy;
+      final bottom = top + renderObject.size.height;
+      final visibleTop = top < viewportTop ? viewportTop : top;
+      final visibleBottom = bottom > viewportBottom ? viewportBottom : bottom;
+      final visibleHeight = visibleBottom - visibleTop;
+      if (visibleHeight <= 0) continue;
+      if (visibleHeight / renderObject.size.height >= 0.40) {
+        candidateIndex = index;
+      }
+    }
+    if (candidateIndex != null) {
+      _lastVisibleAyahCandidate = ayahs[candidateIndex].number;
+    }
+  }
+
+  /// Menyimpan ayat terakhir yang terlihat sebagai posisi baca.
+  /// Dipanggil tepat satu kali saat pengguna keluar dari layar bacaan.
+  Future<void> _saveLastVisibleAyahOnExit() async {
+    if (_exitBookmarkSaved) return;
+    _exitBookmarkSaved = true;
+    _captureVisibleAyah();
+    final target = _lastVisibleAyahCandidate;
+    if (target == null) return;
+    await _saveAyahAsLastRead(target);
   }
 
   Future<void> _saveAyahAsLastRead(int ayah) async {
@@ -511,35 +563,49 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
     final cached = _ayahs;
 
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: SafeArea(
-        bottom: false,
-        child: (cached != null && cached.isNotEmpty)
-            ? _buildReader(cached)
-            : FutureBuilder<List<Ayah>>(
-                future: _future,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return _buildReaderSkeleton();
-                  }
-                  if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
-                    return _errorState();
-                  }
-                  _ayahs = snapshot.data!;
-                  _restoreReadingWhenReady();
-                  return _buildReader(snapshot.data!);
-                },
-              ),
+    return PopScope(
+      // Simpan posisi baca otomatis setiap kali pengguna keluar dari ayat,
+      // baik lewat tombol back AppBar, back sistem, maupun gesture.
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop || _isPopping) return;
+        _isPopping = true;
+        final navigator = Navigator.of(context);
+        await _saveLastVisibleAyahOnExit();
+        if (mounted) {
+          navigator.pop(result);
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        body: SafeArea(
+          bottom: false,
+          child: (cached != null && cached.isNotEmpty)
+              ? _buildReader(cached)
+              : FutureBuilder<List<Ayah>>(
+                  future: _future,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return _buildReaderSkeleton();
+                    }
+                    if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
+                      return _errorState();
+                    }
+                    _ayahs = snapshot.data!;
+                    _restoreReadingWhenReady();
+                    return _buildReader(snapshot.data!);
+                  },
+                ),
+        ),
       ),
     );
   }
 
   Widget _buildReader(List<Ayah> ayahs) {
     final scheme = Theme.of(context).colorScheme;
+    _ensureAyahKeys(ayahs.length);
     _restoreReadingWhenReady();
 
     return CustomScrollView(

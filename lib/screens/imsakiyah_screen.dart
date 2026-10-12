@@ -153,7 +153,7 @@ class _ImsakiyahScreenState extends State<ImsakiyahScreen> {
                     itemBuilder: (context, index) {
                       final day = _schedule[index];
                       // Parse date using the VALID key we fixed earlier
-                      DateTime date = DateTime.parse(day['tanggal_lengkap']);
+                      final date = DateTime.tryParse(day['tanggal_lengkap']?.toString() ?? '') ?? DateTime.now();
                       bool isToday = DateUtils.isSameDay(date, DateTime.now());
 
                       final dayName = DateFormat('EEEE').format(date);
