@@ -127,34 +127,39 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
   }
 
   Future<void> _showFolder(BookmarkFolder folder) async {
-    final items = _service.itemsForFolder(folder.id);
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       builder: (context) => SafeArea(
         child: SizedBox(
           height: MediaQuery.of(context).size.height * .72,
-          child: ListView(
-            padding: const EdgeInsets.fromLTRB(20, 18, 20, 30),
-            children: [
-              Text(folder.name, style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800)),
-              const SizedBox(height: 10),
-              if (items.isEmpty) const Text('Folder ini masih kosong.'),
-              ...items.map((item) => ListTile(
-                leading: const Icon(Icons.bookmark_rounded),
-                title: Text('Surah ${_surahs[item.surahNumber]?.name ?? item.surahNumber}'),
-                subtitle: Text('Ayat ${item.ayahNumber}'),
-                onTap: () async {
-                  final surah = _surahs[item.surahNumber];
-                  if (surah == null) return;
-                  Navigator.pop(context);
-                  await Navigator.push(context, MaterialPageRoute(
-                    builder: (_) => SurahDetailScreen(surah: surah, initialAyah: item.ayahNumber),
-                  ));
-                },
-                trailing: IconButton(onPressed: () => _service.remove(item.id), icon: const Icon(Icons.delete_outline)),
-              )),
-            ],
+          child: ListenableBuilder(
+            listenable: _service,
+            builder: (context, _) {
+              final items = _service.itemsForFolder(folder.id);
+              return ListView(
+                padding: const EdgeInsets.fromLTRB(20, 18, 20, 30),
+                children: [
+                  Text(folder.name, style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800)),
+                  const SizedBox(height: 10),
+                  if (items.isEmpty) const Text('Folder ini masih kosong.'),
+                  ...items.map((item) => ListTile(
+                    leading: const Icon(Icons.bookmark_rounded),
+                    title: Text('Surah ${_surahs[item.surahNumber]?.name ?? item.surahNumber}'),
+                    subtitle: Text('Ayat ${item.ayahNumber}'),
+                    onTap: () async {
+                      final surah = _surahs[item.surahNumber];
+                      if (surah == null) return;
+                      Navigator.pop(context);
+                      await Navigator.push(context, MaterialPageRoute(
+                        builder: (_) => SurahDetailScreen(surah: surah, initialAyah: item.ayahNumber),
+                      ));
+                    },
+                    trailing: IconButton(onPressed: () => _service.remove(item.id), icon: const Icon(Icons.delete_outline)),
+                  )),
+                ],
+              );
+            },
           ),
         ),
       ),

@@ -158,8 +158,14 @@ class _MainScreenState extends State<MainScreen> {
       growable: false,
     );
 
-    return WillPopScope(
-      onWillPop: _onWillPop,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        if (await _onWillPop() && context.mounted) {
+          Navigator.of(context).pop(result);
+        }
+      },
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Stack(
